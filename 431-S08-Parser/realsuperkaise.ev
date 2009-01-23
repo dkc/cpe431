@@ -1,0 +1,101 @@
+struct jana
+{
+    int a;
+};
+
+struct wark
+{
+    int b;
+    bool f;
+    int c;
+};
+
+int a, b, c, osterzoneisdunningsmith;
+bool d;
+
+fun razzledazzle(struct jana jan) struct jana
+# returns a pointer to the struct provided
+{
+    int jan;
+    struct jana pointsToJan;
+    pointsToJan = jan;
+    return jan;
+}
+
+fun fromdowntown(struct jana jan) struct jana
+# creates a copy of the struct provided and returns it
+{
+    int aStore;
+    struct jana janaomerijanejan;
+    aStore = jan.a;
+    janaomerijanejan = new jana;
+    janaomerijanejan.a = aStore;
+}
+
+fun commit(int val) void
+{
+    a = val;
+    return;
+}
+
+fun get() int
+{
+    return a;
+}
+
+fun thingsareheatingup(struct jana one) struct jana
+# NOBODY SUMMONS MEGATRON
+{
+    int a;
+    a = get() + osterzoneisdunningsmith;
+    if (osterzoneisdunningsmith > 0)
+    {
+        osterzoneisdunningsmith = 0 - osterzoneisdunningsmith - 1;
+    }
+    else
+    {
+        osterzoneisdunningsmith = 0 - osterzoneisdunningsmith + 1;
+    }
+    if (a == 0)
+    {
+        return fromdowntown(one);
+    }
+    else
+    {
+        return razzledazzle(one);
+    }
+    commit(a);
+    return 0;
+}
+
+fun main() int
+{
+    struct jana one, two;
+    read a . b . c;
+    osterzoneisdunningsmith = 1;
+    while((a > b) && (a < c))
+    {
+        one = new jana;
+        one.c = a;
+        two = thingsareheatingup(one);
+        if (a == 0)
+        {
+            if (one == two)
+            {
+                print 0 endl;
+            }
+        }
+        else
+        {
+            if (one != two)
+            {
+                print 0 endl;
+            }
+        }
+    }
+    print a endl;
+    return 0;
+} # comments following main
+  # but prior to eof
+  # take that, anyone writing their own parser
+

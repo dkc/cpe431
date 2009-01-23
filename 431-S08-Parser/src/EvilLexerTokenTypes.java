@@ -1,0 +1,63 @@
+// $ANTLR 2.7.7 (20070330): "evil.g" -> "EvilParser.java"$
+
+
+public interface EvilLexerTokenTypes {
+	int EOF = 1;
+	int NULL_TREE_LOOKAHEAD = 3;
+	int STRUCT = 4;
+	int INT = 5;
+	int BOOL = 6;
+	int FUN = 7;
+	int VOID = 8;
+	int PRINT = 9;
+	int ENDL = 10;
+	int READ = 11;
+	int IF = 12;
+	int ELSE = 13;
+	int WHILE = 14;
+	int DELETE = 15;
+	int RETURN = 16;
+	int TRUE = 17;
+	int FALSE = 18;
+	int NEW = 19;
+	int NULL = 20;
+	int LBRACE = 21;
+	int RBRACE = 22;
+	int SEMI = 23;
+	int COMMA = 24;
+	int LPAREN = 25;
+	int RPAREN = 26;
+	int ASSIGN = 27;
+	int DOT = 28;
+	int AND = 29;
+	int OR = 30;
+	int EQ = 31;
+	int LT = 32;
+	int GT = 33;
+	int NE = 34;
+	int LE = 35;
+	int GE = 36;
+	int PLUS = 37;
+	int MINUS = 38;
+	int TIMES = 39;
+	int DIVIDE = 40;
+	int NOT = 41;
+	int ID = 42;
+	int INTEGER = 43;
+	int WS = 44;
+	int COMMENT = 45;
+	int PROGRAM = 46;
+	int TYPES = 47;
+	int TYPE = 48;
+	int DECLS = 49;
+	int FUNCS = 50;
+	int DECL = 51;
+	int DECLLIST = 52;
+	int PARAMS = 53;
+	int RETTYPE = 54;
+	int BLOCK = 55;
+	int STMTS = 56;
+	int INVOKE = 57;
+	int ARGS = 58;
+	int NEG = 59;
+}
