@@ -780,13 +780,10 @@ inputState.guessing--;
 		
 		exprnr();
 		exp1_AST = (AST)returnAST;
-		astFactory.addASTChild(currentAST, returnAST);
 		operator();
 		op_AST = (AST)returnAST;
-		astFactory.addASTChild(currentAST, returnAST);
 		exprnr();
 		exp2_AST = (AST)returnAST;
-		astFactory.addASTChild(currentAST, returnAST);
 		if ( inputState.guessing==0 ) {
 			binexp_AST = (AST)currentAST.root;
 			binexp_AST = (AST)astFactory.make( (new ASTArray(3)).add(op_AST).add(exp1_AST).add(exp2_AST));
@@ -795,7 +792,6 @@ inputState.guessing--;
 				binexp_AST.getFirstChild() : binexp_AST;
 			currentAST.advanceChildToEnd();
 		}
-		binexp_AST = (AST)currentAST.root;
 		returnAST = binexp_AST;
 	}
 	

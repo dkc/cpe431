@@ -160,7 +160,7 @@ stmt
 	| 	RETURN^ expr SEMI!
 	| 	IF^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE! (ELSE! LBRACE! stmtlist RBRACE!)?
 	| 	WHILE^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE!
-	|! 	FUNCTION name:ID LPAREN! params:paramlist RPAREN! LBRACE! body:stmtlist RBRACE!
+	|! 	FUNCTION name:ID params:paramlist LBRACE! body:stmtlist RBRACE!
 		{ #stmt = #(FUNCTION, #([FUNCTION_NAME, "FUNCTION_NAME"], #name), #params, #([FUNCTION_BODY, "FUNCTION_BODY"], #body)); }
 ;
 
@@ -192,11 +192,12 @@ expr
 ;
 
 exprfield
-	: exprnr DOT ID (LPAREN! arglist RPAREN!)?
+	: exprnr DOT ID (arglist)?
 ;
 
 binexp
-	: exprnr operator exprnr
+	:! 	exp1:exprnr op:operator exp2:exprnr
+		{ #binexp = #(op, exp1, exp2); }
 ;
 
 exprnr
@@ -208,22 +209,22 @@ exprnr
 	| ID
 	| s:STRING
 		{ #exprnr = #([STRING, "STRING"], #s); }
-	| LPAREN! expr RPAREN! (LPAREN! arglist RPAREN!)?
+	| LPAREN! expr RPAREN! (arglist)?
 	| NOT^ expr
-	| NEW^ ID (LPAREN! arglist RPAREN!)
+	| NEW^ ID arglist
 ;
 
 application
-	:! 	id:ID a:arglist
+	: 	id:ID a:arglist
 		{ #application = #([INVOKE, "INVOKE"], #id, #([ARGLIST, "ARGLIST"], #a)); }
 ;
 
 paramlist
-	: 	(ID (COMMA ID)*)?
+	: 	LPAREN! (ID (COMMA! ID)*)? RPAREN!
 ;
 
 arglist
-	:	(expr (COMMA expr)*)?
+	:	LPAREN! (expr (COMMA! expr)*)? RPAREN!
 ;
 
 operator
