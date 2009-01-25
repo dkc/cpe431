@@ -125,11 +125,19 @@ tokens
    INVOKE;
    ARGS;
    NEG;
+   ARGLIST;
+   FUNCTION_NAME;
+   FUNCTION_BODY;
 }
 
 /* the full program is a series of statements ("stmt"s); we'll allow blank programs */
 
 program
+	:	s:stmtlist
+		{ #program = #([PROGRAM,"PROGRAM"], #s); }
+;
+
+stmtlist
 	:	(stmt)*
 ;
 
@@ -146,18 +154,22 @@ program
  */
 
 stmt
-	: id:ID ASSIGN^ e:expr SEMI!
-	| expr (SEMI! | (DOT! ID ASSIGN! expr SEMI!))
-	| VAR ID ASSIGN! expr SEMI!
-	| RETURN expr
-	| IF LPAREN! expr RPAREN! LBRACE! (stmt)* RBRACE! (ELSE LBRACE! (stmt)* RBRACE!)?
-	| WHILE LPAREN! expr RPAREN! LBRACE! (stmt)* RBRACE!
-	| FUNCTION ID LPAREN! paramlist RPAREN! LBRACE! (stmt)* RBRACE!
+	: 	(ID ASSIGN) => stmtassign
+	| 	expr (SEMI! | (DOT! ID ASSIGN! expr SEMI!))
+	| 	VAR^ ID ASSIGN! expr SEMI!
+	| 	RETURN^ expr SEMI!
+	| 	IF^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE! (ELSE! LBRACE! stmtlist RBRACE!)?
+	| 	WHILE^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE!
+	|! 	FUNCTION name:ID LPAREN! params:paramlist RPAREN! LBRACE! body:stmtlist RBRACE!
+		{ #stmt = #(FUNCTION, #([FUNCTION_NAME, "FUNCTION_NAME"], #name), #params, #([FUNCTION_BODY, "FUNCTION_BODY"], #body)); }
 ;
 
+stmtassign
+	:	ID ASSIGN^ expr SEMI!
+;
  
 /* valid expressions:
- x _int_
+ * _int_
  * _float_
  * true
  * false
@@ -174,7 +186,17 @@ stmt
  */
 
 expr
-	: exprnr (DOT ID (LPAREN! arglist RPAREN!)? )?
+	: (exprnr DOT) => exprfield
+	| (exprnr operator) => binexp
+	| exprnr
+;
+
+exprfield
+	: exprnr DOT ID (LPAREN! arglist RPAREN!)?
+;
+
+binexp
+	: exprnr operator exprnr
 ;
 
 exprnr
@@ -182,21 +204,31 @@ exprnr
 	| FLOAT
 	| TRUE
 	| FALSE
+	| (ID arglist) => application
 	| ID
-	| STRING
+	| s:STRING
+		{ #exprnr = #([STRING, "STRING"], #s); }
 	| LPAREN! expr RPAREN! (LPAREN! arglist RPAREN!)?
-	| NOT expr
-	| NEW ID (LPAREN! arglist RPAREN!)
+	| NOT^ expr
+	| NEW^ ID (LPAREN! arglist RPAREN!)
+;
+
+application
+	:! 	id:ID a:arglist
+		{ #application = #([INVOKE, "INVOKE"], #id, #([ARGLIST, "ARGLIST"], #a)); }
 ;
 
 paramlist
-	:
+	: 	(ID (COMMA ID)*)?
 ;
 
 arglist
-	:
+	:	(expr (COMMA expr)*)?
 ;
 
+operator
+	: AND | OR | EQ | LT | GT | NE | LTE | GTE | PLUS | MINUS | TIMES | DIVIDE
+;
 
 /* program
    : STRING (STRING)*

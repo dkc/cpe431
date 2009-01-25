@@ -55,4 +55,7 @@ public interface FootleLexerTokenTypes {
 	int INVOKE = 52;
 	int ARGS = 53;
 	int NEG = 54;
+	int ARGLIST = 55;
+	int FUNCTION_NAME = 56;
+	int FUNCTION_BODY = 57;
 }
