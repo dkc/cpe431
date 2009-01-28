@@ -240,8 +240,15 @@ binexp
 ;
 
 binexplvl8
-	:	(binexplvl7 EQ) => binexplvl7 EQ^ binexplvl8
+	:!	(binexplvl7 l8op binexplvl7 l8op) => exp1:binexplvl7 op1:l8op exp2:binexplvl7 op2:l8op exp3:binexplvl8
+		{	#binexplvl8 = #(op2, #(op1, exp1, exp2), exp3); }
+	|!	(binexplvl7 l8op) => exp4:binexplvl7 op3:l8op exp5:binexplvl8
+		{	#binexplvl8 = #(op3, exp4, exp5); }
 	|	binexplvl7
+;
+
+l8op
+	:	EQ
 ;
 
 binexplvl7
