@@ -42,20 +42,9 @@ public interface FootleLexerTokenTypes {
 	int WS = 39;
 	int COMMENT = 40;
 	int PROGRAM = 41;
-	int TYPES = 42;
-	int TYPE = 43;
-	int DECLS = 44;
-	int FUNCS = 45;
-	int DECL = 46;
-	int DECLLIST = 47;
-	int PARAMS = 48;
-	int RETTYPE = 49;
-	int BLOCK = 50;
-	int STMTS = 51;
-	int INVOKE = 52;
-	int ARGS = 53;
-	int NEG = 54;
-	int ARGLIST = 55;
-	int FUNCTION_NAME = 56;
-	int FUNCTION_BODY = 57;
+	int INVOKE = 42;
+	int ARGUMENTS = 43;
+	int FUNCTION_NAME = 44;
+	int FUNCTION_BODY = 45;
+	int FIELD_LOOKUP = 46;
 }

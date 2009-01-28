@@ -47,7 +47,7 @@ GTE      :  ">="  ;
 PLUS     :  "+"   ;
 MINUS    :  "-"   ;
 TIMES    :  "*"   ;
-DIVIDE   :  "/"   ;
+DIVIDE	 :  "/"   ;
 
 
 ID options {testLiterals=true;}
@@ -112,29 +112,18 @@ options
 tokens
 {
    PROGRAM;
-   TYPES;
-   TYPE;
-   DECLS;
-   FUNCS;
-   DECL;
-   DECLLIST;
-   PARAMS;
-   RETTYPE;
-   BLOCK;
-   STMTS;
    INVOKE;
-   ARGS;
-   NEG;
-   ARGLIST;
+   ARGUMENTS;
    FUNCTION_NAME;
    FUNCTION_BODY;
+   FIELD_LOOKUP;
 }
 
 /* the full program is a series of statements ("stmt"s); we'll allow blank programs */
 
 program
 	:	s:stmtlist
-		{ #program = #([PROGRAM,"PROGRAM"], #s); }
+		{ #program = #([PROGRAM,"Program"], #s); }
 ;
 
 stmtlist
@@ -154,18 +143,33 @@ stmtlist
  */
 
 stmt
-	: 	(ID ASSIGN) => stmtassign
-	| 	expr (SEMI! | (DOT! ID ASSIGN! expr SEMI!))
-	| 	VAR^ ID ASSIGN! expr SEMI!
+	{System.out.println("stmt");}
+	: 	(identifier ASSIGN) => stmtassign
+		{	System.out.println("stmt:assignment");
+		}
+	| 	expr (SEMI! | (DOT! identifier ASSIGN! expr SEMI!))
+		{	System.out.println("stmt:expression");
+		}
+	| 	VAR^ identifier ASSIGN! expr SEMI!
+		{	System.out.println("stmt:var dec");
+		}
 	| 	RETURN^ expr SEMI!
+		{	System.out.println("stmt:return");
+		}
 	| 	IF^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE! (ELSE! LBRACE! stmtlist RBRACE!)?
+		{	System.out.println("stmt:if");
+		}
 	| 	WHILE^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE!
-	|! 	FUNCTION name:ID params:paramlist LBRACE! body:stmtlist RBRACE!
-		{ #stmt = #(FUNCTION, #([FUNCTION_NAME, "FUNCTION_NAME"], #name), #params, #([FUNCTION_BODY, "FUNCTION_BODY"], #body)); }
+		{	System.out.println("stmt:while");
+		}
+	|! 	FUNCTION name:identifier params:paramlist LBRACE! body:stmtlist RBRACE!
+		{	System.out.println("stmt:function dec");
+			#stmt = #(FUNCTION, #([FUNCTION_NAME, "Function Name"], #name), #params, #([FUNCTION_BODY, "Function Body"], #body));
+		}
 ;
 
 stmtassign
-	:	ID ASSIGN^ expr SEMI!
+	:	identifier ASSIGN^ expr SEMI!
 ;
  
 /* valid expressions:
@@ -191,48 +195,106 @@ expr
 	| exprnr
 ;
 
+/* this rule encompasses both straight field lookups and method calls--"Arguments" will be empty on a field lookup */
 exprfield
-	: exprnr DOT ID (arglist)?
+	:! 	exp:exprnr DOT id:identifier (a:arglist)?
+		{ #exprfield = #([FIELD_LOOKUP, "Field Lookup"], #exp, #id, #([ARGUMENTS, "Arguments"], #a)); }
 ;
 
-binexp
-	:! 	exp1:exprnr op:operator exp2:exprnr
-		{ #binexp = #(op, exp1, exp2); }
-;
-
+/* a list of non-LL recursive expressions separated from expr above to keep it from freaking out--thanks, LL parser */
 exprnr
 	: INT
 	| FLOAT
 	| TRUE
 	| FALSE
-	| (ID arglist) => application
-	| ID
+	| (identifier arglist) => application
+	| identifier
 	| s:STRING
-		{ #exprnr = #([STRING, "STRING"], #s); }
+		{ #exprnr = #([STRING, "String"], #s); }
 	| LPAREN! expr RPAREN! (arglist)?
 	| NOT^ expr
-	| NEW^ ID arglist
+	| NEW^ identifier arglist
 ;
 
+/* any function application falls under this rule, including built-ins */
 application
-	: 	id:ID a:arglist
-		{ #application = #([INVOKE, "INVOKE"], #id, #([ARGLIST, "ARGLIST"], #a)); }
+	:! 	id:identifier args:arglist
+		{ #application = #([INVOKE, "Invoke"], #id, #([ARGUMENTS, "Arguments"], #args)); }
 ;
 
+/* list of parameters in a function definition */
 paramlist
-	: 	LPAREN! (ID (COMMA! ID)*)? RPAREN!
+	: 	LPAREN! (identifier (COMMA! identifier)*)? RPAREN!
 ;
 
+/* list of arguments in an application */
 arglist
 	:	LPAREN! (expr (COMMA! expr)*)? RPAREN!
 ;
 
-operator
-	: AND | OR | EQ | LT | GT | NE | LTE | GTE | PLUS | MINUS | TIMES | DIVIDE
+/* all binary expressions are Here */
+
+binexp
+	:	binexplvl8
+		{System.out.println("binexp");}
 ;
 
-/* program
-   : STRING (STRING)*
-      { #program = #([ARGS,"ARGS"], #program); }
-   |! { #program = #([ARGS,"ARGS"]); }
-; */
+binexplvl8
+	:	(binexplvl7 EQ) => binexplvl7 EQ^ binexplvl8
+	|	binexplvl7
+;
+
+binexplvl7
+	:!	(binexplvl6 l7op binexplvl6 l7op) => exp1:binexplvl6 op1:l7op exp2:binexplvl6 op2:l7op exp3:binexplvl7
+		{	#binexplvl7 = #(op2, #(op1, exp1, exp2), exp3); }
+	|!	(binexplvl6 l7op) => exp4:binexplvl6 op3:l7op exp5:binexplvl7
+		{	#binexplvl7 = #(op3, exp4, exp5); }
+	|	binexplvl6
+;
+
+l7op
+	:	AND | OR
+;
+
+binexplvl6
+	:!	(binexplvl5 l6op binexplvl5 l6op) => exp1:binexplvl5 op1:l6op exp2:binexplvl5 op2:l6op exp3:binexplvl6
+		{	#binexplvl6 = #(op2, #(op1, exp1, exp2), exp3); }
+	|!	(binexplvl5 l6op) => exp4:binexplvl5 op3:l6op exp5:binexplvl6
+		{	#binexplvl6 = #(op3, exp4, exp5); }
+	|	binexplvl5
+;
+
+l6op
+	:	GT | GTE | LT | LTE
+;
+
+binexplvl5
+	:!	(binexplvl4 DIVIDE binexplvl4 DIVIDE) => exp1:binexplvl4 op1:l5op exp2:binexplvl4 op2:l5op exp3:binexplvl5
+		{	#binexplvl5 = #(op2, #(op1, exp1, exp2), exp3); }
+	|	(binexplvl4 DIVIDE) => binexplvl4 DIVIDE^ binexplvl5
+	|	binexplvl4
+;
+
+l5op
+	:	DIVIDE
+;
+
+binexplvl4
+	:	(binexplvl3 PLUS) => binexplvl3 PLUS^ binexplvl4
+	|	(binexplvl3 MINUS) => binexplvl3 MINUS^ binexplvl4
+	|	binexplvl3
+;
+
+binexplvl3
+	:	(exprnr TIMES) => exprnr TIMES^ binexplvl3
+	|	exprnr
+;
+
+operator
+	: 	AND | OR | EQ | LT | GT | NE | LTE | GTE | PLUS | MINUS | TIMES | DIVIDE
+;
+
+identifier
+	: 	id:ID
+		{ #identifier = #([ID,"Identifier"], id); }
+;
