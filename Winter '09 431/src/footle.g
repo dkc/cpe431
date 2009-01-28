@@ -269,9 +269,10 @@ l6op
 ;
 
 binexplvl5
-	:!	(binexplvl4 DIVIDE binexplvl4 DIVIDE) => exp1:binexplvl4 op1:l5op exp2:binexplvl4 op2:l5op exp3:binexplvl5
+	:!	(binexplvl4 l5op binexplvl4 l5op ) => exp1:binexplvl4 op1:l5op exp2:binexplvl4 op2:l5op exp3:binexplvl5
 		{	#binexplvl5 = #(op2, #(op1, exp1, exp2), exp3); }
-	|	(binexplvl4 DIVIDE) => binexplvl4 DIVIDE^ binexplvl5
+	|!	(binexplvl4 l5op) => exp4:binexplvl4 op3:l5op exp5:binexplvl5
+		{	#binexplvl5 = #(op3, exp4, exp5); }
 	|	binexplvl4
 ;
 
@@ -280,14 +281,27 @@ l5op
 ;
 
 binexplvl4
-	:	(binexplvl3 PLUS) => binexplvl3 PLUS^ binexplvl4
-	|	(binexplvl3 MINUS) => binexplvl3 MINUS^ binexplvl4
+	:!	(binexplvl3 l4op binexplvl3 l4op) => exp1:binexplvl3 op1:l4op exp2:binexplvl3 op2:l4op exp3:binexplvl4
+		{	#binexplvl4 = #(op2, #(op1, exp1, exp2), exp3); }
+	|!	(binexplvl3 l4op) => exp4:binexplvl3 op3:l4op exp5:binexplvl4
+		{	#binexplvl4 = #(op3, exp4, exp5); }
 	|	binexplvl3
 ;
 
+l4op
+	:	PLUS | MINUS
+;
+
 binexplvl3
-	:	(exprnr TIMES) => exprnr TIMES^ binexplvl3
+	:!	(exprnr l3op exprnr l3op ) => exp1:exprnr op1:l3op exp2:exprnr op2:l3op exp3:binexplvl3
+		{	#binexplvl3 = #(op2, #(op1, exp1, exp2), exp3); }
+	|!	(exprnr l3op) => exp4:exprnr op3:l3op exp5:binexplvl3
+		{	#binexplvl3 = #(op3, exp4, exp5); }
 	|	exprnr
+;
+
+l3op
+	:	TIMES
 ;
 
 operator

@@ -1,4 +1,4 @@
-5 >= 3;
+3 * 4 * 5;
 function odd(x) {
   if (x == 0) {
     return false;
