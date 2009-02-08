@@ -1,0 +1,89 @@
+this.name = 5;
+
+function Hero(name) {
+   this.name = name;
+   this.awesomeness = 9000;
+}
+function Villain(name) {
+   this.name = name;
+   this.nefariousness = 1000000;
+}
+function prompt() {
+   print("\nWhat will you do?");
+   var response = readLine();
+   print("");
+   return response;
+}
+function handleCommand(command, protagonist, antagonist) {
+   if (stringEqual?(command, "whoami")) {
+      print(stringAppend(stringAppend("You are ", protagonist.name), "."));
+      return 0;
+   }
+   if (stringEqual?(command, "attack")) {
+      print("You swing your sword or throw some punches or whatever.");
+      antagonist.nefariousness = antagonist.nefariousness - protagonist.awesomeness;
+      print(stringAppend(antagonist.name, " takes damage!"));
+      return 0;
+   }
+   if (stringEqual?(command, "awesomeness")) {
+      print("Your awesomeness:");
+      print(protagonist.awesomeness);
+      print("\nMan, you're so awesome.");
+      return 0;
+   }
+   if (stringEqual?(command, "scan")) {
+      print(stringAppend(antagonist.name, "'s nefariousness:"));
+      print(antagonist.nefariousness);
+      print(stringAppend("\n", stringAppend(antagonist.name, " eyes you menacingly.")));
+      return 0;
+   }
+   if (stringEqual?(command, "levelup")) {
+      print("(BEEP BOOP BEEP BOOP BEEP BOOP BOOP BEEP)\n");
+      protagonist.awesomeness = protagonist.awesomeness * 2;
+      print("Now you're twice as awesome!");
+      print(stringAppend(antagonist.name, " remains as nefarious as ever."));
+      return 0;
+   }
+   if (stringEqual?(command, "help")) {
+      print("Command      Description");
+      print("=======      ===========");
+      print("whoami       Print your name.");
+      print("attack       Attack the nefarious villain.");
+      print("awesomeness  See how awesome you are.");
+      print("scan         See how nefarious the villain is.");
+      print("levelup      Get more awesome.");
+      print("help         Print this menu.");
+      print("quit         Quit the game.\n");
+      return 0;
+   }
+   print("Nothing happens!\n");
+}
+function greet(protagonist, antagonist) {
+   print(stringAppend(stringAppend("You are ", protagonist.name), "."));
+   print(stringAppend(antagonist.name, " is punching babies and generally being not cool.\n"));
+   print("(Type help for instructions.)");
+}
+function victory(antagonist) {
+   print("");
+   print(stringAppend(antagonist.name, " is overpowered by your might and flees!"));
+   print("\nYou've saved the land from a most heinous villain!");
+   print("Tales of your awesomeness will be told for generations.\n");
+   print("Thanks for playing!\n");
+}
+function main(protagonist, antagonist) {
+   var hero = new Hero(protagonist);
+   var villain = new Villain(antagonist);
+   greet(hero, villain);
+   var command = prompt();
+   while(!stringEqual?(command, "quit")) {
+      handleCommand(command, hero, villain);
+      if (villain.nefariousness <= 0 || stringEqual?(command, "uuddlrlrba")) {
+         victory(villain);
+         command = "quit";
+      }
+      else {
+         command = prompt();
+      }
+   }
+}
+main("Dr. Clements", "Something Nefarious");"

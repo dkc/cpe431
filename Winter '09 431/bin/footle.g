@@ -111,11 +111,22 @@ options
 
 tokens
 {
+   CONST_INT;
+   CONST_FLOAT;
+   CONST_BOOLEAN;
+   CONST_IDENTIFIER;
+   IDENTIFIER;
+   BINOP;
+   IFF;
+   THENF;
+   ELSEF;
+   METHOD_CALL;
    PROGRAM;
    INVOKE;
    ARGUMENTS;
    FUNCTION_NAME;
    FUNCTION_BODY;
+   FUNCTION_COLLECTION;
    FIELD_LOOKUP;
 }
 
@@ -125,7 +136,6 @@ program
 	:	s:stmtlist
 		{ #program = #([PROGRAM,"Program"], #s); }
 ;
-
 stmtlist
 	:	(stmt)*
 ;
@@ -143,33 +153,30 @@ stmtlist
  */
 
 stmt
-	{System.out.println("stmt");}
 	: 	(identifier ASSIGN) => stmtassign
-		{	System.out.println("stmt:assignment");
-		}
-	| 	expr (SEMI! | (DOT! identifier ASSIGN! expr SEMI!))
-		{	System.out.println("stmt:expression");
-		}
+	| 	expr (SEMI! | (ASSIGN! expr SEMI!))
 	| 	VAR^ identifier ASSIGN! expr SEMI!
-		{	System.out.println("stmt:var dec");
-		}
 	| 	RETURN^ expr SEMI!
-		{	System.out.println("stmt:return");
-		}
-	| 	IF^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE! (ELSE! LBRACE! stmtlist RBRACE!)?
-		{	System.out.println("stmt:if");
-		}
+	|! 	IF LPAREN! exp1:expr RPAREN! LBRACE! s1:stmtlist RBRACE! (ELSE! LBRACE! s2:stmtlist RBRACE!)?
+		{ #stmt = #([IFF, "IF"], #exp1, #([THENF, "THEN"], s1), #([ELSEF, "ELSE"], s2)); }  
 	| 	WHILE^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE!
-		{	System.out.println("stmt:while");
-		}
-	|! 	FUNCTION name:identifier params:paramlist LBRACE! body:stmtlist RBRACE!
-		{	System.out.println("stmt:function dec");
-			#stmt = #(FUNCTION, #([FUNCTION_NAME, "Function Name"], #name), #params, #([FUNCTION_BODY, "Function Body"], #body));
-		}
+	|!	f:functions
+		{ #stmt = #([FUNCTION_COLLECTION, "Function Collection"], #f); }
 ;
 
 stmtassign
 	:	identifier ASSIGN^ expr SEMI!
+;
+ 
+functions
+	:	(function FUNCTION) => function functions
+	|	function
+;
+function
+	:! 	FUNCTION name:identifier params:paramlist LBRACE! body:stmtlist RBRACE!
+		{
+			#function = #(FUNCTION, #([FUNCTION_NAME, "Function Name"], #name), #params, #([FUNCTION_BODY, "Function Body"], #body));
+		}
 ;
  
 /* valid expressions:
@@ -188,55 +195,64 @@ stmtassign
  * _expr_ . _id_ ( _arglist_ )
  * new _id_ ( _arglist_ )
  */
-
 expr
 	: (exprnr DOT) => exprfield
 	| (exprnr operator) => binexp
 	| exprnr
 ;
 
-/* this rule encompasses both straight field lookups and method calls--"Arguments" will be empty on a field lookup */
 exprfield
-	:! 	exp:exprnr DOT id:identifier (a:arglist)?
-		{ #exprfield = #([FIELD_LOOKUP, "Field Lookup"], #exp, #id, #([ARGUMENTS, "Arguments"], #a)); }
+	:	(exprnr DOT identifier arglist) => exprmethodcall
+	|! 	exp:exprnr DOT id:identifier
+		{ #exprfield = #([FIELD_LOOKUP, "Field Lookup"], #exp, #id); }
+;
+/* working on handling nested method calls */
+exprmethodcall
+	:!	(exprnr DOT identifier arglist DOT) => expm:loneexprmethodcall DOT id1:identifier a1:arglist
+		{ #exprmethodcall  = #([METHOD_CALL, "Method Call"], #expm, #id1, #([ARGUMENTS, "Arguments"], #a1)); }
+	|	loneexprmethodcall
+;
+loneexprmethodcall
+	:!	exp:exprnr DOT id:identifier a:arglist
+		{ #loneexprmethodcall  = #([METHOD_CALL, "Method Call"], #exp, #id, #([ARGUMENTS, "Arguments"], #a)); }
 ;
 
 /* a list of non-LL recursive expressions separated from expr above to keep it from freaking out--thanks, LL parser */
 exprnr
-	: INT
-	| FLOAT
-	| TRUE
-	| FALSE
-	| (identifier arglist) => application
-	| identifier
-	| s:STRING
+	:!	i:INT
+		{ #exprnr = #([CONST_INT, "INT"], i); }
+	|!	f:FLOAT
+		{ #exprnr = #([CONST_FLOAT, "FLOAT"], f); }
+	|!	b1:TRUE
+		{ #exprnr = #([CONST_BOOLEAN, "BOOLEAN"], b1); }
+	|!	b2:FALSE
+		{ #exprnr = #([CONST_BOOLEAN, "BOOLEAN"], b2); }
+	|	(identifier arglist) => application
+	|!	id:identifier
+		{ #exprnr = #([CONST_IDENTIFIER, "IDENTIFIER"], id); }
+	|!	s:STRING
 		{ #exprnr = #([STRING, "String"], #s); }
-	| LPAREN! expr RPAREN! (arglist)?
-	| NOT^ expr
-	| NEW^ identifier arglist
+	|	LPAREN! expr RPAREN! (arglist)?
+	|	NOT^ expr
+	|	NEW^ identifier arglist
 ;
-
 /* any function application falls under this rule, including built-ins */
 application
 	:! 	id:identifier args:arglist
 		{ #application = #([INVOKE, "Invoke"], #id, #([ARGUMENTS, "Arguments"], #args)); }
 ;
-
 /* list of parameters in a function definition */
 paramlist
 	: 	LPAREN! (identifier (COMMA! identifier)*)? RPAREN!
 ;
-
 /* list of arguments in an application */
 arglist
 	:	LPAREN! (expr (COMMA! expr)*)? RPAREN!
 ;
 
 /* all binary expressions are Here */
-
 binexp
 	:	binexplvl8
-		{System.out.println("binexp");}
 ;
 
 binexplvl8
@@ -246,9 +262,9 @@ binexplvl8
 		{	#binexplvl8 = #(op3, exp4, exp5); }
 	|	binexplvl7
 ;
-
 l8op
-	:	EQ
+	:	op:EQ
+	{	#l8op = #([BINOP, "BINOP"], op); }
 ;
 
 binexplvl7
@@ -258,7 +274,6 @@ binexplvl7
 		{	#binexplvl7 = #(op3, exp4, exp5); }
 	|	binexplvl6
 ;
-
 l7op
 	:	AND | OR
 ;
@@ -270,7 +285,6 @@ binexplvl6
 		{	#binexplvl6 = #(op3, exp4, exp5); }
 	|	binexplvl5
 ;
-
 l6op
 	:	GT | GTE | LT | LTE
 ;
@@ -282,7 +296,6 @@ binexplvl5
 		{	#binexplvl5 = #(op3, exp4, exp5); }
 	|	binexplvl4
 ;
-
 l5op
 	:	DIVIDE
 ;
@@ -294,7 +307,6 @@ binexplvl4
 		{	#binexplvl4 = #(op3, exp4, exp5); }
 	|	binexplvl3
 ;
-
 l4op
 	:	PLUS | MINUS
 ;
@@ -304,9 +316,9 @@ binexplvl3
 		{	#binexplvl3 = #(op2, #(op1, exp1, exp2), exp3); }
 	|!	(exprnr l3op) => exp4:exprnr op3:l3op exp5:binexplvl3
 		{	#binexplvl3 = #(op3, exp4, exp5); }
+	|	(exprnr DOT) => exprfield
 	|	exprnr
 ;
-
 l3op
 	:	TIMES
 ;
@@ -314,8 +326,62 @@ l3op
 operator
 	: 	AND | OR | EQ | LT | GT | NE | LTE | GTE | PLUS | MINUS | TIMES | DIVIDE
 ;
-
 identifier
 	: 	id:ID
 		{ #identifier = #([ID,"Identifier"], id); }
+;
+/*
+ *	Tree Parser
+ */
+ 
+class FootleTreeParser extends TreeParser;
+
+{
+	private int regCtr = 0; /* regCtr should ALWAYS be the next unique register # */
+	
+    private void error (String errormsg)
+    {
+        System.out.println(errormsg);
+        System.exit(1);
+    }
+}
+
+validate
+    : 	#(PROGRAM stmt_list)
+;
+
+/* acceptable statements:
+ * _expr_ ;
+ x _id_ = _expr_ ;
+ * _expr_ . _id_ = _expr_ ;
+ * var _id_ = _expr_ ;
+ * return _expr_ ;
+ * if ( _expr_ ) { _stmt_* }
+ x if ( _expr_ ) { _stmt_* } else { _stmt_* }
+ * while ( _expr_ ) { _stmt_* }
+ * function _id_ ( _paramlist_ ) { _stmt_* }
+ */
+stmt_list
+	:	(stmt)*	
+;
+
+stmt
+	:	#(IFF cond=expr #(THENF stmt_list) #(ELSEF stmt_list))
+	|	#(ASSIGN ID assignValue=expr)
+	|	constRegister=expr
+;
+
+expr returns [String resultRegister = "uninitialized"]
+	:	#(BINOP lhs=expr rhs=expr)
+		{ 	resultRegister = regCtr++;
+			System.out.println("resultRegister");
+		}
+	|	const
+;
+
+const
+	:	#(CONST_INT i:INT)
+	|	#(CONST_FLOAT FLOAT)
+	|	CONST_BOOLEAN
+	|	CONST_IDENTIFIER
 ;

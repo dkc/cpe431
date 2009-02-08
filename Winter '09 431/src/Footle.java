@@ -34,6 +34,20 @@ public class Footle
       }
 
       // attempt to validate
+      
+      FootleTreeParser treeparser = new FootleTreeParser();
+      
+      /* ArrayList<evilStruct> structureDefs = new ArrayList<evilStruct>();
+      ArrayList<symbolBindings> bindingList = new ArrayList<symbolBindings>(); */
+      try
+      {
+    	  treeparser.validate(t);
+      }
+      catch(RecognitionException e)
+      {
+    	  System.out.println("I don't really know what a RecognitionException is, but here you go, I guess.");
+      }
+      
    }
 
    private static void error(String msg)

@@ -41,10 +41,21 @@ public interface FootleLexerTokenTypes {
 	int FLOAT_OR_INT = 38;
 	int WS = 39;
 	int COMMENT = 40;
-	int PROGRAM = 41;
-	int INVOKE = 42;
-	int ARGUMENTS = 43;
-	int FUNCTION_NAME = 44;
-	int FUNCTION_BODY = 45;
-	int FIELD_LOOKUP = 46;
+	int CONST_INT = 41;
+	int CONST_FLOAT = 42;
+	int CONST_BOOLEAN = 43;
+	int CONST_IDENTIFIER = 44;
+	int IDENTIFIER = 45;
+	int BINOP = 46;
+	int IFF = 47;
+	int THENF = 48;
+	int ELSEF = 49;
+	int METHOD_CALL = 50;
+	int PROGRAM = 51;
+	int INVOKE = 52;
+	int ARGUMENTS = 53;
+	int FUNCTION_NAME = 54;
+	int FUNCTION_BODY = 55;
+	int FUNCTION_COLLECTION = 56;
+	int FIELD_LOOKUP = 57;
 }
