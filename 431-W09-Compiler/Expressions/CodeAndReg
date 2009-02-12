@@ -1,0 +1,6 @@
+package Expressions;
+
+public interface Expression {
+	public CodeAndReg compile;
+	//public Value interp(Env env) throws ReturnException;
+}

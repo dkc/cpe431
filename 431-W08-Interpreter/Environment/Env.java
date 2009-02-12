@@ -5,12 +5,12 @@ import Values.Value;
 
 public class Env {
 	public String id;
-	public Value val;
+	//public int index;
 	Env prev;
 	
-	public Env(String id, Value val){
+	public Env(String id){//, String addr){
 		this.id = id;
-		this.val = val;
+		//this.addr = addr;
 		prev = null;
 	}
 	
@@ -22,30 +22,16 @@ public class Env {
 		return newhead;
 	}
 	
-	public static Env lookup(String id, Env env){
+	public static int lookup(String id, Env env){
 		Env v = env;
+		int index = 0;
 		while(v != null){
 			if(v.id.equals(id)){
-				return v;
+				return index;
 			}
 			v = v.prev;
+			index++;
 		}
 		return null;
-	}
-	
-	public boolean equals(Object o) {
-		if(o == null || !(o instanceof Env)) {
-			return false;
-		}
-		Env other = (Env)o;
-		if(other.id.equals(this.id) && other.val.storedValue() == this.val.storedValue()) {
-			if(this.prev == other.prev)
-				return true;
-			else if (this.prev == null || other.prev == null)
-				return false;
-			else
-				return this.prev.equals(other.prev);
-		}
-		return false;
 	}
 }

@@ -1,17 +1,18 @@
 package Expressions.Const;
 
 import Environment.Env;
-import Expressions.Expression;
-import Values.*;
 
-public class FInteger implements Expression{
+public class FInteger extends AbstractCodeAndReg{
 	public int number;
 	
-	public FInteger(int number){
+	public FInteger(int number,int regnum){
+		super(regnum);
 		this.number = number;
 	}
 	
-	public Value interp(Env env){
-		return new VInteger(number);
+	//public CodeAndReg compile(Env env,String scope){
+	public CodeAndReg compile(){
+		this.code = this.reg + " = add i32 0, " + (number << 2) + "\n";
+		return this;
 	}
 }

@@ -6,14 +6,13 @@ import Expressions.Expression;
 import Values.*;
 
 
-public class FFloat implements Expression{
+public class FFloat extends AbstractCodeAndReg{
 	public float number;
 	
-	public FFloat(float number){
+	public FFloat(float number,int regnum){
+		super(regnum);
+		//this is same as int for now
 		this.number = number;
-	}
-	
-	public Value interp(Env env){
-		return new VFloat(number);
+		this.code = this.reg + " = add i32 0, " + number
 	}
 }

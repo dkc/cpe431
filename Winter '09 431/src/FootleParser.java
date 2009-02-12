@@ -1110,7 +1110,7 @@ inputState.guessing--;
 			exp3_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				binexplvl8_AST = (AST)currentAST.root;
-					binexplvl8_AST = (AST)astFactory.make( (new ASTArray(3)).add(op2_AST).add((AST)astFactory.make( (new ASTArray(3)).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
+					binexplvl8_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op2_AST).add((AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
 				currentAST.root = binexplvl8_AST;
 				currentAST.child = binexplvl8_AST!=null &&binexplvl8_AST.getFirstChild()!=null ?
 					binexplvl8_AST.getFirstChild() : binexplvl8_AST;
@@ -1144,7 +1144,7 @@ inputState.guessing--;
 				exp5_AST = (AST)returnAST;
 				if ( inputState.guessing==0 ) {
 					binexplvl8_AST = (AST)currentAST.root;
-						binexplvl8_AST = (AST)astFactory.make( (new ASTArray(3)).add(op3_AST).add(exp4_AST).add(exp5_AST));
+						binexplvl8_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op3_AST).add(exp4_AST).add(exp5_AST));
 					currentAST.root = binexplvl8_AST;
 					currentAST.child = binexplvl8_AST!=null &&binexplvl8_AST.getFirstChild()!=null ?
 						binexplvl8_AST.getFirstChild() : binexplvl8_AST;
@@ -1209,7 +1209,7 @@ inputState.guessing--;
 			exp3_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				binexplvl7_AST = (AST)currentAST.root;
-					binexplvl7_AST = (AST)astFactory.make( (new ASTArray(3)).add(op2_AST).add((AST)astFactory.make( (new ASTArray(3)).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
+					binexplvl7_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op2_AST).add((AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
 				currentAST.root = binexplvl7_AST;
 				currentAST.child = binexplvl7_AST!=null &&binexplvl7_AST.getFirstChild()!=null ?
 					binexplvl7_AST.getFirstChild() : binexplvl7_AST;
@@ -1243,7 +1243,7 @@ inputState.guessing--;
 				exp5_AST = (AST)returnAST;
 				if ( inputState.guessing==0 ) {
 					binexplvl7_AST = (AST)currentAST.root;
-						binexplvl7_AST = (AST)astFactory.make( (new ASTArray(3)).add(op3_AST).add(exp4_AST).add(exp5_AST));
+						binexplvl7_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op3_AST).add(exp4_AST).add(exp5_AST));
 					currentAST.root = binexplvl7_AST;
 					currentAST.child = binexplvl7_AST!=null &&binexplvl7_AST.getFirstChild()!=null ?
 						binexplvl7_AST.getFirstChild() : binexplvl7_AST;
@@ -1274,14 +1274,6 @@ inputState.guessing--;
 		op_AST = astFactory.create(op);
 		astFactory.addASTChild(currentAST, op_AST);
 		match(EQ);
-		if ( inputState.guessing==0 ) {
-			l8op_AST = (AST)currentAST.root;
-				l8op_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(BINOP,"BINOP")).add(op_AST));
-			currentAST.root = l8op_AST;
-			currentAST.child = l8op_AST!=null &&l8op_AST.getFirstChild()!=null ?
-				l8op_AST.getFirstChild() : l8op_AST;
-			currentAST.advanceChildToEnd();
-		}
 		l8op_AST = (AST)currentAST.root;
 		returnAST = l8op_AST;
 	}
@@ -1332,7 +1324,7 @@ inputState.guessing--;
 			exp3_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				binexplvl6_AST = (AST)currentAST.root;
-					binexplvl6_AST = (AST)astFactory.make( (new ASTArray(3)).add(op2_AST).add((AST)astFactory.make( (new ASTArray(3)).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
+					binexplvl6_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op2_AST).add((AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
 				currentAST.root = binexplvl6_AST;
 				currentAST.child = binexplvl6_AST!=null &&binexplvl6_AST.getFirstChild()!=null ?
 					binexplvl6_AST.getFirstChild() : binexplvl6_AST;
@@ -1366,7 +1358,7 @@ inputState.guessing--;
 				exp5_AST = (AST)returnAST;
 				if ( inputState.guessing==0 ) {
 					binexplvl6_AST = (AST)currentAST.root;
-						binexplvl6_AST = (AST)astFactory.make( (new ASTArray(3)).add(op3_AST).add(exp4_AST).add(exp5_AST));
+						binexplvl6_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op3_AST).add(exp4_AST).add(exp5_AST));
 					currentAST.root = binexplvl6_AST;
 					currentAST.child = binexplvl6_AST!=null &&binexplvl6_AST.getFirstChild()!=null ?
 						binexplvl6_AST.getFirstChild() : binexplvl6_AST;
@@ -1464,7 +1456,7 @@ inputState.guessing--;
 			exp3_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				binexplvl5_AST = (AST)currentAST.root;
-					binexplvl5_AST = (AST)astFactory.make( (new ASTArray(3)).add(op2_AST).add((AST)astFactory.make( (new ASTArray(3)).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
+					binexplvl5_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op2_AST).add((AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
 				currentAST.root = binexplvl5_AST;
 				currentAST.child = binexplvl5_AST!=null &&binexplvl5_AST.getFirstChild()!=null ?
 					binexplvl5_AST.getFirstChild() : binexplvl5_AST;
@@ -1498,7 +1490,7 @@ inputState.guessing--;
 				exp5_AST = (AST)returnAST;
 				if ( inputState.guessing==0 ) {
 					binexplvl5_AST = (AST)currentAST.root;
-						binexplvl5_AST = (AST)astFactory.make( (new ASTArray(3)).add(op3_AST).add(exp4_AST).add(exp5_AST));
+						binexplvl5_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op3_AST).add(exp4_AST).add(exp5_AST));
 					currentAST.root = binexplvl5_AST;
 					currentAST.child = binexplvl5_AST!=null &&binexplvl5_AST.getFirstChild()!=null ?
 						binexplvl5_AST.getFirstChild() : binexplvl5_AST;
@@ -1614,7 +1606,7 @@ inputState.guessing--;
 			exp3_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				binexplvl4_AST = (AST)currentAST.root;
-					binexplvl4_AST = (AST)astFactory.make( (new ASTArray(3)).add(op2_AST).add((AST)astFactory.make( (new ASTArray(3)).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
+					binexplvl4_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op2_AST).add((AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
 				currentAST.root = binexplvl4_AST;
 				currentAST.child = binexplvl4_AST!=null &&binexplvl4_AST.getFirstChild()!=null ?
 					binexplvl4_AST.getFirstChild() : binexplvl4_AST;
@@ -1648,7 +1640,7 @@ inputState.guessing--;
 				exp5_AST = (AST)returnAST;
 				if ( inputState.guessing==0 ) {
 					binexplvl4_AST = (AST)currentAST.root;
-						binexplvl4_AST = (AST)astFactory.make( (new ASTArray(3)).add(op3_AST).add(exp4_AST).add(exp5_AST));
+						binexplvl4_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op3_AST).add(exp4_AST).add(exp5_AST));
 					currentAST.root = binexplvl4_AST;
 					currentAST.child = binexplvl4_AST!=null &&binexplvl4_AST.getFirstChild()!=null ?
 						binexplvl4_AST.getFirstChild() : binexplvl4_AST;
@@ -1727,7 +1719,7 @@ inputState.guessing--;
 			exp3_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				binexplvl3_AST = (AST)currentAST.root;
-					binexplvl3_AST = (AST)astFactory.make( (new ASTArray(3)).add(op2_AST).add((AST)astFactory.make( (new ASTArray(3)).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
+					binexplvl3_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op2_AST).add((AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op1_AST).add(exp1_AST).add(exp2_AST))).add(exp3_AST));
 				currentAST.root = binexplvl3_AST;
 				currentAST.child = binexplvl3_AST!=null &&binexplvl3_AST.getFirstChild()!=null ?
 					binexplvl3_AST.getFirstChild() : binexplvl3_AST;
@@ -1761,7 +1753,7 @@ inputState.guessing--;
 				exp5_AST = (AST)returnAST;
 				if ( inputState.guessing==0 ) {
 					binexplvl3_AST = (AST)currentAST.root;
-						binexplvl3_AST = (AST)astFactory.make( (new ASTArray(3)).add(op3_AST).add(exp4_AST).add(exp5_AST));
+						binexplvl3_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(BINOP,"BINOP")).add(op3_AST).add(exp4_AST).add(exp5_AST));
 					currentAST.root = binexplvl3_AST;
 					currentAST.child = binexplvl3_AST!=null &&binexplvl3_AST.getFirstChild()!=null ?
 						binexplvl3_AST.getFirstChild() : binexplvl3_AST;

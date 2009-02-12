@@ -1,4 +1,4 @@
-package Expressions;
+package CodeAndRegs;
 
 
 import Environment.Env;
@@ -6,86 +6,79 @@ import Environment.Env;
 import Values.*;
 
 
-public class Binop implements Expression{
+public class Binop extends AbstractCodeAndReg{
 	
-	public Expression left;
-	public Expression op;
-	public Expression right;
+	public CodeAndReg left;
+	public String op;
+	public CodeAndReg right;
+	public String type;
 	
-	public  Binop(Expression left, Expression op, Expression right){
+	public  Binop(CodeAndReg left, String op, CodeAndReg right,int regnum){
+		super(regnum);
 		this.left = left;
 		this.op = op;
 		this.right = right;
 	}
 	
-	public Value interp(Env env){
-		String exp;
-		Object lhs, rhs;
-		try {
-			exp = (String) (op.interp(env)).storedValue();
-			lhs = left.interp(env).storedValue();
-			rhs = right.interp(env).storedValue();
-		} catch (ReturnException e) {
-			System.err.println("You've got your Return in my BinOp! exiting");
-			System.exit(1);
-			return null;
+	public CodeAndReg compile(){
+		left.compile();
+		right.compile();
+		this.code = left.code + right.code;
+		
+		//type check
+		
+		
+		//bit shift right
+		this.code = this.code + "%lrshft" + regnum + " = " + left.reg + "\n"
+		"%rrshft" + regnum + " = " + right.reg + "\n";
+		if(exp.equals("+")){
+			this.type = "INTEGER";
+			this.code = this.code + "%shftans" + regnum + " = add i32 %lrshft" 
+			+ regnum + ", %rrshft" + regnum + "\n";
+		}else if(exp.equals("-")){
+			this.type = "INTEGER";
+			this.code = this.code + "%shftans" + regnum + " = sub i32 %lrshft" 
+			+ regnum + ", %rrshft" + regnum + "\n";
+		}else if(exp.equals("*")){
+			this.type = "INTEGER";
+			this.code = this.code + "%shftans" + regnum + " = mul i32 %lrshft" 
+			+ regnum + ", %rrshft" + regnum + "\n";
+		}else if(exp.equals("/")){
+			this.type = "INTEGER";
+			this.code = this.code + "%shftans" + regnum + " = udiv i32 %lrshft" 
+			+ regnum + ", %rrshft" + regnum + "\n";
+		}else if(exp.equals("and")){
+			this.type = "BOOLEAN";
+			this.code = this.code + "%shftans" + regnum + " = and i32 %lrshft" 
+			+ regnum + ", %rrshft" + regnum + "\n";
+		}else if(exp.equals("or")){
+			this.type = "BOOLEAN";
+			this.code = this.code + "%shftans" + regnum + " = or i32 %lrshft" 
+			+ regnum + ", %rrshft" + regnum + "\n";
+		}else if(exp.equals("not")){
+			this.type = "BOOLEAN";
+			this.code = this.code + "%shftans" + regnum + " = xor i32 %lrshft" 
+			+ regnum + ", 1\n";
+		}else if(exp.equals("==")){
+			
+		}else if(exp.equals(">")){
+			
+		}else if(exp.equals(">=")){
+			
+		}else if(exp.equals("<")){
+			
+		}else if(exp.equals("<=")){
+			
 		}
 		
-		if(((lhs instanceof Integer) || (lhs instanceof Float)) 
-				&& ((rhs instanceof Integer) || (rhs instanceof Float))){
-			if((lhs instanceof Float) || (rhs instanceof Float)){
-				if(lhs instanceof Integer){
-					lhs = new Float((Integer) lhs);
-				}else if(rhs instanceof Integer){
-					rhs = new Float((Integer) rhs);
-				}
-				if(exp.equals("+")){
-					return new VFloat((Float) lhs + (Float) rhs);
-				}else if(exp.equals("-")){
-					return new VFloat((Float) lhs - (Float) rhs);
-				}else if(exp.equals("*")){
-					return new VFloat((Float) lhs * (Float) rhs);
-				}else if(exp.equals("/")){
-					return new VFloat((Float) lhs / (Float) rhs);
-				}
-			}else{//both int
-				if(exp.equals("+")){
-					return new VInteger((Integer) lhs + (Integer) rhs);
-				}else if(exp.equals("-")){
-					return new VInteger((Integer) lhs - (Integer) rhs);
-				}else if(exp.equals("*")){
-					return new VInteger((Integer) lhs * (Integer) rhs);
-				}else if(exp.equals("/")){
-					return new VInteger((Integer) lhs / (Integer) rhs);
-				}
-			}
-		}else if((lhs instanceof Boolean) || (rhs instanceof Boolean)){
-			if(exp.equals("and")){
-				return new VBoolean((Boolean) lhs && (Boolean) rhs);
-			}else if(exp.equals("or")){
-				return new VBoolean((Boolean) lhs || (Boolean) rhs);
-			}else if(exp.equals("not")){
-				return new VBoolean(!(Boolean)lhs);
-			}
-		}else if((lhs instanceof String) && (rhs instanceof String)){
-			if(exp.equals("string=?")){
-				return new VBoolean(((String)lhs).equals(rhs));
-			}else if(exp.equals("string<?")){
-				return new VBoolean(((String)lhs).compareTo((String)rhs) < 0);
-			}
+		//bit shift answer left
+		this.code = this.code + this.reg + " = $shftans" + regnum + "\n";
+		
+		//add tag
+		if(this.type == "BOOLEAN"){//add 2 for the tag
+			this.code = this.code + this.reg + " = add i32 , 2" + this.reg + "\n";
 		}
 		
-		if(exp.equals("==")){
-			if(lhs instanceof CObject || lhs instanceof PObject || lhs instanceof SObject) /* pointer equals */
-				return new VBoolean(lhs == rhs);
-			else /* standard equals */
-				return new VBoolean(lhs.equals(rhs));
-		}else{
-			System.err.println("binop with non numeric exp");
-		}
-
-		System.err.println("tragic failure in binop: " + lhs.getClass() + " " + exp + " " + rhs.getClass());
-		System.exit(1);
-		return null;
+		return this;
 	}
 }

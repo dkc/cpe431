@@ -257,21 +257,20 @@ binexp
 
 binexplvl8
 	:!	(binexplvl7 l8op binexplvl7 l8op) => exp1:binexplvl7 op1:l8op exp2:binexplvl7 op2:l8op exp3:binexplvl8
-		{	#binexplvl8 = #(op2, #(op1, exp1, exp2), exp3); }
+		{	#binexplvl8 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
 	|!	(binexplvl7 l8op) => exp4:binexplvl7 op3:l8op exp5:binexplvl8
-		{	#binexplvl8 = #(op3, exp4, exp5); }
+		{	#binexplvl8 = #([BINOP, "BINOP"], op3, exp4, exp5); }
 	|	binexplvl7
 ;
 l8op
 	:	op:EQ
-	{	#l8op = #([BINOP, "BINOP"], op); }
 ;
 
 binexplvl7
 	:!	(binexplvl6 l7op binexplvl6 l7op) => exp1:binexplvl6 op1:l7op exp2:binexplvl6 op2:l7op exp3:binexplvl7
-		{	#binexplvl7 = #(op2, #(op1, exp1, exp2), exp3); }
+		{	#binexplvl7 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
 	|!	(binexplvl6 l7op) => exp4:binexplvl6 op3:l7op exp5:binexplvl7
-		{	#binexplvl7 = #(op3, exp4, exp5); }
+		{	#binexplvl7 = #([BINOP, "BINOP"], op3, exp4, exp5); }
 	|	binexplvl6
 ;
 l7op
@@ -280,9 +279,9 @@ l7op
 
 binexplvl6
 	:!	(binexplvl5 l6op binexplvl5 l6op) => exp1:binexplvl5 op1:l6op exp2:binexplvl5 op2:l6op exp3:binexplvl6
-		{	#binexplvl6 = #(op2, #(op1, exp1, exp2), exp3); }
+		{	#binexplvl6 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
 	|!	(binexplvl5 l6op) => exp4:binexplvl5 op3:l6op exp5:binexplvl6
-		{	#binexplvl6 = #(op3, exp4, exp5); }
+		{	#binexplvl6 = #([BINOP, "BINOP"], op3, exp4, exp5); }
 	|	binexplvl5
 ;
 l6op
@@ -291,9 +290,9 @@ l6op
 
 binexplvl5
 	:!	(binexplvl4 l5op binexplvl4 l5op ) => exp1:binexplvl4 op1:l5op exp2:binexplvl4 op2:l5op exp3:binexplvl5
-		{	#binexplvl5 = #(op2, #(op1, exp1, exp2), exp3); }
+		{	#binexplvl5 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
 	|!	(binexplvl4 l5op) => exp4:binexplvl4 op3:l5op exp5:binexplvl5
-		{	#binexplvl5 = #(op3, exp4, exp5); }
+		{	#binexplvl5 = #([BINOP, "BINOP"], op3, exp4, exp5); }
 	|	binexplvl4
 ;
 l5op
@@ -302,9 +301,9 @@ l5op
 
 binexplvl4
 	:!	(binexplvl3 l4op binexplvl3 l4op) => exp1:binexplvl3 op1:l4op exp2:binexplvl3 op2:l4op exp3:binexplvl4
-		{	#binexplvl4 = #(op2, #(op1, exp1, exp2), exp3); }
+		{	#binexplvl4 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
 	|!	(binexplvl3 l4op) => exp4:binexplvl3 op3:l4op exp5:binexplvl4
-		{	#binexplvl4 = #(op3, exp4, exp5); }
+		{	#binexplvl4 = #([BINOP, "BINOP"], op3, exp4, exp5); }
 	|	binexplvl3
 ;
 l4op
@@ -313,9 +312,9 @@ l4op
 
 binexplvl3
 	:!	(exprnr l3op exprnr l3op ) => exp1:exprnr op1:l3op exp2:exprnr op2:l3op exp3:binexplvl3
-		{	#binexplvl3 = #(op2, #(op1, exp1, exp2), exp3); }
+		{	#binexplvl3 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
 	|!	(exprnr l3op) => exp4:exprnr op3:l3op exp5:binexplvl3
-		{	#binexplvl3 = #(op3, exp4, exp5); }
+		{	#binexplvl3 = #([BINOP, "BINOP"], op3, exp4, exp5); }
 	|	(exprnr DOT) => exprfield
 	|	exprnr
 ;
@@ -371,9 +370,9 @@ stmt_list
 ;
 
 stmt
-	:	#(IFF cond=expr #(THENF stmt_list) #(ELSEF stmt_list))
-	|	#(ASSIGN ID assignValue=expr)
-	|	constRegister=expr
+	:	#(IFF cond:expr #(THENF stmt_list) #(ELSEF stmt_list))
+	|	#(ASSIGN ID assignValue:expr)
+	|	constRegister:expr
 ;
 
 expr returns [String resultRegister = "uninitialized"]
@@ -387,10 +386,14 @@ expr returns [String resultRegister = "uninitialized"]
 		resultRegister = regCtr++;
 		System.out.println("resultRegister");
 	}
-	|	const
+	:	#(BINOP lhs:expr rhs:expr)
+		{ 	resultRegister = "" + regCtr++;
+			System.out.println(resultRegister);
+		}
+	|	const_val
 ;
 
-const
+const_val
 	:	#(CONST_INT i:INT)
 	|	#(CONST_FLOAT FLOAT)
 	|	CONST_BOOLEAN
