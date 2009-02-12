@@ -338,6 +338,8 @@ class FootleTreeParser extends TreeParser;
 
 {
 	private int regCtr = 0; /* regCtr should ALWAYS be the next unique register # */
+	//open fd here
+	//create unique function incrementer
 	
     private void error (String errormsg)
     {
@@ -348,6 +350,9 @@ class FootleTreeParser extends TreeParser;
 
 validate
     : 	#(PROGRAM stmt_list)
+    {
+    	//close fd here, after tree parse
+    }
 ;
 
 /* acceptable statements:
@@ -372,10 +377,16 @@ stmt
 ;
 
 expr returns [String resultRegister = "uninitialized"]
-	:	#(BINOP lhs=expr rhs=expr)
-		{ 	resultRegister = regCtr++;
+	:	#(BINOP AND lhs=expr rhs=expr)
+		{ 	
+			resultRegister = regCtr++;
 			System.out.println("resultRegister");
 		}
+	:	#(BINOP OR lhs=expr rhs=expr)
+	{ 	
+		resultRegister = regCtr++;
+		System.out.println("resultRegister");
+	}
 	|	const
 ;
 
@@ -383,5 +394,9 @@ const
 	:	#(CONST_INT i:INT)
 	|	#(CONST_FLOAT FLOAT)
 	|	CONST_BOOLEAN
+		{
+			System.out.println("ret i32 2");//0 true
+			System.out.println("ret i32 6");//1 false
+		}
 	|	CONST_IDENTIFIER
 ;

@@ -1,0 +1,12 @@
+Our interpreter is written in Java and developed haphazardly from the interfaces
+we initially built to represent the language's forms of data (values being
+Values, expressions being Expression objects and environments being Env
+objects). Despite our piecemeal approaches to planning and test cases we
+encountered much less trouble than the other groups reported having--we ended
+up building the core expressions dealing with the environment and the values and
+primitives separately but with just enough communication that merging the two
+pieces was a pain-free process. We lost a few hours of work at the end doing
+that merge, implementing return and refactoring out some poor early design
+decisions that caused the code to balloon in size and complexity but all in all
+the project went quite smoothly. Lesson learned on working with a CVS from the
+very start and writing test cases up front, though!
