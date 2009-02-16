@@ -1,5 +1,0 @@
-function f(x,y,z)  {x+y-z;}
-var a = 1 == (11-10);
-if(a && true)
-{ print (f (3,2,1)); }
-else { print ("no") ; }
