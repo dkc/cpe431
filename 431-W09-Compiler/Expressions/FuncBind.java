@@ -3,20 +3,20 @@ package Expressions;
 import java.util.ArrayList;
 
 import Environment.Env;
-import Values.*;
 
-public class FuncBind implements Expression {
+public class FuncBind extends AbstractCodeAndReg {
 	public ArrayList<FuncDec> funs;
-	public Expression body;
+	public CodeAndReg body;
 
 	
-	public FuncBind(ArrayList<FuncDec> funs, Expression body){
+	public FuncBind(ArrayList<FuncDec> funs, CodeAndReg body,int regnum){
+		super(regnum);
 		this.funs = funs;
 		this.body = body;
 	}
 	
 	@Override
-	public Value interp(Env env) {
+	public CodeAndReg compile(Env env) {
 		Env local = env;
 		for(int i = 0; i < funs.size(); i++){
 			local = Env.add(new Env(funs.get(i).name, null),local); //this might be dangerous.

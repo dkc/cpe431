@@ -1,28 +1,33 @@
 package Expressions;
 
 import Environment.Env;
-import Values.*;
 
-public class VarMut implements Expression{
+public class VarMut extends AbstractCodeAndReg{
 	String id;
-	Expression newVal;
+	CodeAndReg newVal;
 	
-	public VarMut(String id, Expression newVal){
+	public VarMut(String id, CodeAndReg newVal,int regnum){
+		super(regnum);
 		this.id = id;
 		this.newVal = newVal;
 	}
 	
-	public Value interp(Env env) {
-		Env v = Env.lookup(this.id, env);
-		Value val;
-		try {
-			val = newVal.interp(env);
-			v.val = val;
-			return val;
-		} catch (ReturnException e) {
+	public CodeAndReg compile(Env env) {
+		//are we actually changin mem or just adding a new binding for same id?
+		int index = Env.lookup(this.id, env);
+		//try {
+			this.code.addAll(newVal.compile(env).getCode());
+			//TODO load val to eframe
+			
+			
+			//store to ret reg
+			this.code.add(this.reg + " = add i32 0, " + newVal.getReg() + "\n");
+			
+			return this;
+		/*} catch (ReturnException e) {
 			System.err.println("return in varmut; exiting");
 			System.exit(1);
 			return null;
-		}
+		}*/
 	}
 }

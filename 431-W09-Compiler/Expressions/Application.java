@@ -5,43 +5,75 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import Environment.Env;
+import Expressions.Const.FVoid;
 import Expressions.FuncExp.BOp;
 import Expressions.FuncExp.UOp;
-import Values.*;
 
-public class Application implements Expression{
-	Expression function;
-	ArrayList<Expression> args;
+public class Application extends AbstractCodeAndReg{
+	CodeAndReg function;
+	ArrayList<CodeAndReg> args;
 	
-	public Application(Expression function, ArrayList<Expression> args){
+	public Application(CodeAndReg function, ArrayList<CodeAndReg> args, int regnum){
+		super(regnum);
 		this.function = function;
 		this.args = args;
 	}
 	
-	public Value interp(Env env) {
-		Value v = null;
+	public Env staticPass(Env env){
+		//new scope ?
+		if(this.function instanceof FuncDec){
+		FuncDec fdec = (FuncDec) this.function;
+		fdec.staticPass(env);
+		for(int i = 0;i < args.size();i++){
+			if(i == 1){
+				//TODO set regnum
+				env.setNewScope(-1);
+			}
+			fdec.env = Env.add(new Env(fdec.params.get(i)), fdec.env);
+		}
+		}
+		return env;
+	}
+	
+	public CodeAndReg compile(Env env) {
+		//Value v = null;
 		try {
-			v = function.interp(env);
+			this.code.addAll(function.compile(env).getCode());
 		} catch (ReturnException e) {
 			System.err.println("Return is not a valid application; exiting");
 		}
 		
-		if(v instanceof VClosure){
-			VClosure clos = (VClosure) v;
-			Value vargs;
+		if(function instanceof FuncDec){
+			FuncDec clos = (FuncDec) function;
+			//CodeAndReg vargs;
 			for(int i = 0;i < args.size();i++){
 				try {
-					vargs = args.get(i).interp(env);
+					//vargs = args.get(i).interp(env);
+					//compile args
+					this.code.addAll(args.get(i).compile(env).getCode());
+					
+					
+					
 				} catch (ReturnException e) {
 					System.err.println("Return used in a closure argument--exiting...");
 					System.exit(1);
 					return null;
 				}
-				clos.env = Env.add(new Env(clos.params.get(i), vargs), clos.env);
+				//TODO add code to store from arg to env
+				
+				
+				//clos.env = Env.add(new Env(clos.params.get(i), vargs), clos.env);
 			}
 			try {
-				clos.body.interp(clos.env);
-				return new VVoid(); /* function did not return a value */
+				//clos.body.interp(clos.env);
+				//add func dec, is this the right place?
+				this.code.addAll(clos.body.compile(env).getCode());
+				
+				//TODO Dipatch function
+				
+				
+				//TODO regnum?
+				return new FVoid(-1).compile(env); /* function did not return a value */
 				
 			} catch (ReturnException e) { /* when functions do return values, we catch their custom ReturnException */
 				return e.storedContainer;
@@ -70,7 +102,7 @@ public class Application implements Expression{
 					return null;
 				}
 			} else if(args.size() == 2) { /* should be a binary operation */
-				BOp primitive = new BOp((String)v.storedValue()); /* expression representing the primitive func */
+				BOp primitive = new BOp((String)v.storedValue()); /* CodeAndReg representing the primitive func */
 				BinaryOperation binaryOperation = new BinaryOperation(args.get(0), primitive, args.get(1));
 				return binaryOperation.interp(env);
 			} else if(args.size() == 3) { /* should be substring; handled inline */
@@ -82,7 +114,7 @@ public class Application implements Expression{
 						String substring = targetString.substring(startIndex.intValue(), endIndex.intValue());
 						return new SObject(substring,null);
 					} catch (ReturnException e) {
-						System.err.println("A return expression provided to substring? Aww, you *shouldn't* have. EXITING");
+						System.err.println("A return CodeAndReg provided to substring? Aww, you *shouldn't* have. EXITING");
 						System.exit(1);
 						return null;
 					}

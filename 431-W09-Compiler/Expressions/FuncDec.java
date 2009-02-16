@@ -1,21 +1,25 @@
 package Expressions;
 
 import java.util.ArrayList;
-import Values.*;
 import Environment.Env;
 
-public class FuncDec implements Expression{
+public class FuncDec extends AbstractCodeAndReg{
 	public String name;
 	public ArrayList<String> params;
-	public Expression body;
+	public CodeAndReg body;
+	public Env env;
 	
-	public FuncDec(String name, ArrayList<String> params, Expression body){
+	public FuncDec(String name, ArrayList<String> params, CodeAndReg body,int regnum){
+		super(regnum);
 		this.name = name;
 		this.params = params;
 		this.body = body;
 	}
 	
-	public Value interp(Env env){
-		return new VClosure(params, body, env);
+	public void staticPass(Env env){
+		this.env = env;
+		//TODO regnum
+		Env newScope = new Env(-1);
+		this.env = Env.addScope(env, newScope);
 	}
 }

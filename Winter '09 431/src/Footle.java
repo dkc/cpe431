@@ -1,3 +1,5 @@
+import Environment.Env;
+import Expressions.CodeAndReg;
 import antlr.*;
 import antlr.collections.*;
 import antlr.debug.misc.ASTFrame;
@@ -35,19 +37,66 @@ public class Footle
 
       // attempt to validate
       
+      CodeAndReg compiledCode = null;
       FootleTreeParser treeparser = new FootleTreeParser();
       
       /* ArrayList<evilStruct> structureDefs = new ArrayList<evilStruct>();
       ArrayList<symbolBindings> bindingList = new ArrayList<symbolBindings>(); */
       try
       {
-    	  treeparser.validate(t);
+    	  compiledCode = treeparser.validate(t);
       }
       catch(RecognitionException e)
       {
     	  System.out.println("I don't really know what a RecognitionException is, but here you go, I guess.");
       }
       
+      //Static Pass initializes env
+      //TODO setup regnum
+      Env env = new Env(-1);
+      compiledCode.staticPass(env);
+      
+      //compile creates llvm code
+      compiledCode.compile(env);
+      
+      //write output
+      writeLLVM(compiledCode, env);
+      
+   }
+   
+   private static void writeLLVM(CodeAndReg compiledCode, Env env){
+	   
+	   
+	   
+	   ArrayList<String> code = compiledCode.code;
+	      Writer output = null;
+	      try{
+	      output = new BufferedWriter(new FileWriter("llvm-code.s"));
+	      }catch(Exception e){
+	    	  error("Could not create and open llvm-code.s for writing");
+	      }
+	      
+	      try{
+	    	  //output beginning of main
+	    	  output.write("define i32 @llvm_fun(){\n");
+	   	   	  output.write("%eframe = type{%eframe*, i32, [ 0 x i32 ]}\n");
+	   	   	  output.write(env.getCurrentScope() + " = malloc { %eframe*, i32, [ " + env.ids.size() +
+	   	   	  " x i32 ] }\n");
+	    	  
+	    	  for(String line : code){
+	    		  output.write(line);
+	  		}
+	    	  //output return from main
+	    	  output.write("ret i32 " + compiledCode.getReg() + "\n");  
+	      }catch(Exception e){
+	    	  error("Could not write output to file llvm-code.s");
+	      }
+	      
+	      try{
+	      output.close();
+	      }catch(Exception e){
+	    	  error("Could not close llvm-code.s");
+	      }
    }
 
    private static void error(String msg)

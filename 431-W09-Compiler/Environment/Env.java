@@ -1,39 +1,65 @@
 package Environment;
 
-import Values.PObject;
-import Values.Value;
+import java.util.ArrayList;
 
 public class Env {
-	public String id;
-	public Value val;
+	private String scopeReg;
+//	public String id;
+	//public Value val;
+	private ArrayList<String> ids;
 	Env prev;
 	
-	public Env(String id, Value val){
-		this.id = id;
-		this.val = val;
+	public Env(int regnum){
+		//this.id = id;
+		//this.val = val;
+		this.ids = new ArrayList<String>();
+		this.scopeReg = "%scoperegr" + regnum;
 		prev = null;
 	}
 	
-	public static Env add(Env newhead, Env oldhead){
-		if(oldhead == null){
-			return newhead;
-		}
-		newhead.prev = oldhead;
-		return newhead;
+	public static Env addScope(Env newScope, Env oldScope){
+		newScope.prev = oldScope;
+		return newScope;
 	}
 	
-	public static Env lookup(String id, Env env){
+	public String getCurrentScope(){
+		return this.scopeReg;
+	}
+	
+	public void add(String id){
+		//if(env == null){
+			//return newhead;
+		//}
+		//newhead.prev = oldhead;
+		//newhead.scopeReg = oldhead.scopeReg;
+		//return newhead;
+		ids.add(id);
+	}
+	
+	public static RegAndIndex lookup(String id, Env env){
 		Env v = env;
+		int index = 0;
+		int i = 0;
 		while(v != null){
-			if(v.id.equals(id)){
-				return v;
+			for(index = 0;index < v.ids.size();index++){
+				if(v.ids.get(index).equals(id)){
+					RegAndIndex retVal = new RegAndIndex();
+					retVal.index = index;
+					if(i == 0){
+						retVal.reg = env.scopeReg;
+					}else{//TODO val is in higher scope
+						
+					}
+					return retVal;
+				}
 			}
+			i++;
 			v = v.prev;
 		}
 		return null;
 	}
 	
-	public boolean equals(Object o) {
+	/*public boolean equals(Object o) {
 		if(o == null || !(o instanceof Env)) {
 			return false;
 		}
@@ -47,5 +73,5 @@ public class Env {
 				return this.prev.equals(other.prev);
 		}
 		return false;
-	}
+	}*/
 }

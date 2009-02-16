@@ -1,17 +1,19 @@
 package Expressions.Const;
 
 import Environment.Env;
-import Expressions.Expression;
-import Values.*;
-public class FString implements Expression{
+import Expressions.AbstractCodeAndReg;
+
+public class FString extends AbstractCodeAndReg{
 	String s;
 	
-	public FString(String s){
+	public FString(String s,int regnum){
+		super(regnum);
 		this.s = s;
 	}
 	
-	public Value interp(Env env){
+	//TODO compile!
+	/*public Value interp(Env env){
 		Env slots = null;
 		return new SObject(s,slots);
-	}
+	}*/
 }

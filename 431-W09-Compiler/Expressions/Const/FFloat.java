@@ -2,8 +2,8 @@ package Expressions.Const;
 
 
 import Environment.Env;
-import Expressions.Expression;
-import Values.*;
+import Expressions.AbstractCodeAndReg;
+import Expressions.CodeAndReg;
 
 
 public class FFloat extends AbstractCodeAndReg{
@@ -11,8 +11,12 @@ public class FFloat extends AbstractCodeAndReg{
 	
 	public FFloat(float number,int regnum){
 		super(regnum);
-		//this is same as int for now
 		this.number = number;
-		this.code = this.reg + " = add i32 0, " + number
+	}
+	
+	public CodeAndReg compile(Env env){
+		//TODO this is same as int for now
+		this.code.add(this.reg + " = add i32 0, " + number + "\n");
+		return this;
 	}
 }
