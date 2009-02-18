@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="Expressions/Application.java|Expressions/FieldLookup.java|Expressions/FieldMut.java|Expressions/FuncBind.java|Expressions/MethodCall.java|Expressions/NewObj.java|Expressions/UnaryOperation.java|Expressions/VarMut.java|Expressions/WhileExp.java|Expressions/FuncExp/BOp.java|Expressions/FuncExp/MathOp.java|Expressions/FuncExp/UnaryOp.java|Expressions/FuncExp/UOp.java|Values/VClosure.java|Expressions/Objects/CObjectExp.java|Expressions/Objects/FObjectExp.java|Expressions/Objects/PObjectExp.java|Expressions/Objects/SObjectExp.java|Values/CObject.java|Expressions/BinaryOperation.java" kind="src" path="src"/>
+	<classpathentry excluding="Expressions/NewObj.java|Expressions/FuncExp/BOp.java|Expressions/FuncExp/MathOp.java|Expressions/FuncExp/UnaryOp.java|Expressions/FuncExp/UOp.java|Values/VClosure.java|Expressions/Objects/CObjectExp.java|Expressions/Objects/FObjectExp.java|Expressions/Objects/PObjectExp.java|Expressions/Objects/SObjectExp.java|Values/CObject.java|Expressions/FuncBind.java|Expressions/FieldLookup.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="src/runtime-2008-03-13.12.jar"/>
 	<classpathentry kind="lib" path="src/stringtemplate-3.1b1.jar"/>

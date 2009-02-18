@@ -8,7 +8,6 @@ public class FuncBind extends AbstractCodeAndReg {
 	public ArrayList<FuncDec> funs;
 	public CodeAndReg body;
 
-	
 	public FuncBind(ArrayList<FuncDec> funs, CodeAndReg body,int regnum){
 		super(regnum);
 		this.funs = funs;
