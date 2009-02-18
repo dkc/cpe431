@@ -403,7 +403,7 @@ stmt returns [CodeAndReg stmtResult = null]
 		}
 	|	#(ASSIGN #(CONST_IDENTIFIER id:ID) exprResult=expr)
 		{	/* binding to variables; VarMuts should always work if the static pass determines use before initialization */
-			// stmtResult = new VarMut(id.toString(), exprResult);
+			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
 	|	stmtResult=expr
 		{ 	/* is this right? pretty sure we don't need more encapsulation */
@@ -435,8 +435,8 @@ expr returns [CodeAndReg result = null]
 }
 	:	result=binop
 	|	result=const_val
-	|	NOT expression=expr
-		{	/* need to look up how the interpreter represents the unary "not" again--as an application with one argument, probably */
+	|	#(NOT expression=expr)
+		{	result = new UnaryOperation("not", expression, nextUniqueRegisterId++);
 		}
 	|	FIELD_LOOKUP expression=expr #(CONST_IDENTIFIER fieldId:ID)
 		{	
@@ -449,43 +449,42 @@ expr returns [CodeAndReg result = null]
 binop returns [CodeAndReg resultRegister = null]
 {
 	CodeAndReg lhs, rhs;
-	// BinaryOperation bin;
 }
 	:	(#(BINOP AND expr expr)) => #(BINOP AND lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "&&", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "&&", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP OR expr expr)) => #(BINOP OR lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "||", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "||", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP EQ expr expr)) => #(BINOP EQ lhs=expr rhs=expr)
-		{	// bin = new BinaryOperation(lhs, "==", rhs);
+		{	resultRegister = new BinaryOperation(lhs, "==", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP LT expr expr)) => #(BINOP LT lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "<", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "<", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP GT expr expr)) => #(BINOP GT lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, ">", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, ">", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP NE expr expr)) => #(BINOP NE lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "!=", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "!=", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP LTE expr expr)) => #(BINOP LTE lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "<=", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "<=", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP GTE expr expr)) => #(BINOP GTE lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, ">=", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, ">=", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP PLUS expr expr)) => #(BINOP PLUS lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "+", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "+", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP MINUS expr expr)) => #(BINOP MINUS lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "-", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "-", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP TIMES expr expr)) => #(BINOP TIMES lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "*", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "*", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP DIVIDE expr expr)) => #(BINOP DIVIDE lhs=expr rhs=expr)
-		{ 	// bin = new BinaryOperation(lhs, "/", rhs);
+		{ 	resultRegister = new BinaryOperation(lhs, "/", rhs, nextUniqueRegisterId++);
 		}
 ;
 

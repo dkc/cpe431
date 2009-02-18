@@ -1,0 +1,35 @@
+-- bunch of changes here with misc. notes thrown in, ?? are questions, // are notes to myself
+
+?? broadly: aren't we going to need Java "bodies" for the code following every statement? if, while, etc.... implementing this may require a reworking of how the tree parser "thinks" (as a linked list of statements instead of the current flat list of statements), which is probably doable but definitely ugly in both Java and ANTLR--how difficult is it to modify Footle.java, etc. to take a list and pass the "main" scope from each CodeAndReg to the next?
+
+-- wiped Expressions.FuncExp--all those classes do is hold strings representing operations, which is good practice from an OO standpoint but totally unnecessary
+
+-- doubt that we need Expressions.Objects outside of the interpreter but I'm not sure enough to delete it yet
+
+-- BinaryOperation needs LLVM code but it's tied in with the tree parser
+
+-- every Bind class needs to have a body associated with it
+?? on the static pass through Bind, should we be calling staticPass on its body?
+// needs tree parser tie-in
+
+?? what's Application taking? shouldn't (CodeAndReg function) be a String/identifier? even pseudocode can't be implemented to tie together Application and the tree parser until this gets figured out
+// needs tree parser tie-in
+
+-- MethodCall is an empty shell but it's a compiling empty shell
+// needs tree parser tie-in
+
+-- FieldMut emptied like MethodCall, really needs to be rewritten from the ground up (not too bad though, compile the rhs and store its result in the memory associated with the last name in scope)
+?? don't think it even needs its own register since newval will demand its own and we can go straight from that to the store? super can be given a dummy and we save an instruction/register
+// needs tree parser tie-in
+
+-- UnaryOperation needs LLVM code but it's tied in with the tree parser
+
+-- VarMut didn't really need any work on my part apart from tying it into the tree parser
+-- answer to the comment is that it should modify the memory that the static pass has reserved for the last binding of the "id" that's in scope
+?? does this need its own register or can we throw super a dummy? exactly the same problem as fieldMut, we want to store the result of newVal
+?? as mentioned on the first line this is a statement and will need a "body" to hold any following statements if we don't move to an array format
+
+-- WhileExp got gutted like MethodCall and FieldMut
+// not yet tied in but that shouldn't be too bad
+
+TODO: FieldLookup, FuncBind, NewObj

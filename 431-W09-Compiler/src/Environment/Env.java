@@ -30,6 +30,11 @@ public class Env {
 		return this.scopeReg;
 	}
 	
+	/* just defining this to make Application shut up as of 02/17/09 */
+	public void setNewScope(int x){
+		/* TOTALLY WORTHLESS RIGHT NOW I DON'T EVEN KNOW WHETHER THIS IS NEEDED */
+	}
+	
 	public void add(String id){
 		//if(env == null){
 			//return newhead;

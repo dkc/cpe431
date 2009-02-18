@@ -3,9 +3,10 @@ package Expressions;
 import Environment.Env;
 import Values.*;
 
-public class UnaryOperation implements Expression {
-	public Expression operation;
-	public Expression operand;
+public class UnaryOperation extends AbstractCodeAndReg {
+	public String operation;
+	public CodeAndReg operand;
+	private Env operandScope;
 	
 	/* valid unary operations:
 	 *	* string-length
@@ -19,68 +20,37 @@ public class UnaryOperation implements Expression {
 	 *  * not
 	 */
 	
-	public UnaryOperation(Expression op, Expression operationTarget) {
-		operation = op;
-		operand = operationTarget;
+	public UnaryOperation(String operation, CodeAndReg operand, int regnum) {
+		super(regnum);
+		this.operation = operation;
+		this.operand = operand;
+	}
+	
+	@Override
+	public void staticPass(Env env){
+		operandScope = Env.addScope(new Env(-1), env);
+		this.operand.staticPass(this.operandScope);
 	}
 
 	@Override
-	public Value interp(Env env) throws ReturnException {
-		String operationValue = (String) (operation.interp(env)).storedValue();
+	public CodeAndReg compile(Env env) {
+		operand.compile(env);
+		this.code.addAll(operand.getCode());
+		String targetReg = operand.getReg();
+		this.code.add("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
 		
-		Value operandValue = operand.interp(env);
-		
-		if (operationValue.equals("string-length")) {
-			if(operandValue instanceof SObject) {
-				VInteger stringLength = new VInteger(((SObject)operandValue).strval.length());
-				return stringLength;
-			}
-		} else if (operationValue.equals("integer?")) {
-			if(operandValue instanceof VInteger)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		} else if (operationValue.equals("boolean?")) {
-			if(operandValue instanceof VBoolean)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		}else if (operationValue.equals("floating-point?")) {
-			if(operandValue instanceof VFloat)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		} else if (operationValue.equals("void?")) {
-			if(operandValue instanceof VVoid)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		} else if (operationValue.equals("string?")) {
-			if(operandValue instanceof SObject)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		} else if (operationValue.equals("closure?")) {
-			if(operandValue instanceof CObject)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		} else if (operationValue.equals("plain?")) {
-			if(operandValue instanceof PObject)
-				return new VBoolean(true);
-			else
-				return new VBoolean(false);
-		} else if (operationValue.equals("print")) { /* attempts to use the value's toString and returns a void */
-			System.out.println(operandValue);
-			return new VVoid();
-		} else if (operationValue.equals("not")){
-			if(operandValue instanceof VBoolean)
-				return new VBoolean(!((Boolean)operandValue.storedValue()));
+		if (operation.equals("string-length")) {
+		} else if (operation.equals("integer?")) {
+		} else if (operation.equals("boolean?")) {
+		} else if (operation.equals("floating-point?")) {
+		} else if (operation.equals("void?")) {
+		} else if (operation.equals("string?")) {
+		} else if (operation.equals("closure?")) {
+		} else if (operation.equals("plain?")) {
+		} else if (operation.equals("print")) {
+		} else if (operation.equals("not")){
 		}
 		
-		/* if all else fails, error */
-		System.err.println("Error: Cannot apply operation " + operationValue + " to single operand " + operandValue);
-		System.exit(1);
-		return null;
+		return this;
 	}
 }

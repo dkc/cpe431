@@ -8,12 +8,14 @@ br i1 %tst, label %then, label %else
 
 then:
 %r1 = add i32 0, 4
+%r2 = add i32 0, %r1
 br label %end
 
 else:
-%r2 = add i32 0, 8
+%r3 = add i32 0, 8
+%r4 = add i32 0, %r3
 br label %end
 
 end:
-%r3 = phi i32 [%r1,%then], [%r2,%else]
-ret i32 %r3
+%r5 = phi i32 [%r2,%then], [%r4,%else]
+ret i32 %r5

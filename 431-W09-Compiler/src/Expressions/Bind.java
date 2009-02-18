@@ -23,27 +23,19 @@ public class Bind extends AbstractCodeAndReg{
 	}
 	
 	public CodeAndReg compile(Env env){
-		//try {
-			this.code.addAll(val.compile(env).getCode());
-			
-			//llvm load code into eframe
-			
-			RegAndIndex regind = Env.lookup(name, env);
-			this.code.addAll(regind.code);
-			
-			this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
-			regind.reg + ", i32 2, i32 " + regind.index + "\n");
-			this.code.add("store i32 " + val.getReg() + ", i32* " + this.ptrreg + "\n");
-			
-			//return value
-			this.code.add(this.reg + " = add i32 0, " + val.getReg() + "\n");
-			
-			this.code.addAll(body.compile(env).getCode());
-			return this;
-		/*} catch (ReturnException e) {
-			System.err.println("NOOO YOU CAN'T BIND A RETURN WHY WOULD YOU DO THIS exiting");
-			System.exit(1);
-			return null;
-		}*/
+		this.code.addAll(val.compile(env).getCode());
+		
+		//llvm load code into eframe
+		
+		RegAndIndex regind = Env.lookup(name, env);
+		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
+		regind.reg + ", i32 2, i32 " + regind.index + "\n");
+		this.code.add("store i32 " + val.getReg() + ", i32* " + this.ptrreg + "\n");
+		
+		//return value
+		this.code.add(this.reg + " = add i32 0, " + val.getReg() + "\n");
+		
+		this.code.addAll(body.compile(env).getCode());
+		return this;
 	}
 }
