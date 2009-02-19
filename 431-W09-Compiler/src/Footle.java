@@ -1,5 +1,6 @@
 import Environment.Env;
 import Expressions.CodeAndReg;
+import Expressions.Sequence;
 import antlr.*;
 import antlr.collections.*;
 import antlr.debug.misc.ASTFrame;
@@ -37,7 +38,7 @@ public class Footle
  
       // attempt to validate
       
-      CodeAndReg compiledCode = null;
+      Sequence compiledCode = null;
       FootleTreeParser treeparser = new FootleTreeParser();
       
       try
@@ -48,6 +49,8 @@ public class Footle
       {
        System.out.println("I don't really know what a RecognitionException is, but here you go, I guess.");
       }
+      
+      System.out.println("initial sequence: " + compiledCode.seq.toString());
       
       //Static Pass initializes env
       //TODO setup regnum

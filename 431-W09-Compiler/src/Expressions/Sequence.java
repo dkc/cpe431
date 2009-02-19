@@ -6,11 +6,16 @@ import Expressions.Const.FVoid;
 
 public class Sequence extends AbstractCodeAndReg{
 
-	ArrayList<CodeAndReg> seq;
+	public ArrayList<CodeAndReg> seq;
 	
 	public Sequence(ArrayList<CodeAndReg> seq, int regnum){
 		super(regnum);
 		this.seq = seq;
+	}
+	
+	public void staticPass(Env env){
+		for(CodeAndReg reg : seq)
+			reg.staticPass(env);
 	}
 	
 	public CodeAndReg compile(Env env){// throws ReturnException {
@@ -20,12 +25,13 @@ public class Sequence extends AbstractCodeAndReg{
 			return fvoid;
 		}else{
 		//CodeAndReg val = null;
-		int i;
-		for(i = 0;i < seq.size();i++){
-			this.code.addAll(seq.get(i).compile(env).getCode());
+		String lastReg = "0"; // need the void indicator here, actually
+		for(CodeAndReg i : seq){
+			this.code.addAll(i.compile(env).getCode());
+			lastReg = i.getReg();
 		}
-		//store val from last expr
-		this.code.add(this.reg + " = add i32 0, " + seq.get(i).getReg() + "\n");
+		//store val from last expr (wait why are we doing this)
+		this.code.add(this.reg + " = add i32 0, " + lastReg + "\n");
 		
 		return this;
 		}

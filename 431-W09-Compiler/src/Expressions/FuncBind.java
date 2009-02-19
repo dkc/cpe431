@@ -3,6 +3,7 @@ package Expressions;
 import java.util.ArrayList;
 
 import Environment.Env;
+import Environment.RegAndIndex;
 
 public class FuncBind extends AbstractCodeAndReg {
 	public ArrayList<FuncDec> funs;
@@ -27,18 +28,14 @@ public class FuncBind extends AbstractCodeAndReg {
 	@Override
 	public CodeAndReg compile(Env env) {
 
+		CodeAndReg val;
 		for(int i = 0;i < funs.size();i++){
-			val = funs.get(i).interp(local);
-			Env v = Env.lookup(funs.get(i).name, local);
-			v.val = val;
+			val = funs.get(i).compile(local);
+			RegAndIndex regind = Env.lookup(funs.get(i).name, local);
+			//write code?
 		}
 		
-		try {
-			return body.interp(local);
-		} catch (ReturnException e) {
-			System.out.println("Attempted to return outside of a function/method (and within a function binding; exiting");
-			System.exit(1);
-			return null;
-		}
+		this.code.addAll(body.compile(local).getCode());
+		return this;
 	}
 }
