@@ -2,45 +2,43 @@ package Expressions;
 
 
 import Environment.Env;
+import Environment.RegAndIndex;
+import Expressions.Objects.PObjectExp;
 import Values.*;
 
-public class FieldLookup implements Expression {
+public class FieldLookup extends AbstractCodeAndReg {
 	String name;
-	Expression obj;
+	CodeAndReg obj;
 
 	
-	public FieldLookup(String name, Expression obj){
+	public FieldLookup(String name, CodeAndReg obj,int regnum){
+		super(regnum);
 		this.name = name;
 		this.obj = obj;
 	}
 	
-	@Override
-	public Value interp(Env env) {
-		Value val;
-		try {
-			val = obj.interp(env);
-		} catch (ReturnException e) {
-			System.err.println("An error haiku:");
-			System.err.println("	Inside field lookup");
-			System.err.println("	Return should not have been there");
-			System.err.println("	The system exits");
-			System.exit(1);
-			return null;
-		}
-		if(!(val instanceof VObject)){
+	public void staticPass(Env env){
+		/*if(!(val instanceof VObject)){
 			System.err.println("Looking for fields... on something that's NOT an object? You've gone too far this time. Exiting");
 			System.exit(1);
 			return null;
-		}else{
-			Env v = Env.lookup(name,((PObject)val).slots);
-			if(v == null){
+		}*/
+	}
+	
+	@Override
+	public CodeAndReg compile(Env env) {
+		this.code.addAll(obj.compile(env).getCode());
+		
+			//TODO update obj slots ref
+			RegAndIndex regind = Env.lookup(name,((PObjectExp)obj).slots);
+			if(regind == null){
 				System.err.println("Lookup on a nonexistant field--exiting");
 				System.exit(1);
 				return null;
 			}else{
-				return v.val;
+				
+				return this;
 			}
-		}
 	}
 
 }

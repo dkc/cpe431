@@ -1,7 +1,7 @@
 package Expressions.Objects;
 
-import Expressions.Expression;
+import Expressions.*;
 
-public interface FObjectExp extends Expression{
+public interface FObjectExp extends CodeAndReg{
 	
 }

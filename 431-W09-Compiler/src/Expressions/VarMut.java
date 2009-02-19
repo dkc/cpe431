@@ -1,11 +1,7 @@
 package Expressions;
 
-<<<<<<< HEAD:431-W09-Compiler/src/Expressions/VarMut.java
-import Environment.Env;
-import Environment.RegAndIndex;
-=======
+
 import Environment.*;
->>>>>>> c5ed2dc890c6b7898945ef265410535d0f245a94:431-W09-Compiler/src/Expressions/VarMut.java
 
 public class VarMut extends AbstractCodeAndReg{
 	String id;
@@ -24,7 +20,10 @@ public class VarMut extends AbstractCodeAndReg{
 		
 		this.code.addAll(newVal.compile(env).getCode());
 		//TODO load val to eframe
-		
+		RegAndIndex regind = Env.lookup(id, env);
+		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
+		regind.reg + ", i32 2, i32 " + regind.index + "\n");
+		this.code.add("store i32 " + newVal.getReg() + ", i32* " + this.ptrreg + "\n");
 		
 		//store to ret reg
 		this.code.add(this.reg + " = add i32 0, " + newVal.getReg() + "\n");

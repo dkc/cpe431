@@ -1,18 +1,19 @@
 package Expressions.Objects;
 
 import Environment.Env;
+import Expressions.CodeAndReg;
 import Values.*;
 
 public class CObjectExp extends PObjectExp{
 	VClosure clos;
 	
-	public CObjectExp(VClosure clos,Env slots){
-		super(slots);
+	public CObjectExp(VClosure clos,Env slots,int regnum){
+		super(slots,regnum);
 		this.clos = clos;
 	}
 	
 	@Override
-	public Value interp(Env env){
-		return new CObject(clos,slots);
+	public CodeAndReg compile(Env env){
+		return this;
 	}
 }

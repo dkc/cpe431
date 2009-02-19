@@ -1,16 +1,19 @@
 package Expressions.Objects;
 
-import Values.*;
 import Environment.Env;
+import Expressions.AbstractCodeAndReg;
+import Expressions.CodeAndReg;
 
-public class PObjectExp implements FObjectExp{
-	Env slots;
+//public class PObjectExp implements FObjectExp{
+public class PObjectExp extends AbstractCodeAndReg{
+	public Env slots;
 	
-	public PObjectExp(Env slots){
+	public PObjectExp(Env slots, int regnum){
+		super(regnum);
 		this.slots = slots;
 	}
 	
-	public Value interp(Env env){
-		return new PObject(slots);
+	public CodeAndReg compile(Env env){
+		return this;
 	}
 }

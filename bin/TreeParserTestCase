@@ -1,1 +1,1 @@
-if (true) { 3; } else { 16; }
+var x = 1; var y = 2; if (true) { x; } else { y; }
