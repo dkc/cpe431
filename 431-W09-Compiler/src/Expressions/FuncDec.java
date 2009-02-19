@@ -19,7 +19,7 @@ public class FuncDec extends AbstractCodeAndReg{
 	public void staticPass(Env env){
 		this.env = env;
 		//TODO regnum
-		Env newScope = new Env(-1);
+		Env newScope = new Env();
 		this.env = Env.addScope(env, newScope);
 	}
 }

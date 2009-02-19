@@ -26,12 +26,6 @@ public class FuncBind extends AbstractCodeAndReg {
 			Env v = Env.lookup(funs.get(i).name, local);
 			v.val = val;
 		}
-		try {
-			return body.interp(local);
-		} catch (ReturnException e) {
-			System.out.println("Attempted to return outside of a function/method (and within a function binding; exiting");
-			System.exit(1);
-			return null;
-		}
+		return body.interp(local);
 	}
 }

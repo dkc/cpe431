@@ -234,8 +234,7 @@ exprnr
 	|!	b2:FALSE
 		{ #exprnr = #([CONST_BOOLEAN, "BOOLEAN"], b2); }
 	|	(identifier arglist) => application
-	|!	id:identifier
-		{ #exprnr = #([CONST_IDENTIFIER, "IDENTIFIER"], id); }
+	|	id:identifier
 	|!	s:STRING
 		{ #exprnr = #([CONST_STRING, "STRING"], s); }
 	|	LPAREN! expr RPAREN! (arglist)?
@@ -342,6 +341,8 @@ identifier
  */
 
 {
+import java.util.ArrayList;
+
 import Expressions.*;
 import Expressions.Const.*;
 import Environment.*;
@@ -361,22 +362,17 @@ class FootleTreeParser extends TreeParser;
 	}
 }
 
-validate returns [CodeAndReg finalStmtResult = null]
-{
-	CodeAndReg fSR;
-}
-    : 	#(PROGRAM fSR=stmt_list)
-    	{	finalStmtResult = fSR;
-    	}
+validate returns [Sequence finalStmtResult = null]
+    : 	#(PROGRAM finalStmtResult=sequence)
 ;
 
-stmt_list returns [CodeAndReg finalStmtResult = null]
+sequence returns [Sequence compiledSequence = null]
 {
+	ArrayList<CodeAndReg> seq = new ArrayList<CodeAndReg>();
 	CodeAndReg fSR = null;
-	/* finalStmtResult should be the CAR returned by the last statement in a stmt_list */
 }
-	:	(fSR=stmt)*
-	{	finalStmtResult = fSR;
+	:	(fSR=stmt { seq.add(fSR); })*
+	{	compiledSequence = new Sequence(seq, nextUniqueRegisterId++);
 	}
 ;
 
@@ -396,7 +392,7 @@ stmt returns [CodeAndReg stmtResult = null]
 	CodeAndReg exprResult, stmtListResult, thenResult, elseResult;
 	IfExp ifExpr;
 }
-	:	#(IFF exprResult=expr #(THENF thenResult=stmt_list) #(ELSEF elseResult=stmt_list))
+	:	#(IFF exprResult=expr #(THENF thenResult=sequence) #(ELSEF elseResult=sequence))
 		{	ifExpr = new IfExp(exprResult, thenResult, elseResult, nextUniqueRegisterId++);
 			stmtResult = ifExpr;
 			/* will need an extra register to store the phi of then and else for the return--is that what if should be returning? */
@@ -408,8 +404,11 @@ stmt returns [CodeAndReg stmtResult = null]
 	|	stmtResult=expr
 		{ 	/* is this right? pretty sure we don't need more encapsulation */
 		}
-	|	#(WHILE exprResult=expr stmtListResult=stmt_list)
+	|	#(WHILE exprResult=expr stmtListResult=sequence)
 		{	// stmtResult = new WhileExp();
+		}
+	|	#(VAR #(CONST_IDENTIFIER id2:ID) exprResult=expr)
+		{	stmtResult = new Bind(id2.toString(), exprResult, nextUniqueRegisterId++);
 		}
 ;
 
@@ -501,7 +500,7 @@ const_val returns [CodeAndReg constValue = null]
 	|	(#(CONST_BOOLEAN FALSE)) => #(CONST_BOOLEAN FALSE)
 		{	constValue = new FBoolean(new Boolean(false), nextUniqueRegisterId++);
 		}
-	|	CONST_IDENTIFIER id:ID
+	|	#(CONST_IDENTIFIER id:ID)
 		{	constValue = new VarRef(id.toString(), nextUniqueRegisterId++);
 		}
 	|	CONST_STRING str:STRING

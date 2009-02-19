@@ -28,7 +28,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	
 	@Override
 	public void staticPass(Env env){
-		operandScope = Env.addScope(new Env(-1), env);
+		operandScope = Env.addScope(new Env(), env);
 		this.operand.staticPass(this.operandScope);
 	}
 

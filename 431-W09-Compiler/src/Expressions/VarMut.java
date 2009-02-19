@@ -1,11 +1,6 @@
 package Expressions;
 
-<<<<<<< HEAD:431-W09-Compiler/src/Expressions/VarMut.java
-import Environment.Env;
-import Environment.RegAndIndex;
-=======
 import Environment.*;
->>>>>>> c5ed2dc890c6b7898945ef265410535d0f245a94:431-W09-Compiler/src/Expressions/VarMut.java
 
 public class VarMut extends AbstractCodeAndReg{
 	String id;

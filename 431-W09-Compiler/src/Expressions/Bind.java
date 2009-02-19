@@ -7,14 +7,12 @@ import Environment.RegAndIndex;
 public class Bind extends AbstractCodeAndReg{
 	public String name;
 	public CodeAndReg val;
-	public CodeAndReg body;
 	private String ptrreg = "%ptrreg";
 	
-	public Bind(String name, CodeAndReg val, CodeAndReg body,int regnum){
+	public Bind(String name, CodeAndReg val,int regnum){
 		super(regnum);
 		this.name = name;
 		this.val = val;
-		this.body = body;
 		this.ptrreg += regnum;
 	}
 	
@@ -35,7 +33,6 @@ public class Bind extends AbstractCodeAndReg{
 		//return value
 		this.code.add(this.reg + " = add i32 0, " + val.getReg() + "\n");
 		
-		this.code.addAll(body.compile(env).getCode());
 		return this;
 	}
 }
