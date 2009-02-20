@@ -381,7 +381,7 @@ sequence returns [Sequence compiledSequence = null]
  x _id_ = _expr_ ;
  * _expr_ . _id_ = _expr_ ;
  * var _id_ = _expr_ ;
- * return _expr_ ;
+ x return _expr_ ;
  x if ( _expr_ ) { _stmt_* } -- pretty sure all if/thens have an empty else slapped on by the parser if it's not present, so we only need one rule
  x if ( _expr_ ) { _stmt_* } else { _stmt_* }
  x while ( _expr_ ) { _stmt_* }
@@ -402,13 +402,14 @@ stmt returns [CodeAndReg stmtResult = null]
 			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
 	|	stmtResult=expr
-		{ 	/* is this right? pretty sure we don't need more encapsulation */
-		}
 	|	#(WHILE exprResult=expr stmtListResult=sequence)
-		{	// stmtResult = new WhileExp();
+		{	stmtResult = new WhileExp(exprResult, stmtListResult, nextUniqueRegisterId++);
 		}
 	|	#(VAR #(CONST_IDENTIFIER id2:ID) exprResult=expr)
 		{	stmtResult = new Bind(id2.toString(), exprResult, nextUniqueRegisterId++);
+		}
+	|	#(RETURN exprResult=expr)
+		{	stmtResult = new FReturn(exprResult, nextUniqueRegisterId++);
 		}
 ;
 
