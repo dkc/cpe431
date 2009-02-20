@@ -18,11 +18,7 @@ public class FieldLookup extends AbstractCodeAndReg {
 	}
 	
 	public void staticPass(Env env){
-		/*if(!(val instanceof VObject)){
-			System.err.println("Looking for fields... on something that's NOT an object? You've gone too far this time. Exiting");
-			System.exit(1);
-			return null;
-		}*/
+		
 	}
 	
 	@Override

@@ -337,7 +337,7 @@ identifier
 
 /*
  *	Tree Parser
- 	- suspecting that ids are handled differently in certain places in the parser--need to run test cases again when it's compiling to verify behavior
+ 	- suspecting that ids are handled differently in certain places in the parser--need to run test cases again
  */
 
 {
@@ -380,7 +380,7 @@ sequence returns [Sequence compiledSequence = null]
  x _expr_ ;
  x _id_ = _expr_ ;
  * _expr_ . _id_ = _expr_ ;
- * var _id_ = _expr_ ;
+ x var _id_ = _expr_ ;
  x return _expr_ ;
  x if ( _expr_ ) { _stmt_* } -- pretty sure all if/thens have an empty else slapped on by the parser if it's not present, so we only need one rule
  x if ( _expr_ ) { _stmt_* } else { _stmt_* }
@@ -420,8 +420,8 @@ stmt returns [CodeAndReg stmtResult = null]
  x false
  x _id_
  x _string_
- | ( _expr_ ) -- parser dealt with this
- * _id_ ( _arglist_ ) -- invocation
+ | ( _expr_ ) -- parser stripped parentheses
+ x _id_ ( _arglist_ ) -- application
  * ( _expr_ ) ( _arglist_ )
  x _expr_ _binop_ _expr_
  x ! _expr_
@@ -432,18 +432,23 @@ stmt returns [CodeAndReg stmtResult = null]
 expr returns [CodeAndReg result = null]
 {
 	CodeAndReg expression;
+	ArrayList<CodeAndReg> argumentList;
 }
 	:	result=binop
 	|	result=const_val
 	|	#(NOT expression=expr)
 		{	result = new UnaryOperation("not", expression, nextUniqueRegisterId++);
 		}
-	|	FIELD_LOOKUP expression=expr #(CONST_IDENTIFIER fieldId:ID)
-		{	
+	|	#(FIELD_LOOKUP expression=expr #(CONST_IDENTIFIER fieldId:ID))
+		{	// result = new FieldLookup(fieldId.toString(), expression);
 		}
-	|	METHOD_CALL expression=expr #(CONST_IDENTIFIER methodId:ID) #(ARGUMENTS args)
-		{	
+	|	#(METHOD_CALL expression=expr #(CONST_IDENTIFIER methodId:ID) argumentList=args)
+		{	result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
 		}
+	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
+		{	// result = new Application(functionName.toString, argumentList);
+		}
+	|	
 ;
 
 binop returns [CodeAndReg resultRegister = null]
@@ -451,40 +456,40 @@ binop returns [CodeAndReg resultRegister = null]
 	CodeAndReg lhs, rhs;
 }
 	:	(#(BINOP AND expr expr)) => #(BINOP AND lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "&&", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "&&", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP OR expr expr)) => #(BINOP OR lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "||", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "||", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP EQ expr expr)) => #(BINOP EQ lhs=expr rhs=expr)
-		{	resultRegister = new BinaryOperation(lhs, "==", rhs, nextUniqueRegisterId++);
+		{	resultRegister = new Binop(lhs, "==", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP LT expr expr)) => #(BINOP LT lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "<", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "<", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP GT expr expr)) => #(BINOP GT lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, ">", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, ">", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP NE expr expr)) => #(BINOP NE lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "!=", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "!=", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP LTE expr expr)) => #(BINOP LTE lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "<=", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "<=", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP GTE expr expr)) => #(BINOP GTE lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, ">=", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, ">=", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP PLUS expr expr)) => #(BINOP PLUS lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "+", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "+", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP MINUS expr expr)) => #(BINOP MINUS lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "-", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "-", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP TIMES expr expr)) => #(BINOP TIMES lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "*", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "*", rhs, nextUniqueRegisterId++);
 		}
 	|	(#(BINOP DIVIDE expr expr)) => #(BINOP DIVIDE lhs=expr rhs=expr)
-		{ 	resultRegister = new BinaryOperation(lhs, "/", rhs, nextUniqueRegisterId++);
+		{ 	resultRegister = new Binop(lhs, "/", rhs, nextUniqueRegisterId++);
 		}
 ;
 
@@ -513,8 +518,9 @@ operator
 	: 	AND | OR | EQ | LT | GT | NE | LTE | GTE | PLUS | MINUS | TIMES | DIVIDE
 ;
 
-args
-	:
-	{	throw new RecognitionException();
-	}
+args returns [ArrayList<CodeAndReg> argumentList = new ArrayList<CodeAndReg>()]
+{
+	CodeAndReg argument;
+}
+	:	#(ARGUMENTS (argument=expr { argumentList.add(argument); })* )
 ;
