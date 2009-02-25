@@ -1,6 +1,7 @@
 import Environment.Env;
 import Expressions.CodeAndReg;
 import Expressions.Sequence;
+import LLVMObjects.LLVMLine;
 import antlr.*;
 import antlr.collections.*;
 import antlr.debug.misc.ASTFrame;
@@ -66,40 +67,40 @@ public class Footle
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env){
-	   ArrayList<String> code = compiledCode.getCode();
-	      Writer output = null;
-	      try{
-	      output = new BufferedWriter(new FileWriter("llvm-code.s"));
-	      }catch(Exception e){
-	    	  error("Could not create and open llvm-code.s for writing");
-	      }
-	      
-	      try{
-	    	  //define types
-	    	  output.write("%eframe = type{%eframe*, i32, [ 0 x i32 ]}\n");
-	    	  
-	    	  //output beginning of main
-	    	  output.write("define i32 @llvm_fun(){\n");
-	   	   	  
-	   	   	  output.write(env.getCurrentScope() + " = malloc { %eframe*, i32, [ " + env.ids.size() +
-	   	   	  " x i32 ] }\n");
-	    	  
-	   	   	  //output code
-	    	  for(String line : code){
-	    		  output.write(line);
-	  		}
-	    	  //output return from main
-	    	  output.write("ret i32 " + compiledCode.getReg() + "\n");
-	    	  output.write("}");
-	      }catch(Exception e){
-	    	  error("Could not write output to file llvm-code.s");
-	      }
-	      
-	      try{
-	      output.close();
-	      }catch(Exception e){
-	    	  error("Could not close llvm-code.s");
-	      }
+	   ArrayList<LLVMLine> code = compiledCode.getCode();
+      Writer output = null;
+      String outputFile = "llvm-code.s";
+      try{
+    	  output = new BufferedWriter(new FileWriter(outputFile));
+      }catch(Exception e){
+    	  error("Could not create and open llvm-code.s for writing");
+      }
+      
+      try{
+		//define types
+		output.write("%eframe = type{%eframe*, i32, [ 0 x i32 ]}\n");
+		  
+		//output beginning of main
+		output.write("define i32 @llvm_fun(){\n");
+		  
+		output.write(env.getCurrentScope() + " = malloc { %eframe*, i32, [ " + env.numIds() + " x i32 ] }\n");
+		  
+		//output code
+		for(LLVMLine line : code)
+			output.write(line.getCode());
+		
+		//output return from main
+		output.write("ret i32 " + compiledCode.getReg() + "\n");
+		output.write("}");
+      } catch(Exception e){
+    	  error("Could not write output to file llvm-code.s");
+      }
+      
+      try{
+    	  output.close();
+      } catch(Exception e){
+    	  error("Could not close " + outputFile);
+      }
    }
  
    private static void error(String msg)

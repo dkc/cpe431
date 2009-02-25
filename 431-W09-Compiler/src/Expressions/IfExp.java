@@ -2,6 +2,7 @@ package Expressions;
 
 
 import Environment.Env;
+import LLVMObjects.LLVMLine;
 public class IfExp extends AbstractCodeAndReg{
 	CodeAndReg test;
 	CodeAndReg fthen;
@@ -27,28 +28,50 @@ public class IfExp extends AbstractCodeAndReg{
 	}
 	
 	public CodeAndReg compile(Env env){
+		LLVMLine currentLine;
+		
 		//test
 		this.test.compile(env);
 		this.code.addAll(this.test.getCode());
-		this.code.add(this.testreg + " = icmp eq i32 2, " + this.test.getReg() + "\n"); 
-		this.code.add("br i1 " + this.testreg + ", label %then, label %else\n");
+		
+		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 2, " + this.test.getReg() + "\n");
+		currentLine.setOperation("icmp eq");
+		currentLine.setRegisterDefined(this.testreg);
+		currentLine.addRegisterUsed(this.test.getReg());
+		
+		currentLine = new LLVMLine("br i1 " + this.testreg + ", label %then, label %else\n");
+		currentLine.setOperation("br");
+		currentLine.addRegisterUsed(this.testreg);
 		
 		//then
 		this.fthen.compile(this.thenscope);
-		this.code.add("then:\n");
+		
+		currentLine = new LLVMLine("then:\n");
+		currentLine.setOperation("label");
+		
 		this.code.addAll(this.fthen.getCode());
-		this.code.add("br label %end\n");
+		
+		currentLine = new LLVMLine("br label %end\n");
+		currentLine.setOperation("br");
 		
 		//else
-		this.felse.compile(this.elsescope);
-		this.code.add("else:\n");
+		currentLine = new LLVMLine("else:\n");
+		currentLine.setOperation("label");
+		
 		this.code.addAll(this.felse.getCode());
-		this.code.add("br label %end\n");
+		
+		currentLine = new LLVMLine("br label %end\n");
+		currentLine.setOperation("br");
 		
 		//end
-		this.code.add("end:\n");
-		this.code.add(this.reg + " = phi i32 [" + 
-			this.fthen.getReg() + ",%then], [" + this.felse.getReg() + ",%else]\n");
+		currentLine = new LLVMLine("end:\n");
+		currentLine.setOperation("label");
+		
+		currentLine = new LLVMLine(this.reg + " = phi i32 [" + this.fthen.getReg() + ",%then], [" + this.felse.getReg() + ",%else]\n");
+		currentLine.setOperation("phi");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(this.fthen.getReg());
+		currentLine.addRegisterUsed(this.felse.getReg());
 		
 		return this;
 	}

@@ -2,6 +2,7 @@ package Expressions;
 
 
 import Environment.Env;
+import LLVMObjects.LLVMLine;
 
 public class FReturn extends AbstractCodeAndReg {
 	CodeAndReg target;
@@ -13,19 +14,16 @@ public class FReturn extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env){// throws ReturnException {
-		//Value retVal;
-	
-		//try {
-			this.code.addAll(target.compile(env).getCode());
-			this.code.add(this.reg + " = add i32 0, " + target.getReg() + "\n");
-		//} catch (ReturnException e) { /* we've caught another ReturnException, which should only be thrown from a return */
-			/*System.err.println("Encountered a return inside of a return--exiting...");
-			System.exit(1);
-			return null;
-		}*/
+	public CodeAndReg compile(Env env){
+		LLVMLine currentLine;
 		
-		//throw new ReturnException(target);
+		this.code.addAll(target.compile(env).getCode());
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + target.getReg() + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(target.getReg());
+			
 		return this;
 	}
 

@@ -37,6 +37,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 		operand.compile(env);
 		this.code.addAll(operand.getCode());
 		String targetReg = operand.getReg();
+		
 		this.code.add("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
 		
 		if (operation.equals("string-length")) {
@@ -49,6 +50,11 @@ public class UnaryOperation extends AbstractCodeAndReg {
 		} else if (operation.equals("plain?")) {
 		} else if (operation.equals("print")) {
 		} else if (operation.equals("not")){
+			/* copy/pasted from Binop:
+			else if(exp.equals("not")){
+			this.type = "BOOLEAN";
+			this.code.add(ashftreg + " = xor i32 " + lshftreg + ", 1\n");
+			*/
 		}
 		
 		return this;

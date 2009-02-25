@@ -37,36 +37,25 @@ public class Application extends AbstractCodeAndReg{
 	 * string=?, string<?) are "predefined" applications that should always be included and can be called through
 	 * here */
 	public CodeAndReg compile(Env env) {
-		//Value v = null;
 		this.code.addAll(function.compile(env).getCode());
 		
-		if(function instanceof FuncDec){
-			FuncDec clos = (FuncDec) function;
-			//CodeAndReg vargs;
-			for(int i = 0;i < args.size();i++){
-				//vargs = args.get(i).interp(env);
-				//compile args
-				this.code.addAll(args.get(i).compile(env).getCode());
+		//CodeAndReg vargs;
+		for(int i = 0;i < args.size();i++){
+			//compile args
+			this.code.addAll(args.get(i).compile(env).getCode());
 
-				//TODO add code to store from arg to env
-				
-				
-				//clos.env = Env.add(new Env(clos.params.get(i), vargs), clos.env);
-			}
-			//clos.body.interp(clos.env);
-			//add func dec, is this the right place?
-			this.code.addAll(clos.body.compile(env).getCode());
-			
-			//TODO Dipatch function
+			//TODO add code to store from arg to env
 			
 			
-			//TODO regnum?
-			return new FVoid(-1).compile(env); /* function did not return a value */
 		}
-		else { /* don't know what they're trying to feed us but it can't be good */
-			System.err.println("WUGGA WUGGA WUGGA FFFFFFFFFFFFFFFFF"); // this is obviously not final
-			System.exit(1);
-			return null;
-		}
+		//clos.body.interp(clos.env);
+		//add func dec, is this the right place?
+		
+		//TODO Dispatch function
+		
+		
+		//TODO regnum?
+		return new FVoid(-1).compile(env); /* function did not return a value */
+		
 	}
 }

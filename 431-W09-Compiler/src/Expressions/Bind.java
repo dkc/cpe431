@@ -3,6 +3,7 @@ package Expressions;
 
 import Environment.Env;
 import Environment.RegAndIndex;
+import LLVMObjects.LLVMLine;
 
 public class Bind extends AbstractCodeAndReg{
 	public String name;
@@ -26,12 +27,25 @@ public class Bind extends AbstractCodeAndReg{
 		//llvm load code into eframe
 		
 		RegAndIndex regind = Env.lookup(name, env);
-		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
-		regind.reg + ", i32 2, i32 " + regind.index + "\n");
-		this.code.add("store i32 " + val.getReg() + ", i32* " + this.ptrreg + "\n");
+		LLVMLine currentLine;
+		
+		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 2, i32 " + regind.index + "\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.ptrreg);
+		currentLine.addRegisterUsed(regind.reg);
+		currentLine.addRegisterUsed(this.ptrreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store i32 " + val.getReg() + ", i32* " + this.ptrreg + "\n");
+		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(this.ptrreg);
+		this.code.add(currentLine);
 		
 		//return value
-		this.code.add(this.reg + " = add i32 0, " + val.getReg() + "\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + val.getReg() + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(val.getReg());
 		
 		return this;
 	}

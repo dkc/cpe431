@@ -18,22 +18,21 @@ public class Sequence extends AbstractCodeAndReg{
 			reg.staticPass(env);
 	}
 	
-	public CodeAndReg compile(Env env){// throws ReturnException {
+	public CodeAndReg compile(Env env){
 		if(seq.size() == 0){
 			CodeAndReg fvoid = new FVoid(this.regnum).compile(env);
 			this.code.addAll(fvoid.getCode());
 			return fvoid;
 		}else{
-		//CodeAndReg val = null;
-		String lastReg = "0"; // need the void indicator here, actually
-		for(CodeAndReg i : seq){
-			this.code.addAll(i.compile(env).getCode());
-			lastReg = i.getReg();
-		}
-		//store val from last expr (wait why are we doing this)
-		this.code.add(this.reg + " = add i32 0, " + lastReg + "\n");
-		
-		return this;
+			String lastReg = "0"; // need the void indicator here, actually
+			for(CodeAndReg i : seq){
+				this.code.addAll(i.compile(env).getCode());
+				lastReg = i.getReg();
+			}
+			//store val from last expr (wait why are we doing this)
+			this.code.add(this.reg + " = add i32 0, " + lastReg + "\n");
+			
+			return this;
 		}
 	}
 }
