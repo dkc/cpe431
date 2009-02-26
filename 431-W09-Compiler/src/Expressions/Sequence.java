@@ -20,10 +20,10 @@ public class Sequence extends AbstractCodeAndReg{
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){// throws ReturnException {
+
 		if(seq.size() == 0){
 			return new FVoid(this.regnum).compile(env, funcdecs, fieldTable);
 		}else{
-
 		for(CodeAndReg i : seq){
 			this.code.addAll(i.compile(env, funcdecs, fieldTable).getCode());
 		}

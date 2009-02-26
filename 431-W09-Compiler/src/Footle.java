@@ -6,6 +6,7 @@ import Expressions.FuncDec;
 import Expressions.Sequence;
 import Expressions.VarRef;
 import Expressions.Const.FInteger;
+import LLVMObjects.LLVMLine;
 import antlr.*;
 import antlr.collections.*;
 import antlr.debug.misc.ASTFrame;
@@ -96,7 +97,7 @@ public class Footle
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<String> funcdecs,
 		   ArrayList<Integer> funcids){
-	   ArrayList<String> code = compiledCode.getCode();
+	   	ArrayList<LLVMLine> code = compiledCode.getCode();
 	      Writer output = null;
 	      try{
 	      output = new BufferedWriter(new FileWriter("llvm-code.s"));
@@ -186,14 +187,14 @@ public class Footle
 	    	  //output beginning of llvm_fun
 	    	  output.write("define i32 @llvm_fun(){\n");
 	   	   	  
-	   	   	  output.write(env.getMallocReg() + " = malloc {%eframe*, i32, [" + env.ids.size() +
+	   	   	  output.write(env.getMallocReg() + " = malloc {%eframe*, i32, [" + env.numIds() +
 	   	   	  " x i32]}\n");
-	   	   	  output.write(env.getCurrentScope() + " = bitcast {%eframe*, i32, [" + env.ids.size() + 
+	   	   	  output.write(env.getCurrentScope() + " = bitcast {%eframe*, i32, [" + env.numIds() + 
 	   	   			  " x i32]}* " + env.getMallocReg() + " to %eframe*\n");
 	    	  
 	   	   	  //output code
-	    	  for(String line : code){
-	    		  output.write(line);
+	    	  for(LLVMLine line : code){
+	    		  output.write(line.getCode());
 	  			}
 	    	  
 	    	  //output return

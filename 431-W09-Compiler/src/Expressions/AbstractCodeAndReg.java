@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
+import LLVMObjects.LLVMLine;
 
 
 public abstract class AbstractCodeAndReg implements CodeAndReg{
-	protected ArrayList<String> code;
+	protected ArrayList<LLVMLine> code;
 	protected String reg;
 	protected int regnum;
 	
 	public AbstractCodeAndReg(int regnum){
 		this.regnum = regnum;
 		this.reg = "%r" + regnum;
-		this.code = new ArrayList<String>();
+		this.code = new ArrayList<LLVMLine>();
 	}
 	
 	public void staticPass(Env env, ArrayList<Integer> funcids){}
@@ -27,11 +28,7 @@ public abstract class AbstractCodeAndReg implements CodeAndReg{
 		return this.reg;
 	}
 	
-	public ArrayList<String> getCode(){
-		/*String retcode = "";
-		for(String line : code){
-			retcode += line;
-		}*/
+	public ArrayList<LLVMLine> getCode(){
 		return this.code;
 	}
 	

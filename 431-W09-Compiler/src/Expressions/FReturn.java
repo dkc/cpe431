@@ -4,6 +4,7 @@ package Expressions;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import Environment.Env;
+import LLVMObjects.LLVMLine;
 
 public class FReturn extends AbstractCodeAndReg {
 	CodeAndReg target;
@@ -17,8 +18,15 @@ public class FReturn extends AbstractCodeAndReg {
 	
 	@Override
 	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
-			this.code.addAll(target.compile(env, funcdecs, fieldTable).getCode());
-			this.code.add("ret i32 " + target.getReg() + "\n");
+		LLVMLine currentLine;
+		
+		this.code.addAll(target.compile(env, funcdecs, fieldTable).getCode());
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + target.getReg() + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(target.getReg());
+			
 		return this;
 	}
 

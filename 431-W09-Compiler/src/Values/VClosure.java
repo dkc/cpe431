@@ -6,12 +6,10 @@ import Expressions.*;
 
 public class VClosure implements Value{
 	public ArrayList<String> params;
-	public Expression body;
 	public Env env;
 	
-	public VClosure(ArrayList<String> params, Expression body,Env env){
+	public VClosure(ArrayList<String> params,Env env){
 		this.params = params;
-		this.body = body;
 		this.env = env;
 	}
 

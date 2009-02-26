@@ -2,18 +2,16 @@ package Environment;
 
 import java.util.ArrayList;
 
+import LLVMObjects.LLVMLine;
+
 public class Env {
 	private String scopeReg;
 	private String mallocReg = "%scomalreg";
 	public int scopenum;
-//	public String id;
-	//public Value val;
-	public ArrayList<String> ids;
+	private ArrayList<String> ids;
 	Env prev;
 	
 	public Env(int scopenum){//int regnum){
-		//this.id = id;
-		//this.val = val;
 		this.ids = new ArrayList<String>();
 		this.scopenum = scopenum;
 		this.scopeReg = "%scopereg" + this.scopenum;
@@ -31,7 +29,7 @@ public class Env {
 	public String getCurrentScope(){
 		return this.scopeReg;
 	}
-	
+
 	public String getMallocReg(){
 		return this.mallocReg;
 	}
@@ -40,18 +38,17 @@ public class Env {
 	public void setNewScope(int x){
 		/* TOTALLY WORTHLESS RIGHT NOW I DON'T EVEN KNOW WHETHER THIS IS NEEDED */
 	}
-	
+
 	public void add(String id){
-		//if(env == null){
-			//return newhead;
-		//}
-		//newhead.prev = oldhead;
-		//newhead.scopeReg = oldhead.scopeReg;
-		//return newhead;
 		ids.add(id);
 	}
 	
+	public int numIds() {
+		return ids.size();
+	}
+	
 	public static RegAndIndex lookup(String id, Env env){
+		LLVMLine currentLine;
 		Env v = env;
 		int index = 0;
 		int i = 0;
@@ -69,28 +66,20 @@ public class Env {
 				}
 			}
 			//TODO add code to get element ptr to next scope in local reg
-			retVal.code.add("%eframeptr" + v.scopenum + " = getelementptr %eframe* " 
-					+ v.scopeReg + ",i32 1\n");
-			retVal.code.add("%scopereg" + v.scopenum + " = load i32* %eframeptr" + v.scopenum + "\n");
+			
+			currentLine = new LLVMLine("%eframeptr" + v.scopenum + " = getelementptr %eframe* " + v.scopeReg + ",i32 1\n");
+			currentLine.setOperation("getelementptr");
+			currentLine.setRegisterDefined("%eframeptr" + v.scopenum);
+			currentLine.addRegisterUsed(v.scopeReg);
+			
+			currentLine = new LLVMLine("%scopereg" + v.scopenum + " = load i32* %eframeptr" + v.scopenum + "\n");
+			currentLine.setOperation("load");
+			currentLine.setRegisterDefined("%scopereg" + v.scopenum);
+			currentLine.addRegisterUsed("%eframeptr" + v.scopenum);
+			
 			i++;
 			v = v.prev;
 		}
 		return null;
 	}
-	
-	/*public boolean equals(Object o) {
-		if(o == null || !(o instanceof Env)) {
-			return false;
-		}
-		Env other = (Env)o;
-		if(other.id.equals(this.id) && other.val.storedValue() == this.val.storedValue()) {
-			if(this.prev == other.prev)
-				return true;
-			else if (this.prev == null || other.prev == null)
-				return false;
-			else
-				return this.prev.equals(other.prev);
-		}
-		return false;
-	}*/
 }
