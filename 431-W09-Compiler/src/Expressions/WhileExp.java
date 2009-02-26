@@ -1,5 +1,8 @@
 package Expressions;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
 import Values.*;
 
@@ -13,7 +16,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		this.body = body;
 	}
 	
-	public CodeAndReg compile(Env env) {
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
 		return null;
 	}
 }

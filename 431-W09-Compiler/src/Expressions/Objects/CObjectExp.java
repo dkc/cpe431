@@ -1,5 +1,8 @@
 package Expressions.Objects;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
 import Expressions.CodeAndReg;
 import Values.*;
@@ -13,7 +16,7 @@ public class CObjectExp extends PObjectExp{
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env){
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
 		return this;
 	}
 }

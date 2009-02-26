@@ -1,5 +1,8 @@
 package Expressions;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.*;
 
 public class VarMut extends AbstractCodeAndReg{
@@ -14,14 +17,13 @@ public class VarMut extends AbstractCodeAndReg{
 		this.ptrreg = "%ptrreg" + regnum;
 	}
 	
-	public CodeAndReg compile(Env env) {
-		RegAndIndex index = Env.lookup(this.id, env);
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
 		
-		this.code.addAll(newVal.compile(env).getCode());
-		//TODO load val to eframe
+		this.code.addAll(newVal.compile(env, funcdecs, fieldTable).getCode());
+		// load val to eframe
 		RegAndIndex regind = Env.lookup(id, env);
 		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
-		regind.reg + ", i32 2, i32 " + regind.index + "\n");
+		regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
 		this.code.add("store i32 " + newVal.getReg() + ", i32* " + this.ptrreg + "\n");
 		
 		//store to ret reg

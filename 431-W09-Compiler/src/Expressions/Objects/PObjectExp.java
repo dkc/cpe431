@@ -1,5 +1,8 @@
 package Expressions.Objects;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
 import Expressions.AbstractCodeAndReg;
 import Expressions.CodeAndReg;
@@ -13,7 +16,7 @@ public class PObjectExp extends AbstractCodeAndReg{
 		this.slots = slots;
 	}
 	
-	public CodeAndReg compile(Env env){
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
 		return this;
 	}
 }

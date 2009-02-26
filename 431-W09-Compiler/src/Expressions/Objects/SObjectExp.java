@@ -1,7 +1,10 @@
 package Expressions.Objects;
 
+import java.util.ArrayList;
+
 import Environment.Env;
 import Expressions.CodeAndReg;
+import java.util.Hashtable;
 
 public class SObjectExp extends PObjectExp{
 	String strval;
@@ -12,7 +15,7 @@ public class SObjectExp extends PObjectExp{
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env){
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
 		return this;
 	}
 }

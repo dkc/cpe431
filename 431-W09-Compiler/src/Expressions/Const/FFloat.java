@@ -1,6 +1,9 @@
 package Expressions.Const;
 
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
 import Expressions.AbstractCodeAndReg;
 import Expressions.CodeAndReg;
@@ -14,7 +17,7 @@ public class FFloat extends AbstractCodeAndReg{
 		this.number = number;
 	}
 	
-	public CodeAndReg compile(Env env){
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
 		//TODO this is same as int for now
 		this.code.add(this.reg + " = add i32 0, " + number + "\n");
 		return this;

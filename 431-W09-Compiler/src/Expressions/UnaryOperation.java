@@ -1,5 +1,8 @@
 package Expressions;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
 import Values.*;
 
@@ -27,14 +30,14 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env){
-		operandScope = Env.addScope(new Env(), env);
-		this.operand.staticPass(this.operandScope);
+	public void staticPass(Env env, ArrayList<Integer> funcids){
+		operandScope = Env.addScope(new Env(this.regnum), env);
+		this.operand.staticPass(this.operandScope, null);
 	}
 
 	@Override
-	public CodeAndReg compile(Env env) {
-		operand.compile(env);
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+		operand.compile(env, null, fieldTable);
 		this.code.addAll(operand.getCode());
 		String targetReg = operand.getReg();
 		this.code.add("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");

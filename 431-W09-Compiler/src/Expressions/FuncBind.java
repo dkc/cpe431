@@ -1,7 +1,7 @@
 package Expressions;
 
 import java.util.ArrayList;
-
+import java.util.Hashtable;
 import Environment.Env;
 import Environment.RegAndIndex;
 
@@ -16,26 +16,26 @@ public class FuncBind extends AbstractCodeAndReg {
 		this.body = body;
 	}
 	
-	public void staticPass(Env env){
-		local = new Env();
+	public void staticPass(Env env, ArrayList<Integer> funcids){
+		local = new Env(this.regnum);
 		Env.addScope(local, env);
 		
 		for(int i = 0; i < funs.size(); i++){
-			local.add(funs.get(i).name); //this might be dangerous.
+			funs.get(i).staticPass(local, null); //this might be dangerous.
 		}
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env) {
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
 
 		CodeAndReg val;
 		for(int i = 0;i < funs.size();i++){
-			val = funs.get(i).compile(local);
+			val = funs.get(i).compile(local, null, fieldTable);
 			RegAndIndex regind = Env.lookup(funs.get(i).name, local);
 			//write code?
 		}
 		
-		this.code.addAll(body.compile(local).getCode());
+		this.code.addAll(body.compile(local, null, fieldTable).getCode());
 		return this;
 	}
 }

@@ -1,6 +1,8 @@
 package Expressions;
 
 
+import java.util.ArrayList;
+import java.util.Hashtable;
 import Environment.Env;
 
 public class FReturn extends AbstractCodeAndReg {
@@ -12,21 +14,19 @@ public class FReturn extends AbstractCodeAndReg {
 		this.target = target;
 	}
 	
-	@Override
-	public CodeAndReg compile(Env env){// throws ReturnException {
-		//Value retVal;
 	
-		//try {
-			this.code.addAll(target.compile(env).getCode());
-			this.code.add(this.reg + " = add i32 0, " + target.getReg() + "\n");
-		//} catch (ReturnException e) { /* we've caught another ReturnException, which should only be thrown from a return */
-			/*System.err.println("Encountered a return inside of a return--exiting...");
-			System.exit(1);
-			return null;
-		}*/
-		
-		//throw new ReturnException(target);
+	@Override
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+			this.code.addAll(target.compile(env, funcdecs, fieldTable).getCode());
+			this.code.add("ret i32 " + target.getReg() + "\n");
 		return this;
+	}
+
+
+	@Override
+	public void staticPass(Env env, ArrayList<Integer> funcids) {
+		// TODO Auto-generated method stub
+		super.staticPass(env, funcids);
 	}
 
 }

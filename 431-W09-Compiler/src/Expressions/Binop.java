@@ -1,6 +1,9 @@
 package Expressions;
 
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
 
 
@@ -23,9 +26,9 @@ public class Binop extends AbstractCodeAndReg{
 		this.aboolreg = "%boolreg" + regnum;
 	}
 	
-	public CodeAndReg compile(Env env){
-		left.compile(env);
-		right.compile(env);
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+		left.compile(env, funcdecs, fieldTable);
+		right.compile(env, funcdecs, fieldTable);
 		this.code.addAll(left.getCode());
 		this.code.addAll(right.getCode());
 		

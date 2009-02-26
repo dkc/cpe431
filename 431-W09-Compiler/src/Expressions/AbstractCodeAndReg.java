@@ -1,6 +1,7 @@
 package Expressions;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import Environment.Env;
 
@@ -16,7 +17,7 @@ public abstract class AbstractCodeAndReg implements CodeAndReg{
 		this.code = new ArrayList<String>();
 	}
 	
-	public void staticPass(Env env){}
+	public void staticPass(Env env, ArrayList<Integer> funcids){}
 	
 	public int getRegnum(){
 		return this.regnum;
@@ -34,7 +35,7 @@ public abstract class AbstractCodeAndReg implements CodeAndReg{
 		return this.code;
 	}
 	
-	public CodeAndReg compile(Env env){
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
 		return this;
 	}
 }

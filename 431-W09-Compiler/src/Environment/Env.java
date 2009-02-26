@@ -4,30 +4,36 @@ import java.util.ArrayList;
 
 public class Env {
 	private String scopeReg;
+	private String mallocReg = "%scomalreg";
 	public int scopenum;
 //	public String id;
 	//public Value val;
 	public ArrayList<String> ids;
 	Env prev;
 	
-	public Env(){//int regnum){
+	public Env(int scopenum){//int regnum){
 		//this.id = id;
 		//this.val = val;
 		this.ids = new ArrayList<String>();
-		this.scopenum = 0;
+		this.scopenum = scopenum;
 		this.scopeReg = "%scopereg" + this.scopenum;
+		this.mallocReg += this.scopenum;
 		prev = null;
 	}
 	
 	public static Env addScope(Env newScope, Env oldScope){
 		newScope.prev = oldScope;
-		newScope.scopenum = oldScope.scopenum + 1;
-		newScope.scopeReg = "%scopereg" + newScope.scopenum;
+		//newScope.scopenum = oldScope.scopenum + 1;
+		//newScope.scopeReg = "%scopereg" + newScope.scopenum;
 		return newScope;
 	}
 	
 	public String getCurrentScope(){
 		return this.scopeReg;
+	}
+	
+	public String getMallocReg(){
+		return this.mallocReg;
 	}
 	
 	/* just defining this to make Application shut up as of 02/17/09 */

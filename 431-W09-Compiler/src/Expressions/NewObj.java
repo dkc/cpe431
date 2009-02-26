@@ -1,58 +1,47 @@
 package Expressions;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+
 import Environment.Env;
+import Environment.RegAndIndex;
 import Values.*;
 
-public class NewObj implements Expression{
-	Expression function;
-	ArrayList<Expression> args;
+public class NewObj extends AbstractCodeAndReg{
+	String objid;
+	ArrayList<CodeAndReg> args;
 	
-	public NewObj(Expression function, ArrayList<Expression> args){
-		this.function = function;
+	public NewObj(String objid, ArrayList<CodeAndReg> args, int regnum){
+		super(regnum);
+		this.objid = objid;
 		this.args = args;
 	}
-	
-	public Value interp(Env env){
-		Value val;
-		try {
-			val = function.interp(env);
-		} catch (ReturnException e) {
-			System.err.println("RETURN IS NOT A VALID PART OF A CONSTRUCTOR GO AWAY GO AWAY GO AWAY exiting");
-			System.exit(1);
-			return null;
-		}
-		if(!(val instanceof VClosure)){
-			System.err.println("Well we can't very well construct a new object with something that's not a closure. Exiting");
-			System.exit(1);
-			return null;
-		}else{
-			VClosure vclos = (VClosure) val;
-			Env slots = null;
-			slots = Env.add(new Env("constructor",val),slots);
-			PObject obj = new PObject(slots);
-			
-			Value argval = null;
-			for(int i = 0;i < args.size();i++){
-				try {
-					argval = args.get(i).interp(env);
-				} catch (ReturnException e) {
-					System.err.println("Catching a ReturnException in NewObj doot doot doot exiting");
-					System.exit(1);
-					return null;
-				}
-				vclos.env = Env.add(new Env(vclos.params.get(i), argval),vclos.env);
-			}
-			
-			vclos.env = Env.add(new Env("this",obj),vclos.env);
-			
-			try {
-				vclos.body.interp(vclos.env);
-				
-			} catch (ReturnException e) {
-				
-			}
-			return obj;
+
+	@Override
+	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+		this.code.add(this.objreg + " = malloc %pobj\n");
+		
+		//store pobj to env
+		this.code.add(this.castreg + " = ptrtoint %pobj* " + this.objreg + " to i32\n");
+		this.code.add(this.shftreg + " = lhs i32 " + this.castreg + ", 2\n");
+		//tag is 00 cuz its pobj
+		RegAndIndex regind = Env.lookup(objid, env);
+		this.code.addAll(regind.code);
+		this.code.add(this.pttreg + " = getelementptr %eframe* " + 
+				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
+		this.code.add("store i32 " + this.shftreg + ", i32* "+ this.pttreg + "\n");
+		this.code.add("\n");
+		return this;
+	}
+
+	@Override
+	public void staticPass(Env env, ArrayList<Integer> funcids) {
+		env.add(this.objid);
+		//call staticPass on args?
+		for(CodeAndReg arg: args){
+			arg.staticPass(env, funcids);
 		}
 	}
+	
+	
 }
