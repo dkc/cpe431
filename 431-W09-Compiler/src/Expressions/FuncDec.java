@@ -126,7 +126,8 @@ public class FuncDec extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		//write func dec?
-		funcdecs.add("define i32 @footle_fun" + this.regnum + "(%eframe* " + this.scope.getCurrentScope() + "){\n");
+		currentLine = new LLVMLine("define i32 @footle_fun" + this.regnum + "(%eframe* " + this.scope.getCurrentScope() + "){\n");
+		funcdecs.add(currentLine);
 		
 		//TODO can't handle func dec in func body, save index, use insert? done?
 		ArrayList<LLVMLine> body = this.body.compile(this.scope, funcdecs, fieldTable).getCode();
