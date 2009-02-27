@@ -15,8 +15,14 @@ public class FVoid extends AbstractCodeAndReg{
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
+		LLVMLine currentLine;
+		
 		//void is 2 + 10 tag bits
-		this.code.add(this.reg + " = add i32 0, " + 10 + "\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + 10 + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		this.code.add(currentLine);
+		
 		return this;
 	}
 }

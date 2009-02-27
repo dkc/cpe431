@@ -20,7 +20,13 @@ public class FFloat extends AbstractCodeAndReg{
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		//TODO this is same as int for now
-		this.code.add(this.reg + " = add i32 0, " + number + "\n");
+		LLVMLine currentLine;
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + number + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		this.code.add(currentLine);
+		
 		return this;
 	}
 }
