@@ -38,11 +38,16 @@ public class UnaryOperation extends AbstractCodeAndReg {
 
 	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
+		LLVMLine currentLine;
+		
 		operand.compile(env, null, fieldTable);
 		this.code.addAll(operand.getCode());
 		String targetReg = operand.getReg();
 		
-		this.code.add("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
+		currentLine = new LLVMLine("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
+		currentLine.setOperation(operation);
+		currentLine.setRegisterDefined(this.getReg());
+		currentLine.addRegisterUsed(targetReg);
 		
 		if (operation.equals("string-length")) {
 		} else if (operation.equals("integer?")) {
