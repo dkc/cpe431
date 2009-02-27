@@ -85,7 +85,7 @@ public class Footle
       seq.staticPass(env, funcids);*/
       
       //compile creates llvm code
-      ArrayList<String> funcdecs = new ArrayList<String>();
+      ArrayList<LLVMLine> funcdecs = new ArrayList<LLVMLine>();
       compiledCode.compile(env, funcdecs, fieldTable);
       //seq.compile(env, funcdecs, fieldTable);
       
@@ -95,7 +95,7 @@ public class Footle
       //writeDispatch(funcids, "If with Var Ref", 4);
    }
    
-   private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<String> funcdecs,
+   private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
 		   ArrayList<Integer> funcids){
 	   	ArrayList<LLVMLine> code = compiledCode.getCode();
 	      Writer output = null;
@@ -180,8 +180,8 @@ public class Footle
 	    	  output.write("declare void @type_check(i32, i32)\n");
 	    	  
 	    	  //write funcdecs
-	    	  for(String line : funcdecs){
-	    		  output.write(line);
+	    	  for(LLVMLine line : funcdecs){
+	    		  output.write(line.getCode());
 	  			}
 	    	  
 	    	  //output beginning of llvm_fun

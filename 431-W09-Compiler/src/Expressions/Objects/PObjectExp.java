@@ -16,7 +16,7 @@ public class PObjectExp extends AbstractCodeAndReg{
 		this.slots = slots;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		return this;
 	}
 }

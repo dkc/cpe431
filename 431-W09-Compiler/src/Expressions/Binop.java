@@ -27,7 +27,7 @@ public class Binop extends AbstractCodeAndReg{
 		this.aboolreg = "%boolreg" + regnum;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		left.compile(env, funcdecs, fieldTable);
 		right.compile(env, funcdecs, fieldTable);
 

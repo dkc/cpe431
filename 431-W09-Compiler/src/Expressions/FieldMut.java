@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import Environment.Env;
 import Environment.RegAndIndex;
 import Expressions.CodeAndReg;
+import LLVMObjects.LLVMLine;
 import Values.PObject;
 import Values.ReturnContainer;
 import Values.VObject;
@@ -49,7 +50,7 @@ public class FieldMut extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		//compile newVal
 		this.code.addAll(this.newval.compile(env, funcdecs, fieldTable).getCode());
 		

@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import Environment.Env;
 import Environment.RegAndIndex;
+import LLVMObjects.LLVMLine;
 
 public class FuncDec extends AbstractCodeAndReg{
 	public String name;
@@ -42,44 +43,95 @@ public class FuncDec extends AbstractCodeAndReg{
 		this.body.staticPass(this.scope, null);
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
+		LLVMLine currentLine;
+		
 		//build closure obj
-		this.code.add(this.mallocreg + " = malloc %cobj, align 4\n");
+		currentLine = new LLVMLine(this.mallocreg + " = malloc %cobj, align 4\n");
+		currentLine.setOperation("malloc");
+		currentLine.setRegisterDefined(this.mallocreg);
+		this.code.add(currentLine);
+		
 		//closure env
-		this.code.add(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.ids.size() +
- 	   	  " x i32]}, align 4\n");
- 	   	this.code.add(scope.getCurrentScope() + " = bitcast {%eframe*, i32, [" + scope.ids.size() + 
- 	   			  " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
+		currentLine = new LLVMLine(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.numIds() + " x i32]}, align 4\n");
+		currentLine.setOperation("malloc");
+		currentLine.setRegisterDefined(scope.getMallocReg());
+		this.code.add(currentLine);
+		
+ 	   	currentLine = new LLVMLine(scope.getCurrentScope() + " = bitcast {%eframe*, i32, [" + scope.numIds() + " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
+		currentLine.setOperation("bitcast");
+		currentLine.setRegisterDefined(scope.getCurrentScope());
+		currentLine.addRegisterUsed(scope.getMallocReg());
+		this.code.add(currentLine);
+		
 		//store func num
-		this.code.add(this.typereg + " = getelementptr %cobj* " + 
-				this.mallocreg + ", i32 0, i32 0\n");
-		this.code.add("store i32 " + ((this.regnum << 2) + 1) + ", i32* " + this.typereg + "\n");
+		currentLine = new LLVMLine(this.typereg + " = getelementptr %cobj* " + this.mallocreg + ", i32 0, i32 0\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.typereg);
+		currentLine.addRegisterUsed(this.mallocreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store i32 " + ((this.regnum << 2) + 1) + ", i32* " + this.typereg + "\n");
+		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(this.typereg);
+		this.code.add(currentLine);
+		
  	   	//1 is tag right now
 		
 		//store env ptr
-		this.code.add(this.eframereg + " = getelementptr %cobj* " + 
-				this.mallocreg + ", i32 0, i32 2\n");
-		this.code.add("store %eframe* " + this.scope.getCurrentScope() + ", %eframe** " + this.eframereg + "\n");
+		currentLine = new LLVMLine(this.eframereg + " = getelementptr %cobj* " + this.mallocreg + ", i32 0, i32 2\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.eframereg);
+		currentLine.addRegisterUsed(this.mallocreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store %eframe* " + this.scope.getCurrentScope() + ", %eframe** " + this.eframereg + "\n");
+		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(this.scope.getCurrentScope());
+		currentLine.addRegisterUsed(this.eframereg);
+		this.code.add(currentLine);
 		
 		//setup pointer to obj
 		RegAndIndex regind = Env.lookup(this.name, env);
-		this.code.add(this.objreg + " = ptrtoint %cobj* " + this.mallocreg + " to i32\n");
-		this.code.add(this.memreg + " = shl i32 " + this.objreg + ", 2\n");
-		this.code.add(this.reg + " = add i32 1, " + this.memreg + "\n");//add 1 for tag
+		
+		currentLine = new LLVMLine(this.objreg + " = ptrtoint %cobj* " + this.mallocreg + " to i32\n");
+		currentLine.setOperation("ptrtoint");
+		currentLine.setRegisterDefined(this.objreg);
+		currentLine.addRegisterUsed(this.mallocreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.memreg + " = shl i32 " + this.objreg + ", 2\n");
+		currentLine.setOperation("shl");
+		currentLine.setRegisterDefined(this.memreg);
+		currentLine.addRegisterUsed(this.objreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 1, " + this.memreg + "\n"); //add 1 for tag
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(this.memreg);
+		this.code.add(currentLine);
 		
 		//store pointer to env
-		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
-				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
-		this.code.add("store i32 " + this.reg
-				+ ", i32* " + this.ptrreg + "\n");
+		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.ptrreg);
+		currentLine.addRegisterUsed(regind.reg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store i32 " + this.reg + ", i32* " + this.ptrreg + "\n");
+		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(this.reg);
+		currentLine.addRegisterUsed(this.ptrreg);
+		this.code.add(currentLine);
 		
 		//write func dec?
 		funcdecs.add("define i32 @footle_fun" + this.regnum + "(%eframe* " + this.scope.getCurrentScope() + "){\n");
-		int savedindex = funcdecs.size();
+		
 		//TODO can't handle func dec in func body, save index, use insert? done?
-		ArrayList<String> body = this.body.compile(this.scope, funcdecs, fieldTable).getCode();
-		body.add("}\n");
-		funcdecs.addAll(savedindex,body);
+		ArrayList<LLVMLine> body = this.body.compile(this.scope, funcdecs, fieldTable).getCode();
+		body.add(new LLVMLine("}\n"));
+		funcdecs.addAll(body);
 		//funcdecs.add("ret i32 " + this.reg + "\n");
 		
 		return this;

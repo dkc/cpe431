@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import Environment.Env;
 import Environment.RegAndIndex;
+import LLVMObjects.LLVMLine;
 
 public class VarRef extends AbstractCodeAndReg{
 	String id;
@@ -18,7 +19,7 @@ public class VarRef extends AbstractCodeAndReg{
 		this.eframereg += regnum;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		RegAndIndex regind = Env.lookup(id, env);
 		if(regind != null){
 			//this.code.add(this.eframereg + " = add i32 0," + regind.reg + "\n");

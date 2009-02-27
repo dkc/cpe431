@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.*;
+import LLVMObjects.LLVMLine;
 
 public class VarMut extends AbstractCodeAndReg{
 	String id;
@@ -17,7 +18,7 @@ public class VarMut extends AbstractCodeAndReg{
 		this.ptrreg = "%ptrreg" + regnum;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		
 		this.code.addAll(newVal.compile(env, funcdecs, fieldTable).getCode());
 		// load val to eframe

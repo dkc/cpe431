@@ -42,7 +42,7 @@ public class Application extends AbstractCodeAndReg{
 	 * UnaryOperation and BinaryOperation ate the bulk of this functionality and the other built-ins (readline,
 	 * string=?, string<?) are "predefined" applications that should always be included and can be called through
 	 * here */
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 			//Lookup closure by name in env
 		LLVMLine currentLine;
 		RegAndIndex regind = Env.lookup(this.fname, env);

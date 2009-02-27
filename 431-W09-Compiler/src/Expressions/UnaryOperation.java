@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
+import LLVMObjects.LLVMLine;
 import Values.*;
 
 public class UnaryOperation extends AbstractCodeAndReg {
@@ -36,7 +37,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	}
 
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		operand.compile(env, null, fieldTable);
 		this.code.addAll(operand.getCode());
 		String targetReg = operand.getReg();

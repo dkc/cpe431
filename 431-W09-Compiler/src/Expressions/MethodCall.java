@@ -3,6 +3,7 @@ package Expressions;
 import java.util.ArrayList;
 import Environment.Env;
 import Environment.RegAndIndex;
+import LLVMObjects.LLVMLine;
 import Values.*;
 import java.util.Hashtable;
 public class MethodCall extends AbstractCodeAndReg {
@@ -54,7 +55,7 @@ public class MethodCall extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		//get obj pointer
 		RegAndIndex regind = Env.lookup(obj, env);
 		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 

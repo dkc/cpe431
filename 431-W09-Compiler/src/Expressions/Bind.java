@@ -24,7 +24,7 @@ public class Bind extends AbstractCodeAndReg{
 		env.add(name);
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		this.code.addAll(val.compile(env, funcdecs, fieldTable).getCode());
 		
 		//llvm load code into eframe

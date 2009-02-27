@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import Environment.Env;
 import Expressions.AbstractCodeAndReg;
 import Expressions.CodeAndReg;
+import LLVMObjects.LLVMLine;
 
 
 public class FBoolean extends AbstractCodeAndReg {
@@ -17,7 +18,7 @@ public class FBoolean extends AbstractCodeAndReg {
 		this.bool = bool;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		if(bool == true){
 			//true is 0 with 10 tag
 			this.code.add(this.reg + " = add i32 0, 2\n");

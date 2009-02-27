@@ -18,7 +18,7 @@ public class NewObj extends AbstractCodeAndReg{
 	}
 
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		this.code.add(this.objreg + " = malloc %pobj\n");
 		
 		//store pobj to env

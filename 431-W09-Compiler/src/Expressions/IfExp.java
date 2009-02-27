@@ -32,7 +32,7 @@ public class IfExp extends AbstractCodeAndReg{
 		this.felse.staticPass(env, null);
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 
 		LLVMLine currentLine;
 		
