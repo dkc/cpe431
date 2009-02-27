@@ -448,7 +448,6 @@ expr returns [CodeAndReg result = null]
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
 		{	// result = new Application(functionName.toString, argumentList);
 		}
-	|	
 ;
 
 binop returns [CodeAndReg resultRegister = null]
