@@ -56,31 +56,67 @@ public class MethodCall extends AbstractCodeAndReg {
 	
 	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
+		LLVMLine currentLine;
+		
 		//get obj pointer
 		RegAndIndex regind = Env.lookup(obj, env);
-		this.code.add(this.ptrreg + " = getelementptr %eframe* " + 
-				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
-		this.code.add(this.objreg + " = load i32* " + this.ptrreg + "\n");
-		this.code.add(this.shftreg + " = lshr i32 " + this.objreg + ", 2\n");
+		
+		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.ptrreg);
+		currentLine.addRegisterUsed(regind.reg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.objreg + " = load i32* " + this.ptrreg + "\n");
+		currentLine.setOperation("load");
+		currentLine.setRegisterDefined(this.objreg);
+		currentLine.addRegisterUsed(this.ptrreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.shftreg + " = lshr i32 " + this.objreg + ", 2\n");
+		currentLine.setOperation("lshr");
+		currentLine.setRegisterDefined(this.shftreg);
+		currentLine.addRegisterUsed(this.objreg);
+		this.code.add(currentLine);
+		
 		//TODO typecheck, but opposite here... as in !typecheck
 		//this.code.add("call void @type_check( i32 " + ", i32 1 )\n");
-		this.code.add(this.castreg + " = inttoptr i32 " + this.shftreg + 
-				" to %pobj*\n");
+		
+		currentLine = new LLVMLine(this.castreg + " = inttoptr i32 " + this.shftreg + " to %pobj*\n");
+		currentLine.setOperation("inttoptr");
+		currentLine.setRegisterDefined(this.castreg);
+		currentLine.addRegisterUsed(this.shftreg);
+		this.code.add(currentLine);
 		
 		//update obj slots ref
-		this.code.add(this.slotsptrreg + " = getelementptr %pobj* " + this.castreg + 
-				", i32 0, i32 1\n");
-		this.code.add(this.slotsreg + " = load %slots** " + this.slotsptrreg + "\n");
+		
+		currentLine = new LLVMLine(this.slotsptrreg + " = getelementptr %pobj* " + this.castreg + ", i32 0, i32 1\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.slotsptrreg);
+		currentLine.addRegisterUsed(this.castreg);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.slotsreg + " = load %slots** " + this.slotsptrreg + "\n");
+		currentLine.setOperation("load");
+		currentLine.setRegisterDefined(this.slotsreg);
+		currentLine.addRegisterUsed(this.slotsptrreg);
+		this.code.add(currentLine);
 		
 		//get object type and check
 		int fid = fieldTable.get(obj + mname);
-		this.code.add( this.lookupreg + " = call i32* @lookup_field( i32 " + fid + 
-				", %slots* " + this.slotsreg + "\n");
-		this.code.add(this.typereg + " = load i32* " + this.lookupreg + "\n");
+		
+		currentLine = new LLVMLine(this.lookupreg + " = call i32* @lookup_field( i32 " + fid + ", %slots* " + this.slotsreg + "\n");
+		currentLine.setOperation("call");
+		currentLine.setRegisterDefined(this.lookupreg);
+		currentLine.addRegisterUsed(this.slotsreg);
+		this.code.add(currentLine);
 		
 		
-		
-		
+		currentLine = new LLVMLine(this.typereg + " = load i32* " + this.lookupreg + "\n");
+		currentLine.setOperation("load");
+		currentLine.setRegisterDefined(this.typereg);
+		currentLine.addRegisterUsed(this.lookupreg);
+		this.code.add(currentLine);
 		
 		//Lookup closure by name in env
 		//RegAndIndex regind = Env.lookup(this.mname, env);
@@ -91,29 +127,72 @@ public class MethodCall extends AbstractCodeAndReg {
 			//	regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
 		//this.code.add(this.typereg + " = load i32* " + this.cptrreg + "\n");
 		//type check for func close
-		this.code.add("call void @type_check( i32 " + this.typereg + ", i32 1)\n");//1 is cobj type
+		
+		currentLine = new LLVMLine("call void @type_check( i32 " + this.typereg + ", i32 1)\n"); //1 is cobj type
+		currentLine.setOperation("call");
+		currentLine.addRegisterUsed(this.typereg);
+		this.code.add(currentLine);
+		
 		//shift
-		this.code.add(this.cshftreg + " = lshr i32 " + this.typereg + ", 2\n");
-		this.code.add(this.cobjreg + " = inttoptr i32 " + this.cshftreg + 
-				" to %cobj*\n");
+		
+		currentLine = new LLVMLine(this.cshftreg + " = lshr i32 " + this.typereg + ", 2\n");
+		currentLine.setOperation("lshr");
+		currentLine.setRegisterDefined(this.cshftreg);
+		currentLine.addRegisterUsed(this.typereg);
+		this.code.add(currentLine);
+		
+		
+		currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.cshftreg + " to %cobj*\n");
+		currentLine.setOperation("inttoptr");
+		currentLine.setRegisterDefined(this.cobjreg);
+		currentLine.addRegisterUsed(this.cshftreg);
+		this.code.add(currentLine);
 		
 		//evaluate args
-		this.code.add(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
-		this.code.add(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + 
-				this.argptr + " to i32*\n");
+		
+		currentLine = new LLVMLine(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
+		currentLine.setOperation("malloc");
+		currentLine.setRegisterDefined(this.argptr);
+		this.code.add(currentLine);
+		
+		
+		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + this.argptr + " to i32*\n");
+		currentLine.setOperation("bitcast");
+		currentLine.setRegisterDefined(this.argsreg);
+		currentLine.addRegisterUsed(this.argptr);
+		this.code.add(currentLine);
+		
 		for(int i = 0;i < args.size();i++){
 			this.code.addAll(args.get(i).compile(env, funcdecs, fieldTable).getCode());
-			this.code.add(this.argslistptr + i + " = getelementptr i32* " + 
-					this.argsreg + ", i32 " + i + "\n");
-			this.code.add("store i32 " + args.get(i).getReg() + ", i32* " + 
-					this.argslistptr + i + "\n");
+			
+			currentLine = new LLVMLine(this.argslistptr + i + " = getelementptr i32* " + this.argsreg + ", i32 " + i + "\n");
+			currentLine.setOperation("getelementptr");
+			currentLine.setRegisterDefined(this.argslistptr);
+			currentLine.addRegisterUsed(this.argsreg);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine("store i32 " + args.get(i).getReg() + ", i32* " + this.argslistptr + i + "\n");
+			currentLine.setOperation("store");
+			currentLine.addRegisterUsed(args.get(i).getReg());
+			currentLine.addRegisterUsed(this.argslistptr);
+			this.code.add(currentLine);
+			
 		}
 		
 		//TODO Dipatch function nounwind needed?
 		//send compiled args and closure id # to dispatch
-		this.code.add(this.numargs + " = add i32 0, " + args.size() + "\n");
-		this.code.add(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + this.numargs + ", i32* " + this.argsreg + " ) nounwind\n");
+		
+		currentLine = new LLVMLine(this.numargs + " = add i32 0, " + args.size() + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.numargs);
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + this.cobjreg + ", i32 " + this.numargs + ", i32* " + this.argsreg + " ) nounwind\n");
+		currentLine.setOperation("call");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(this.cobjreg);
+		currentLine.addRegisterUsed(this.argsreg);
+		this.code.add(currentLine);
 		
 		//TODO Tricky, does it work?
 		//this.code.addAll(new FVoid(this.regnum).compile(env, funcdecs, fieldTable).getCode());
