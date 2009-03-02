@@ -50,18 +50,21 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine = new LLVMLine(this.mallocreg + " = malloc %cobj, align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.mallocreg);
+		currentLine.addConstantUsed(-1); // how big is cobj?
 		this.code.add(currentLine);
 		
 		//closure env
 		currentLine = new LLVMLine(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.numIds() + " x i32]}, align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(scope.getMallocReg());
+		currentLine.addConstantUsed(4*scope.numIds());
 		this.code.add(currentLine);
 		
  	   	currentLine = new LLVMLine(scope.getCurrentScope() + " = bitcast {%eframe*, i32, [" + scope.numIds() + " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
 		currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(scope.getCurrentScope());
 		currentLine.addRegisterUsed(scope.getMallocReg());
+		currentLine.addConstantUsed(scope.numIds());
 		this.code.add(currentLine);
 		
 		//store func num
@@ -69,6 +72,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.typereg);
 		currentLine.addRegisterUsed(this.mallocreg);
+		currentLine.addConstantUsed(4*0);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store i32 " + ((this.regnum << 2) + 1) + ", i32* " + this.typereg + "\n");
@@ -83,6 +87,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.eframereg);
 		currentLine.addRegisterUsed(this.mallocreg);
+		currentLine.addConstantUsed(4*2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store %eframe* " + this.scope.getCurrentScope() + ", %eframe** " + this.eframereg + "\n");
@@ -104,12 +109,14 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine.setOperation("shl");
 		currentLine.setRegisterDefined(this.memreg);
 		currentLine.addRegisterUsed(this.objreg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.reg + " = add i32 1, " + this.memreg + "\n"); //add 1 for tag
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.memreg);
+		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
 		
 		//store pointer to env
@@ -117,6 +124,8 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
+		currentLine.addConstantUsed(4*2);
+		currentLine.addConstantUsed(4*regind.index);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store i32 " + this.reg + ", i32* " + this.ptrreg + "\n");

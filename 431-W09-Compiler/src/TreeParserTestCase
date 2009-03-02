@@ -1,1 +1,3 @@
-var x = 1; var y = 2; if (true) { x; } else { y; }
+var x = 1-5;
+var y = x;
+if (true) { x; } else { y; }

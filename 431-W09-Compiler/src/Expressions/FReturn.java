@@ -26,6 +26,7 @@ public class FReturn extends AbstractCodeAndReg {
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(target.getReg());
+		currentLine.addConstantUsed(0);
 			
 		return this;
 	}

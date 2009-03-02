@@ -44,12 +44,14 @@ public class Binop extends AbstractCodeAndReg{
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.lshftreg);
 		currentLine.addRegisterUsed(left.getReg());
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.rshftreg + " = lshr i32 " + right.getReg() + ", 2\n");
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.rshftreg);
 		currentLine.addRegisterUsed(right.getReg());
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		if(exp.equals("+")){
@@ -199,6 +201,7 @@ public class Binop extends AbstractCodeAndReg{
 		currentLine.setOperation("shl");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.ashftreg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		//add tag
@@ -207,6 +210,7 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.getReg());
+			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 		}
 		

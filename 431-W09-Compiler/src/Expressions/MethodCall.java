@@ -65,6 +65,8 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
+		currentLine.addConstantUsed(4*2);
+		currentLine.addConstantUsed(4*regind.index);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.objreg + " = load i32* " + this.ptrreg + "\n");
@@ -77,6 +79,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.objreg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		//TODO typecheck, but opposite here... as in !typecheck
@@ -94,6 +97,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.slotsptrreg);
 		currentLine.addRegisterUsed(this.castreg);
+		currentLine.addConstantUsed(4*1);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.slotsreg + " = load %slots** " + this.slotsptrreg + "\n");
@@ -129,8 +133,9 @@ public class MethodCall extends AbstractCodeAndReg {
 		//type check for func close
 		
 		currentLine = new LLVMLine("call void @type_check( i32 " + this.typereg + ", i32 1)\n"); //1 is cobj type
-		currentLine.setOperation("call");
+		currentLine.setOperation("call void @type_check");
 		currentLine.addRegisterUsed(this.typereg);
+		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
 		
 		//shift
@@ -139,6 +144,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.cshftreg);
 		currentLine.addRegisterUsed(this.typereg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		
@@ -153,6 +159,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine = new LLVMLine(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.argptr);
+		currentLine.addConstantUsed(4*args.size());
 		this.code.add(currentLine);
 		
 		
@@ -160,6 +167,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.argsreg);
 		currentLine.addRegisterUsed(this.argptr);
+		currentLine.addConstantUsed(4*args.size());
 		this.code.add(currentLine);
 		
 		for(int i = 0;i < args.size();i++){
@@ -169,6 +177,7 @@ public class MethodCall extends AbstractCodeAndReg {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.argslistptr);
 			currentLine.addRegisterUsed(this.argsreg);
+			currentLine.addConstantUsed(4*i);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine("store i32 " + args.get(i).getReg() + ", i32* " + this.argslistptr + i + "\n");
@@ -185,12 +194,14 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine = new LLVMLine(this.numargs + " = add i32 0, " + args.size() + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.numargs);
+		currentLine.addConstantUsed(0);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + this.cobjreg + ", i32 " + this.numargs + ", i32* " + this.argsreg + " ) nounwind\n");
-		currentLine.setOperation("call");
+		currentLine.setOperation("call @dispatch_fun");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.cobjreg);
+		currentLine.addRegisterUsed(this.numargs);
 		currentLine.addRegisterUsed(this.argsreg);
 		this.code.add(currentLine);
 		

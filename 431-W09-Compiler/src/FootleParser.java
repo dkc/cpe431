@@ -69,7 +69,7 @@ public FootleParser(ParserSharedInputState state) {
 		astFactory.addASTChild(currentAST, returnAST);
 		if ( inputState.guessing==0 ) {
 			program_AST = (AST)currentAST.root;
-			program_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(PROGRAM,"Program")).add(s_AST));
+			program_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(PROGRAM,"PROGRAM")).add(s_AST));
 			currentAST.root = program_AST;
 			currentAST.child = program_AST!=null &&program_AST.getFirstChild()!=null ?
 				program_AST.getFirstChild() : program_AST;
@@ -191,7 +191,7 @@ public FootleParser(ParserSharedInputState state) {
 			}
 			if ( inputState.guessing==0 ) {
 				stmt_AST = (AST)currentAST.root;
-				stmt_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(IFF,"IF")).add(exp1_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(THENF,"THEN")).add(s1_AST))).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ELSEF,"ELSE")).add(s2_AST))));
+				stmt_AST = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(IFF,"IFF")).add(exp1_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(THENF,"THENF")).add(s1_AST))).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ELSEF,"ELSEF")).add(s2_AST))));
 				currentAST.root = stmt_AST;
 				currentAST.child = stmt_AST!=null &&stmt_AST.getFirstChild()!=null ?
 					stmt_AST.getFirstChild() : stmt_AST;
@@ -222,7 +222,7 @@ public FootleParser(ParserSharedInputState state) {
 			f_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				stmt_AST = (AST)currentAST.root;
-				stmt_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(FUNCTION_COLLECTION,"Function Collection")).add(f_AST));
+				stmt_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(FUNCTION_COLLECTION,"FUNCTION_COLLECTION")).add(f_AST));
 				currentAST.root = stmt_AST;
 				currentAST.child = stmt_AST!=null &&stmt_AST.getFirstChild()!=null ?
 					stmt_AST.getFirstChild() : stmt_AST;
@@ -302,7 +302,7 @@ inputState.guessing--;
 		match(ID);
 		if ( inputState.guessing==0 ) {
 			identifier_AST = (AST)currentAST.root;
-			identifier_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_IDENTIFIER,"Identifier")).add(id_AST));
+			identifier_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_IDENTIFIER,"CONST_IDENTIFIER")).add(id_AST));
 			currentAST.root = identifier_AST;
 			currentAST.child = identifier_AST!=null &&identifier_AST.getFirstChild()!=null ?
 				identifier_AST.getFirstChild() : identifier_AST;
@@ -459,7 +459,7 @@ inputState.guessing--;
 		if ( inputState.guessing==0 ) {
 			function_AST = (AST)currentAST.root;
 			
-						function_AST = (AST)astFactory.make( (new ASTArray(4)).add(tmp114_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(FUNCTION_NAME,"Function Name")).add(name_AST))).add(params_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(FUNCTION_BODY,"Function Body")).add(body_AST))));
+						function_AST = (AST)astFactory.make( (new ASTArray(4)).add(tmp114_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(FUNCTION_NAME,"FUNCTION_NAME")).add(name_AST))).add(params_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(FUNCTION_BODY,"FUNCTION_BODY")).add(body_AST))));
 						functionCounter++;
 					
 			currentAST.root = function_AST;
@@ -539,7 +539,7 @@ inputState.guessing--;
 			match(INT);
 			if ( inputState.guessing==0 ) {
 				exprnr_AST = (AST)currentAST.root;
-				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_INT,"INT")).add(i_AST));
+				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_INT,"CONST_INT")).add(i_AST));
 				currentAST.root = exprnr_AST;
 				currentAST.child = exprnr_AST!=null &&exprnr_AST.getFirstChild()!=null ?
 					exprnr_AST.getFirstChild() : exprnr_AST;
@@ -554,7 +554,7 @@ inputState.guessing--;
 			match(FLOAT);
 			if ( inputState.guessing==0 ) {
 				exprnr_AST = (AST)currentAST.root;
-				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_FLOAT,"FLOAT")).add(f_AST));
+				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_FLOAT,"CONST_FLOAT")).add(f_AST));
 				currentAST.root = exprnr_AST;
 				currentAST.child = exprnr_AST!=null &&exprnr_AST.getFirstChild()!=null ?
 					exprnr_AST.getFirstChild() : exprnr_AST;
@@ -569,7 +569,7 @@ inputState.guessing--;
 			match(TRUE);
 			if ( inputState.guessing==0 ) {
 				exprnr_AST = (AST)currentAST.root;
-				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_BOOLEAN,"BOOLEAN")).add(b1_AST));
+				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_BOOLEAN,"CONST_BOOLEAN")).add(b1_AST));
 				currentAST.root = exprnr_AST;
 				currentAST.child = exprnr_AST!=null &&exprnr_AST.getFirstChild()!=null ?
 					exprnr_AST.getFirstChild() : exprnr_AST;
@@ -584,7 +584,7 @@ inputState.guessing--;
 			match(FALSE);
 			if ( inputState.guessing==0 ) {
 				exprnr_AST = (AST)currentAST.root;
-				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_BOOLEAN,"BOOLEAN")).add(b2_AST));
+				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_BOOLEAN,"CONST_BOOLEAN")).add(b2_AST));
 				currentAST.root = exprnr_AST;
 				currentAST.child = exprnr_AST!=null &&exprnr_AST.getFirstChild()!=null ?
 					exprnr_AST.getFirstChild() : exprnr_AST;
@@ -599,7 +599,7 @@ inputState.guessing--;
 			match(STRING);
 			if ( inputState.guessing==0 ) {
 				exprnr_AST = (AST)currentAST.root;
-				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_STRING,"STRING")).add(s_AST));
+				exprnr_AST = (AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(CONST_STRING,"CONST_STRING")).add(s_AST));
 				currentAST.root = exprnr_AST;
 				currentAST.child = exprnr_AST!=null &&exprnr_AST.getFirstChild()!=null ?
 					exprnr_AST.getFirstChild() : exprnr_AST;
@@ -751,7 +751,7 @@ inputState.guessing--;
 			id_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				exprfield_AST = (AST)currentAST.root;
-				exprfield_AST = (AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(FIELD_LOOKUP,"Field Lookup")).add(exp_AST).add(id_AST));
+				exprfield_AST = (AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(FIELD_LOOKUP,"FIELD_LOOKUP")).add(exp_AST).add(id_AST));
 				currentAST.root = exprfield_AST;
 				currentAST.child = exprfield_AST!=null &&exprfield_AST.getFirstChild()!=null ?
 					exprfield_AST.getFirstChild() : exprfield_AST;
@@ -993,7 +993,7 @@ inputState.guessing--;
 			a1_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				exprmethodcall_AST = (AST)currentAST.root;
-				exprmethodcall_AST  = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(METHOD_CALL,"Method Call")).add(expm_AST).add(id1_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ARGUMENTS,"Arguments")).add(a1_AST))));
+				exprmethodcall_AST  = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(METHOD_CALL,"METHOD_CALL")).add(expm_AST).add(id1_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ARGUMENTS,"ARGUMENTS")).add(a1_AST))));
 				currentAST.root = exprmethodcall_AST;
 				currentAST.child = exprmethodcall_AST!=null &&exprmethodcall_AST.getFirstChild()!=null ?
 					exprmethodcall_AST.getFirstChild() : exprmethodcall_AST;
@@ -1032,7 +1032,7 @@ inputState.guessing--;
 		a_AST = (AST)returnAST;
 		if ( inputState.guessing==0 ) {
 			loneexprmethodcall_AST = (AST)currentAST.root;
-			loneexprmethodcall_AST  = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(METHOD_CALL,"Method Call")).add(exp_AST).add(id_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ARGUMENTS,"Arguments")).add(a_AST))));
+			loneexprmethodcall_AST  = (AST)astFactory.make( (new ASTArray(4)).add(astFactory.create(METHOD_CALL,"METHOD_CALL")).add(exp_AST).add(id_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ARGUMENTS,"ARGUMENTS")).add(a_AST))));
 			currentAST.root = loneexprmethodcall_AST;
 			currentAST.child = loneexprmethodcall_AST!=null &&loneexprmethodcall_AST.getFirstChild()!=null ?
 				loneexprmethodcall_AST.getFirstChild() : loneexprmethodcall_AST;
@@ -1055,7 +1055,7 @@ inputState.guessing--;
 		args_AST = (AST)returnAST;
 		if ( inputState.guessing==0 ) {
 			application_AST = (AST)currentAST.root;
-			application_AST = (AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(INVOKE,"Invoke")).add(id_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ARGUMENTS,"Arguments")).add(args_AST))));
+			application_AST = (AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(INVOKE,"INVOKE")).add(id_AST).add((AST)astFactory.make( (new ASTArray(2)).add(astFactory.create(ARGUMENTS,"ARGUMENTS")).add(args_AST))));
 			currentAST.root = application_AST;
 			currentAST.child = application_AST!=null &&application_AST.getFirstChild()!=null ?
 				application_AST.getFirstChild() : application_AST;

@@ -51,15 +51,23 @@ define i32 @llvm_fun(){
 %scomalreg0 = malloc {%eframe*, i32, [2 x i32]}
 %scopereg0 = bitcast {%eframe*, i32, [2 x i32]}* %scomalreg0 to %eframe*
 %r0 = add i32 0, 4
-%ptrreg1 = getelementptr %eframe* %scopereg0, i32 2, i32 0
-store i32 %r0, i32* %ptrreg1
-%r2 = add i32 0, 8
-%ptrreg3 = getelementptr %eframe* %scopereg0, i32 2, i32 1
+%r1 = add i32 0, 20
+%lrshft2 = lshr i32 %r0, 2
+%rrshft2 = lshr i32 %r1, 2
+%shftans2 = sub i32 %lrshft2, %rrshft2
+%r2 = shl i32 %shftans2, 2
+%ptrreg3 = getelementptr %eframe* %scopereg0, i32 2, i32 0
 store i32 %r2, i32* %ptrreg3
-%r4 = add i32 0, 2
-%pttrreg5 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
-%r5 = load i32* %pttrreg5
-%pttrreg7 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 1
+%r3 = add i32 0, %r2
+%pttrreg4 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
+%r4 = load i32* %pttrreg4
+%ptrreg5 = getelementptr %eframe* %scopereg0, i32 2, i32 1
+store i32 %r4, i32* %ptrreg5
+%r5 = add i32 0, %r4
+%r6 = add i32 0, 2
+%pttrreg7 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
 %r7 = load i32* %pttrreg7
-ret i32 %r9
+%pttrreg9 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 1
+%r9 = load i32* %pttrreg9
+ret i32 %r11
 }

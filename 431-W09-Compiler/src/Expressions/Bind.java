@@ -36,18 +36,22 @@ public class Bind extends AbstractCodeAndReg{
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
-		currentLine.addRegisterUsed(this.ptrreg);
+		currentLine.addConstantUsed(4*2);
+		currentLine.addConstantUsed(4*regind.index);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store i32 " + val.getReg() + ", i32* " + this.ptrreg + "\n");
 		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(val.getReg());
 		currentLine.addRegisterUsed(this.ptrreg);
 		this.code.add(currentLine);		
 		//return value
+		
 		currentLine = new LLVMLine(this.reg + " = add i32 0, " + val.getReg() + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(val.getReg());
+		this.code.add(currentLine);
 		
 		return this;
 	}

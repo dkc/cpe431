@@ -139,7 +139,7 @@ tokens
 
 program
 	:	s:stmtlist
-		{ #program = #([PROGRAM,"Program"], #s); }
+		{ #program = #([PROGRAM,"PROGRAM"], #s); }
 ;
 stmtlist
 	:	(stmt)*
@@ -163,10 +163,10 @@ stmt
 	| 	VAR^ identifier ASSIGN! expr SEMI!
 	| 	RETURN^ expr SEMI!
 	|! 	IF LPAREN! exp1:expr RPAREN! LBRACE! s1:stmtlist RBRACE! (ELSE! LBRACE! s2:stmtlist RBRACE!)?
-		{ #stmt = #([IFF, "IF"], #exp1, #([THENF, "THEN"], s1), #([ELSEF, "ELSE"], s2)); }  
+		{ #stmt = #([IFF, "IFF"], #exp1, #([THENF, "THENF"], s1), #([ELSEF, "ELSEF"], s2)); }  
 	| 	WHILE^ LPAREN! expr RPAREN! LBRACE! stmtlist RBRACE!
 	|!	f:functions
-		{ #stmt = #([FUNCTION_COLLECTION, "Function Collection"], #f); }
+		{ #stmt = #([FUNCTION_COLLECTION, "FUNCTION_COLLECTION"], #f); }
 ;
 
 stmtassign
@@ -180,7 +180,7 @@ functions
 function
 	:! 	FUNCTION name:identifier params:paramlist LBRACE! body:stmtlist RBRACE!
 		{
-			#function = #(FUNCTION, #([FUNCTION_NAME, "Function Name"], #name), #params, #([FUNCTION_BODY, "Function Body"], #body));
+			#function = #(FUNCTION, #([FUNCTION_NAME, "FUNCTION_NAME"], #name), #params, #([FUNCTION_BODY, "FUNCTION_BODY"], #body));
 			functionCounter++;
 		}
 ;
@@ -210,33 +210,33 @@ expr
 exprfield
 	:	(exprnr DOT identifier arglist) => exprmethodcall
 	|! 	exp:exprnr DOT id:identifier
-		{ #exprfield = #([FIELD_LOOKUP, "Field Lookup"], #exp, #id); }
+		{ #exprfield = #([FIELD_LOOKUP, "FIELD_LOOKUP"], #exp, #id); }
 ;
 /* working on handling nested method calls */
 exprmethodcall
 	:!	(exprnr DOT identifier arglist DOT) => expm:loneexprmethodcall DOT id1:identifier a1:arglist
-		{ #exprmethodcall  = #([METHOD_CALL, "Method Call"], #expm, #id1, #([ARGUMENTS, "Arguments"], #a1)); }
+		{ #exprmethodcall  = #([METHOD_CALL, "METHOD_CALL"], #expm, #id1, #([ARGUMENTS, "ARGUMENTS"], #a1)); }
 	|	loneexprmethodcall
 ;
 loneexprmethodcall
 	:!	exp:exprnr DOT id:identifier a:arglist
-		{ #loneexprmethodcall  = #([METHOD_CALL, "Method Call"], #exp, #id, #([ARGUMENTS, "Arguments"], #a)); }
+		{ #loneexprmethodcall  = #([METHOD_CALL, "METHOD_CALL"], #exp, #id, #([ARGUMENTS, "ARGUMENTS"], #a)); }
 ;
 
 /* a list of non-LL recursive expressions separated from expr above to keep it from freaking out--thanks, LL parser */
 exprnr
 	:!	i:INT
-		{ #exprnr = #([CONST_INT, "INT"], i); }
+		{ #exprnr = #([CONST_INT, "CONST_INT"], i); }
 	|!	f:FLOAT
-		{ #exprnr = #([CONST_FLOAT, "FLOAT"], f); }
+		{ #exprnr = #([CONST_FLOAT, "CONST_FLOAT"], f); }
 	|!	b1:TRUE
-		{ #exprnr = #([CONST_BOOLEAN, "BOOLEAN"], b1); }
+		{ #exprnr = #([CONST_BOOLEAN, "CONST_BOOLEAN"], b1); }
 	|!	b2:FALSE
-		{ #exprnr = #([CONST_BOOLEAN, "BOOLEAN"], b2); }
+		{ #exprnr = #([CONST_BOOLEAN, "CONST_BOOLEAN"], b2); }
 	|	(identifier arglist) => application
 	|	id:identifier
 	|!	s:STRING
-		{ #exprnr = #([CONST_STRING, "STRING"], s); }
+		{ #exprnr = #([CONST_STRING, "CONST_STRING"], s); }
 	|	LPAREN! expr RPAREN! (arglist)?
 	|	NOT^ expr
 	|	NEW^ identifier arglist
@@ -244,7 +244,7 @@ exprnr
 /* any function application falls under this rule, including built-ins */
 application
 	:! 	id:identifier args:arglist
-		{ #application = #([INVOKE, "Invoke"], #id, #([ARGUMENTS, "Arguments"], #args)); }
+		{ #application = #([INVOKE, "INVOKE"], #id, #([ARGUMENTS, "ARGUMENTS"], #args)); }
 ;
 /* list of parameters in a function definition */
 paramlist
@@ -332,7 +332,7 @@ operator
 ;
 identifier
 	: 	id:ID
-		{ #identifier = #([CONST_IDENTIFIER,"Identifier"], id); }
+		{ #identifier = #([CONST_IDENTIFIER,"CONST_IDENTIFIER"], id); }
 ;
 
 /*
@@ -443,7 +443,7 @@ expr returns [CodeAndReg result = null]
 		{	// result = new FieldLookup(fieldId.toString(), expression);
 		}
 	|	#(METHOD_CALL expression=expr #(CONST_IDENTIFIER methodId:ID) argumentList=args)
-		{	result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
+		{	// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
 		}
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
 		{	// result = new Application(functionName.toString, argumentList);

@@ -61,6 +61,8 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
+		currentLine.addConstantUsed(4*2);
+		currentLine.addConstantUsed(4*regind.index);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.objreg + " = load i32* " + this.ptrreg + "\n");
@@ -75,6 +77,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.objreg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		// what type to bitcast to, before type check?
@@ -91,6 +94,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.slotsptrreg);
 		currentLine.addRegisterUsed(this.castreg);
+		currentLine.addConstantUsed(4*1);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.slotsreg + " = load %slots** " + this.slotsptrreg + "\n");
@@ -109,6 +113,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			currentLine = new LLVMLine(this.newslotreg + " = malloc %slots\n");
 			currentLine.setOperation("malloc");
 			currentLine.setRegisterDefined(this.newslotreg);
+			currentLine.addConstantUsed(-1); // how big is slots?
 			this.code.add(currentLine);
 			
 			//store old front of list to next
@@ -117,6 +122,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.newsptr);
 			currentLine.addRegisterUsed(this.newslotreg);
+			currentLine.addConstantUsed(4*1);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine("store %slots* " + this.slotsreg + ", %slots** " + this.newsptr + "\n");
@@ -131,12 +137,14 @@ public class FieldMut extends AbstractCodeAndReg {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.fieldptr);
 			currentLine.addRegisterUsed(this.newslotreg);
+			currentLine.addConstantUsed(4*0);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.fidptr + " = getelementptr %field*" + this.fieldptr + ", i32 0, i32 0\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.fidptr);
 			currentLine.addRegisterUsed(this.fieldptr);
+			currentLine.addConstantUsed(4*0);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine("store i32 " + fid + ", i32* " + this.fidptr + "\n");
@@ -150,6 +158,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.valptr);
 			currentLine.addRegisterUsed(this.fieldptr);
+			currentLine.addConstantUsed(4*1);
 			this.code.add(currentLine);
 			
 			
@@ -188,6 +197,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.newval.getReg());
+		currentLine.addConstantUsed(0);
 		this.code.add(currentLine);
 		
 		return this;

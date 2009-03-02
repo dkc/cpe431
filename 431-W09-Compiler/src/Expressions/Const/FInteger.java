@@ -23,6 +23,7 @@ public class FInteger extends AbstractCodeAndReg{
 		currentLine = new LLVMLine(this.reg + " = add i32 0, " + (number << 2) + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
+		currentLine.addConstantUsed(number<<2);
 		this.code.add(currentLine);
 		
 		return this;

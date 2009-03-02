@@ -25,6 +25,8 @@ public class FFloat extends AbstractCodeAndReg{
 		currentLine = new LLVMLine(this.reg + " = add i32 0, " + number + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
+		currentLine.addConstantUsed(number);
+		
 		this.code.add(currentLine);
 		
 		return this;
