@@ -71,9 +71,9 @@ public class LLVMLine {
 	
 	public int getConstantSum() {
 		int sum = 0;
-		for(Number n : constantsUsed) {
+		for(Number n : constantsUsed)
 			sum += n.intValue();
-		}
+		
 		return sum;
 	}
 	
