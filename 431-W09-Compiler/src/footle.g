@@ -159,7 +159,7 @@ stmtlist
 
 stmt
 	: 	(identifier ASSIGN) => stmtassign
-	| 	expr (SEMI! | (ASSIGN! expr SEMI!))
+	| 	expr (SEMI! | (ASSIGN^ expr SEMI!))
 	| 	VAR^ identifier ASSIGN! expr SEMI!
 	| 	RETURN^ expr SEMI!
 	|! 	IF LPAREN! exp1:expr RPAREN! LBRACE! s1:stmtlist RBRACE! (ELSE! LBRACE! s2:stmtlist RBRACE!)?
@@ -389,19 +389,19 @@ sequence returns [Sequence compiledSequence = null]
  */
 stmt returns [CodeAndReg stmtResult = null]
 {
-	CodeAndReg exprResult, stmtListResult, thenResult, elseResult;
-	IfExp ifExpr;
+	CodeAndReg exprResult, stmtListResult, thenResult, elseResult, assignResult;
 }
-	:	#(IFF exprResult=expr #(THENF thenResult=sequence) #(ELSEF elseResult=sequence))
-		{	ifExpr = new IfExp(exprResult, thenResult, elseResult, nextUniqueRegisterId++);
-			stmtResult = ifExpr;
-			/* will need an extra register to store the phi of then and else for the return--is that what if should be returning? */
+	:	stmtResult=expr
+	|	#(IFF exprResult=expr #(THENF thenResult=sequence) #(ELSEF elseResult=sequence))
+		{	stmtResult = new IfExp(exprResult, thenResult, elseResult, nextUniqueRegisterId++);
 		}
-	|	#(ASSIGN #(CONST_IDENTIFIER id:ID) exprResult=expr)
+	|!	(#(ASSIGN #(CONST_IDENTIFIER ID) expr)) => #(ASSIGN #(CONST_IDENTIFIER id:ID) exprResult=expr)
 		{	/* binding to variables; VarMuts should always work if the static pass determines use before initialization */
 			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
-	|	stmtResult=expr
+	|	#(ASSIGN #(FIELD_LOOKUP exprResult=expr fieldId:ID) assignResult=expr) 
+		{	/* fieldmut */
+		}
 	|	#(WHILE exprResult=expr stmtListResult=sequence)
 		{	stmtResult = new WhileExp(exprResult, stmtListResult, nextUniqueRegisterId++);
 		}

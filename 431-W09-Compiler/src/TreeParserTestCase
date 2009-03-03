@@ -1,3 +1,4 @@
+x.y = 1;
 var x = 1-5;
 var y = x;
 if (true) { x; } else { y; }
