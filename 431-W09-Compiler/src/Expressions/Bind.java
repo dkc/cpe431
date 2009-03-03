@@ -20,7 +20,7 @@ public class Bind extends AbstractCodeAndReg{
 		this.ptrreg += regnum;
 	}
 	
-	public void staticPass(Env env, ArrayList<Integer> funcids){
+	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
 		env.add(name);
 	}
 	
@@ -32,7 +32,7 @@ public class Bind extends AbstractCodeAndReg{
 		RegAndIndex regind = Env.lookup(name, env);
 		LLVMLine currentLine;
 		
-		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 2, i32 " + regind.index + "\n");
+		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
@@ -44,10 +44,10 @@ public class Bind extends AbstractCodeAndReg{
 		currentLine.addRegisterUsed(this.ptrreg);
 		this.code.add(currentLine);		
 		//return value
-		currentLine = new LLVMLine(this.reg + " = add i32 0, " + val.getReg() + "\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");//return void
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
-		currentLine.addRegisterUsed(val.getReg());
+		this.code.add(currentLine);
 		
 		return this;
 	}

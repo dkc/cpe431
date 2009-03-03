@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
+import LLVMObjects.LLVMLine;
 import Values.*;
 
 public class UnaryOperation extends AbstractCodeAndReg {
@@ -30,18 +31,21 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids){
+	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
 		operandScope = Env.addScope(new Env(this.regnum), env);
-		this.operand.staticPass(this.operandScope, null);
+		this.operand.staticPass(this.operandScope, null, stringdecs);
 	}
 
 	@Override
 	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+		LLVMLine currentLine;
+		
 		operand.compile(env, null, fieldTable);
 		this.code.addAll(operand.getCode());
 		String targetReg = operand.getReg();
 		
-		this.code.add("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
+		currentLine = new LLVMLine("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
+		this.code.add(currentLine);
 		
 		if (operation.equals("string-length")) {
 		} else if (operation.equals("integer?")) {

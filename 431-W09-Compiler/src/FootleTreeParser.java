@@ -367,8 +367,7 @@ public FootleTreeParser() {
 				_t = __t151;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						//result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
-						result = new MethodCall("obj", methodId.toString(), argumentList, nextUniqueRegisterId++);	
+						result = new MethodCall(new FieldLookup(expression, methodId.toString(),nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 				}
 				break;
 			}

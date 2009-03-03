@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import Environment.Env;
 import Expressions.AbstractCodeAndReg;
 import Expressions.CodeAndReg;
+import LLVMObjects.LLVMLine;
 
 
 public class FBoolean extends AbstractCodeAndReg {
@@ -18,12 +19,19 @@ public class FBoolean extends AbstractCodeAndReg {
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+		LLVMLine currentLine;
 		if(bool == true){
 			//true is 0 with 10 tag
-			this.code.add(this.reg + " = add i32 0, 2\n");
+			currentLine = new LLVMLine(this.reg + " = add i32 0, 2\n");
+			currentLine.setOperation("add");
+			currentLine.setRegisterDefined(this.reg);
+			this.code.add(currentLine);
 		}else{
 			//false is 1 with 10 tag
-			this.code.add(this.reg + " = add i32 0, 3\n");
+			currentLine = new LLVMLine(this.reg + " = add i32 0, 3\n");
+			currentLine.setOperation("add");
+			currentLine.setRegisterDefined(this.reg);
+			this.code.add(currentLine);
 		}
 		return this;
 	}

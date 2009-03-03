@@ -58,13 +58,15 @@ public class Footle
        System.out.println("I don't really know what a RecognitionException is, but here you go, I guess.");
       }
       
-      System.out.println("initial sequence: " + compiledCode.seq.toString());
+      //System.out.println("initial sequence: " + compiledCode.seq.toString());
       
       //Static Pass initializes env
       Env env = new Env(0);
-      ArrayList<Integer> funcids = new ArrayList<Integer>();
+      //ArrayList<Integer> funcids = new ArrayList<Integer>();
+      ArrayList<String> stringdecs = new ArrayList<String>();
       Hashtable<String, Integer> fieldTable = new Hashtable<String, Integer>();
-      compiledCode.staticPass(env, funcids);
+      Integer funcid = 0;
+      compiledCode.staticPass(env, funcid, stringdecs);
       
       //TEST CODE
       /*ArrayList<CodeAndReg> testseq = new ArrayList<CodeAndReg>();
@@ -90,13 +92,12 @@ public class Footle
       //seq.compile(env, funcdecs, fieldTable);
       
       //write output
-      writeLLVM(compiledCode, env, funcdecs, funcids);
-      //writeLLVM(seq, env, funcdecs, funcids);
-      //writeDispatch(funcids, "If with Var Ref", 4);
+      writeLLVM(compiledCode, env, funcdecs, funcid, stringdecs);
+
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<String> funcdecs,
-		   ArrayList<Integer> funcids){
+		   Integer funcid, ArrayList<String> stringdecs){
 	   	ArrayList<LLVMLine> code = compiledCode.getCode();
 	      Writer output = null;
 	      try{
@@ -145,11 +146,13 @@ public class Footle
 	    	  output.write("%shftreg = load i32* %fidptr\n");
 	    	  output.write("%fid = lshr i32 %shftreg, 2\n");
 	    	  output.write("switch i32 %fid, label %default [");
-	    	  for(Integer i: funcids){
+	    	  //for(Integer i: funcids){
+	    	  for(int i = 0; i < funcid; i++){
 	    		  output.write(" i32 " + i + ", label %funccall" + i + " ");
 	    	  }
 	    	  output.write("]\n");
-	    	  for(Integer i: funcids){
+	    	  //for(Integer i: funcids){
+	    	  for(int i = 0; i < funcid; i++){
 	    		  output.write("funccall" + i + ":\n");
 	    		  //build eframe from args, recursive helper fun? probably
 	    		  output.write("%funcenv = call %eframe* @createArgsList ( i32 %len, i32* %args, %eframe* %envframe, i32 0)\n");
@@ -178,11 +181,18 @@ public class Footle
 	    	  output.write("}\n");
 	    	  
 	    	  output.write("declare void @type_check(i32, i32)\n");
+	    	  output.write("declare void @obj_type_check(i32, i32)\n");
+	    	  output.write("declare void @neg_float_check(i32)\n");
 	    	  
 	    	  //write funcdecs
 	    	  for(String line : funcdecs){
 	    		  output.write(line);
 	  			}
+	    	  
+	    	  //write string decs
+	    	  for(String line: stringdecs){
+	    		  output.write(line);
+	    	  }
 	    	  
 	    	  //output beginning of llvm_fun
 	    	  output.write("define i32 @llvm_fun(){\n");
@@ -210,44 +220,6 @@ public class Footle
 	    	  error("Could not close llvm-code.s");
 	      }
    }
-   
-   private static void writeDispatch(ArrayList<Integer> funcids, String msg, int expVal){
-	   	Writer output = null;
-	      try{
-	      output = new BufferedWriter(new FileWriter("dispatch.c"));
-	      }catch(Exception e){
-	    	  error("Could not create and open dispatch.c for writing");
-	      }
-	      //write output
-	   try{
-		   //output main
-		   output.write("#include <stdio>\n");
-		   output.write("extern unsigned int llvm_fun();\n");
-		   output.write("int main(){\n");
-		   output.write("unsigned int retVal = llvm_fun();\n");
-		   output.write("printf(\"Test: " + msg + "\\n\");\n");
-		   output.write("printf(\"Expected Output: " + expVal + "\\n\");\n");
-		   output.write("printf(\"Test: %d\\n\", retVal);\n");
-		   output.write("return 0;\n");
-		   output.write("}\n");
-		   
-		   output.write("void type_check(unsigned int type, unsigned int test){\n");
-		   output.write("unsigned int shfttype = type & 3;\n");
-		   output.write("if(shfttype == test){\n");
-		   output.write("}else{\n");
-		   output.write("fprintf(stderr,\"Type error, expected but got \\n\");\n");
-		   output.write("exit(-1);\n");
-		   output.write("}\n");
-		   output.write("}\n");
-	   }catch(Exception e){
-	    	  error("Could not write output to file llvm-code.s");
-	      }
-	   try{
-		      output.close();
-		      }catch(Exception e){
-		    	  error("Could not close dispatch.c");
-		      }
-   }
  
    private static void error(String msg)
    {
@@ -258,7 +230,7 @@ public class Footle
    private static final String DISPLAYAST = "-displayAST";
  
    private static String inputFile = null;
-   private static boolean displayAST = true;
+   private static boolean displayAST = false;
  
    private static void parseParameters(String [] args)
    {

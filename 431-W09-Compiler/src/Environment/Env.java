@@ -51,34 +51,39 @@ public class Env {
 		LLVMLine currentLine;
 		Env v = env;
 		int index = 0;
-		int i = 0;
+		//int i = 0;
 		RegAndIndex retVal = new RegAndIndex();
 		while(v != null){
 			for(index = 0;index < v.ids.size();index++){
 				if(v.ids.get(index).equals(id)){
 					retVal.index = index;
-					if(i == 0){
+					retVal.reg = v.getCurrentScope();
+					/*if(i == 0){
 						retVal.reg = env.scopeReg;
 					}else{//TODO val is in higher scope
 						retVal.reg = "%scopereg" + v.scopenum;
-					}
+					}*/
 					return retVal;
 				}
 			}
 			//TODO add code to get element ptr to next scope in local reg
 			
-			currentLine = new LLVMLine("%eframeptr" + v.scopenum + " = getelementptr %eframe* " + v.scopeReg + ",i32 1\n");
+			String eframeptr = "%eframeptr" + v.scopenum;
+			currentLine = new LLVMLine(eframeptr + " = getelementptr %eframe* " + v.scopeReg + ", i32 0, i32 1\n");
 			currentLine.setOperation("getelementptr");
-			currentLine.setRegisterDefined("%eframeptr" + v.scopenum);
+			currentLine.setRegisterDefined(eframeptr);
 			currentLine.addRegisterUsed(v.scopeReg);
 			
-			currentLine = new LLVMLine("%scopereg" + v.scopenum + " = load i32* %eframeptr" + v.scopenum + "\n");
-			currentLine.setOperation("load");
-			currentLine.setRegisterDefined("%scopereg" + v.scopenum);
-			currentLine.addRegisterUsed("%eframeptr" + v.scopenum);
 			
-			i++;
+			
+			//i++;
 			v = v.prev;
+			
+			currentLine = new LLVMLine(v.scopeReg + " = load %eframe** " + eframeptr + "\n");
+			currentLine.setOperation("load");
+			currentLine.setRegisterDefined(v.scopeReg);
+			currentLine.addRegisterUsed(eframeptr);
+			
 		}
 		return null;
 	}

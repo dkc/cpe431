@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import Environment.Env;
 import Expressions.AbstractCodeAndReg;
 import Expressions.CodeAndReg;
+import LLVMObjects.LLVMLine;
 
 public class FInteger extends AbstractCodeAndReg{
 	public int number;
@@ -17,7 +18,10 @@ public class FInteger extends AbstractCodeAndReg{
 	
 	//public CodeAndReg compile(Env env,String scope){
 	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
-		this.code.add(this.reg + " = add i32 0, " + (number << 2) + "\n");
+		LLVMLine currentLine = new LLVMLine(this.reg + " = add i32 0, " + (number << 2) + "\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		this.code.add(currentLine);
 		return this;
 	}
 }
