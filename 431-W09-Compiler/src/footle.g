@@ -440,13 +440,13 @@ expr returns [CodeAndReg result = null]
 		{	result = new UnaryOperation("not", expression, nextUniqueRegisterId++);
 		}
 	|	#(FIELD_LOOKUP expression=expr #(CONST_IDENTIFIER fieldId:ID))
-		{	// result = new FieldLookup(fieldId.toString(), expression);
+		{	// result = new FieldLookup(expression, fieldId.toString());
 		}
 	|	#(METHOD_CALL expression=expr #(CONST_IDENTIFIER methodId:ID) argumentList=args)
 		{	// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
-		}
+		} 
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
-		{	// result = new Application(functionName.toString, argumentList);
+		{	result = new Application(functionName.toString(), argumentList, nextUniqueRegisterId++);
 		}
 ;
 
@@ -509,7 +509,7 @@ const_val returns [CodeAndReg constValue = null]
 		{	constValue = new VarRef(id.toString(), nextUniqueRegisterId++);
 		}
 	|	CONST_STRING str:STRING
-		{	// constValue = new SObject(str);
+		{	// constValue = new FString(str, nextUniqueRegisterId++);
 		}
 ;
 

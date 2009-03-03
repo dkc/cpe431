@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060906): "src/footle.g" -> "FootleTreeParser.java"$
+// $ANTLR 2.7.7 (20060906): "footle.g" -> "FootleTreeParser.java"$
 
 
 import antlr.TreeParser;
@@ -368,6 +368,7 @@ public FootleTreeParser() {
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
+								// String obj, String field, args, regnum
 							
 				}
 				break;
@@ -392,7 +393,7 @@ public FootleTreeParser() {
 				_t = __t153;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						// result = new Application(functionName.toString, argumentList);
+						result = new Application(functionName.toString(), argumentList, nextUniqueRegisterId++);
 							
 				}
 				break;
@@ -1100,7 +1101,7 @@ inputState.guessing--;
 				match(_t,STRING);
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						// constValue = new SObject(str);
+						// constValue = new FString(str, nextUniqueRegisterId++);
 							
 				}
 				break;

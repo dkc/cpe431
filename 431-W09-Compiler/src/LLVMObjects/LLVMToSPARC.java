@@ -77,7 +77,7 @@ public class LLVMToSPARC {
 				currentLine.setOperation("ld");
 				SPARCcode += "\tld\t[" + currentLine.getRegisterUsed(0) + "], " + currentLine.getRegisterDefined();
 			} else if(currentLine.getOperation().equals("bitcast")) {
-				
+				SPARCcode += "! bitcast removed by the LLVM->SPARC translation";
 			} else if(currentLine.getOperation().equals("malloc")) {
 				
 			} else if(currentLine.getOperation().equals("")) {
