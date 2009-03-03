@@ -446,7 +446,7 @@ expr returns [CodeAndReg result = null]
 		{	// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
 		} 
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
-		{	result = new Application(functionName.toString(), argumentList, nextUniqueRegisterId++);
+		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
 ;
 

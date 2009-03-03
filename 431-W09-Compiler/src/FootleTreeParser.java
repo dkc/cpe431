@@ -305,6 +305,10 @@ inputState.guessing--;
 					_t = _retTree;
 					_t = __t147;
 					_t = _t.getNextSibling();
+					if ( inputState.guessing==0 ) {
+							/* fieldmut */
+								
+					}
 				}
 			else {
 				throw new NoViableAltException(_t);
@@ -417,8 +421,8 @@ inputState.guessing--;
 				_t = __t157;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						//result = new MethodCall(new FieldLookup(expression, methodId.toString(),nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 						// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
+							
 				}
 				break;
 			}
@@ -442,7 +446,7 @@ inputState.guessing--;
 				_t = __t159;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						result = new Application(functionName.toString(), argumentList, nextUniqueRegisterId++);
+						result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 							
 				}
 				break;
