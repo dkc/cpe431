@@ -31,9 +31,9 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids){
+	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
 		operandScope = Env.addScope(new Env(this.regnum), env);
-		this.operand.staticPass(this.operandScope, null);
+		this.operand.staticPass(this.operandScope, null, stringdecs);
 	}
 
 	@Override
@@ -45,10 +45,8 @@ public class UnaryOperation extends AbstractCodeAndReg {
 		String targetReg = operand.getReg();
 		
 		currentLine = new LLVMLine("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
-		currentLine.setOperation(operation);
-		currentLine.setRegisterDefined(this.getReg());
-		currentLine.addRegisterUsed(targetReg);
-		
+		this.code.add(currentLine);
+
 		if (operation.equals("string-length")) {
 		} else if (operation.equals("integer?")) {
 		} else if (operation.equals("boolean?")) {

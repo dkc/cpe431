@@ -18,7 +18,7 @@ public class FVoid extends AbstractCodeAndReg{
 		LLVMLine currentLine;
 		
 		//void is 2 + 10 tag bits
-		currentLine = new LLVMLine(this.reg + " = add i32 0, " + 10 + "\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addConstantUsed(10);

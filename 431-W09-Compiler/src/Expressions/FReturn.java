@@ -33,9 +33,9 @@ public class FReturn extends AbstractCodeAndReg {
 
 
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids) {
+	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
 		// TODO Auto-generated method stub
-		super.staticPass(env, funcids);
+		super.staticPass(env, funcid, stringdecs);
 	}
 
 }

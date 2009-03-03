@@ -1,4 +1,4 @@
 x.y = 1;
-var x = 1-5;
+var x = 3; x;
 var y = x;
 if (true) { x; } else { y; }

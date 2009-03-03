@@ -20,11 +20,12 @@ public class VarMut extends AbstractCodeAndReg{
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		LLVMLine currentLine;
-		
 		this.code.addAll(newVal.compile(env, funcdecs, fieldTable).getCode());
 		// load val to eframe
 		RegAndIndex regind = Env.lookup(id, env);
-		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
+		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + 
+				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
+
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
@@ -37,12 +38,20 @@ public class VarMut extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		//store to ret reg
-		currentLine = new LLVMLine(this.reg + " = add i32 0, " + newVal.getReg() + "\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");// return void
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
-		currentLine.addRegisterUsed(newVal.getReg());
 		this.code.add(currentLine);
 		
 		return this;
+	}
+	
+	@Override
+	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+		RegAndIndex regind = Env.lookup(id, env);
+		if(regind == null){
+			System.err.println("Error in Static Pass: Variable mutation before bind");
+			System.exit(-1);
+		}
 	}
 }

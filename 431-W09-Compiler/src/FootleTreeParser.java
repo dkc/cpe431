@@ -417,8 +417,8 @@ inputState.guessing--;
 				_t = __t157;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
+						//result = new MethodCall(new FieldLookup(expression, methodId.toString(),nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 						// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
-							
 				}
 				break;
 			}
