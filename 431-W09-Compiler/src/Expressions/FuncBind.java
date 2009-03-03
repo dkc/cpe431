@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import Environment.Env;
 import Environment.RegAndIndex;
+import LLVMObjects.LLVMLine;
 
 public class FuncBind extends AbstractCodeAndReg {
 	public ArrayList<FuncDec> funs;
@@ -24,10 +25,21 @@ public class FuncBind extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
-		for(FuncDec f: funs){
-			this.code.addAll(f.compile(env, funcdecs, fieldTable).getCode());
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
+		//compile all func decs
+		for(CodeAndReg fun: this.funs){
+			this.code.addAll(fun.compile(env, funcdecs, fieldTable).getCode());
 		}
+		
+		//retturn void
+		
+		LLVMLine line = new LLVMLine(this.reg + " = add i32 0, 10\n");
+		line.setOperation("add");
+		line.setRegisterDefined(this.reg);
+		line.addConstantUsed(0);
+		line.addConstantUsed(10);
+		this.code.add(line);
+		
 		return this;
 	}
 }

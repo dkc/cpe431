@@ -32,7 +32,7 @@ public class FFloat extends AbstractCodeAndReg{
 		this.floatptr += regnum;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){	
 		LLVMLine currentLine;
 		currentLine = new LLVMLine(this.objreg + " = malloc %fobj\n");
 		currentLine.setOperation("malloc");

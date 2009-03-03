@@ -17,11 +17,15 @@ public class FPointer extends AbstractCodeAndReg{
 		this.address = address;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
-		LLVMLine currentLine = new LLVMLine(this.reg + " = add i32 0, " + ((address << 2) + 1) + "\n");
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
+		LLVMLine currentLine;
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + ((address << 2) + 1) + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
+		currentLine.addConstantUsed((address << 2) + 1);
 		this.code.add(currentLine);
+		
 		return this;
 	}
 }

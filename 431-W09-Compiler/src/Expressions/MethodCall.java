@@ -64,7 +64,7 @@ public class MethodCall extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
 		
 		//get obj pointer
@@ -107,12 +107,14 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine = new LLVMLine("call void @obj_type_check( i32 " + this.cobjid + ", i32 1)\n");//1 is cobj type
 		currentLine.setOperation("call");
 		currentLine.addRegisterUsed(this.cobjid);
+		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
 		
 		//evaluate args
 		currentLine = new LLVMLine(this.argptr + " = malloc [" + (args.size() + 1) + " x i32], align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.argptr);
+		currentLine.addConstantUsed(4*(args.size()+1));
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + (args.size() + 1) + " x i32]* " + 
@@ -120,6 +122,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.argsreg);
 		currentLine.addRegisterUsed(this.argptr);
+		currentLine.addConstantUsed(4*(args.size()+1));
 		this.code.add(currentLine);
 		
 		for(int i = 0;i < args.size();i++){
@@ -129,6 +132,7 @@ public class MethodCall extends AbstractCodeAndReg {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.argslistptr + i);
 			currentLine.addRegisterUsed(this.argsreg);
+			currentLine.addConstantUsed(4*i);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine("store i32 " + args.get(i).getReg() + ", i32* " + 
@@ -161,6 +165,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("call");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.cobjreg);
+		currentLine.addConstantUsed(4*(args.size()+1));
 		currentLine.addRegisterUsed(this.argsreg);
 		this.code.add(currentLine);
 		

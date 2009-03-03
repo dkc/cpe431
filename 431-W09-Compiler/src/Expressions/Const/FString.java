@@ -34,7 +34,7 @@ public class FString extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs,
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs,
 			Hashtable<String, Integer> fieldTable) {
 		LLVMLine currentLine;
 		currentLine = new LLVMLine(this.objreg + " = malloc %sobj\n");

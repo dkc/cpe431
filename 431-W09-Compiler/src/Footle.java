@@ -6,7 +6,7 @@ import Expressions.FuncDec;
 import Expressions.Sequence;
 import Expressions.VarRef;
 import Expressions.Const.FInteger;
-import LLVMObjects.LLVMLine;
+import LLVMObjects.*;
 import antlr.*;
 import antlr.collections.*;
 import antlr.debug.misc.ASTFrame;
@@ -14,50 +14,51 @@ import java.io.*;
 import java.util.ArrayList;
 
 import java.util.Hashtable;
- 
+
 public class Footle
 {
-   public static void main(String[] args)
-   {
-      parseParameters(args);
+	public static void main(String[] args)
+	{
+		parseParameters(args);
  
-      FootleParser parser = new FootleParser(createLexer());
+		FootleParser parser = new FootleParser(createLexer());
       
-      try
-      {
-         parser.setASTNodeClass("LineNumberAST");
-         parser.program();
-      }
-      catch (antlr.TokenStreamException e)
-      {
-         error(e.toString());
-      }
-      catch (antlr.RecognitionException e)
-      {
-         error(e.toString());
-      }
+		try
+		{
+			parser.setASTNodeClass("LineNumberAST");
+			parser.program();
+		}
+		catch (antlr.TokenStreamException e)
+		{
+			error(e.toString());
+		}
+		catch (antlr.RecognitionException e)
+		{
+			error(e.toString());
+		}
  
-      AST t = parser.getAST();
-      if (displayAST && t != null)
-      {
-         ASTFrame frame = new ASTFrame("AST", t);
-         frame.setVisible(true);
-      }
+		AST t = parser.getAST();
+		if (displayAST && t != null)
+		{
+			ASTFrame frame = new ASTFrame("AST", t);
+			frame.setVisible(true);
+		}
  
-      // attempt to validate
+		// attempt to validate
       
-      Sequence compiledCode = null;
-      FootleTreeParser treeparser = new FootleTreeParser();
-      
-      try
-      {
-    	  compiledCode = treeparser.validate(t);
-      }
-      catch(RecognitionException e)
-      {
-       System.out.println("I don't really know what a RecognitionException is, but here you go, I guess.");
-      }
-      
+		Sequence compiledCode = null;
+		FootleTreeParser treeparser = new FootleTreeParser();
+		
+		try
+		{
+			compiledCode = treeparser.validate(t);
+		}
+		catch(RecognitionException e)
+		{
+			System.out.println("I don't really know what a RecognitionException is, but here you go, I guess.");
+		
+		}
+            
       //System.out.println("initial sequence: " + compiledCode.seq.toString());
       
       //Static Pass initializes env
@@ -68,35 +69,17 @@ public class Footle
       Integer funcid = 0;
       compiledCode.staticPass(env, funcid, stringdecs);
       
-      //TEST CODE
-      /*ArrayList<CodeAndReg> testseq = new ArrayList<CodeAndReg>();
-      ArrayList<String> params = new ArrayList<String>();
-      params.add("x");
-      //FInteger retval = new FInteger(8,0);
-      VarRef retval = new VarRef("x",0);
-      FReturn ret = new FReturn(retval, 20);
-      //ArrayList<CodeAndReg> bodylist = new ArrayList<CodeAndReg>();
-      //bodylist.add(retval);
-      //bodylist.add(ret);
-      //Sequence body = new Sequence(bodylist, 21);
-      testseq.add(new FuncDec("f",params,ret,1));
-      ArrayList<CodeAndReg> argslist = new ArrayList<CodeAndReg>();
-      argslist.add(new FInteger(1,50));
-      testseq.add(new Application("f",argslist,2));
-      Sequence seq = new Sequence(testseq,3);
-      seq.staticPass(env, funcids);*/
-      
-      //compile creates llvm code
-      ArrayList<String> funcdecs = new ArrayList<String>();
-      compiledCode.compile(env, funcdecs, fieldTable);
-      //seq.compile(env, funcdecs, fieldTable);
-      
+      	//compile creates llvm code
+      	ArrayList<LLVMLine> funcdecs = new ArrayList<LLVMLine>();
+      	compiledCode.compile(env, funcdecs, fieldTable);
+      	//seq.compile(env, funcdecs, fieldTable);
+
       //write output
       writeLLVM(compiledCode, env, funcdecs, funcid, stringdecs);
 
    }
    
-   private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<String> funcdecs,
+   private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
 		   Integer funcid, ArrayList<String> stringdecs){
 	   	ArrayList<LLVMLine> code = compiledCode.getCode();
 	      Writer output = null;
@@ -185,8 +168,8 @@ public class Footle
 	    	  output.write("declare void @neg_float_check(i32)\n");
 	    	  
 	    	  //write funcdecs
-	    	  for(String line : funcdecs){
-	    		  output.write(line);
+	    	  for(LLVMLine line : funcdecs){
+	    		  output.write(line.getCode());
 	  			}
 	    	  
 	    	  //write string decs

@@ -52,7 +52,7 @@ public class Application extends AbstractCodeAndReg{
 	 * UnaryOperation and BinaryOperation ate the bulk of this functionality and the other built-ins (readline,
 	 * string=?, string<?) are "predefined" applications that should always be included and can be called through
 	 * here */
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 			LLVMLine currentLine;
 		
 			//Lookup closure by name in env
@@ -129,7 +129,6 @@ public class Application extends AbstractCodeAndReg{
 				this.code.add(currentLine);
 			}
 			
-			//TODO Dipatch function nounwind needed?
 			//send compiled args and closure id # to dispatch
 			
 			currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
@@ -141,8 +140,6 @@ public class Application extends AbstractCodeAndReg{
 			currentLine.addRegisterUsed(this.argsreg);
 			this.code.add(currentLine);
 			
-			//TODO Tricky, does it work?
-			//currentLine = new LLVMLineAll(new FVoid(this.regnum).compile(env, funcdecs, fieldTable).getCode());
-			return this; /* function did not return a value */
+			return this;
 	}
 }

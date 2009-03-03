@@ -7,12 +7,22 @@ public class LLVMLine {
 	private String operation;
 	private String registerDefined;
 	private ArrayList<String> registersUsed;
+	private ArrayList<Number> constantsUsed;
+	private String SPARCTranslation;
 	
 	public LLVMLine(String code)
 	{
 		this.code = code;
-		this.registerDefined = registerDefined;
 		this.registersUsed = new ArrayList<String>();
+		this.constantsUsed = new ArrayList<Number>();
+	}
+	
+	public String getSPARCTranslation() {
+		return SPARCTranslation;
+	}
+
+	public void setSPARCTranslation(String translation) {
+		SPARCTranslation = translation;
 	}
 
 	public String getOperation() {
@@ -23,8 +33,8 @@ public class LLVMLine {
 		this.operation = operation;
 	}
 
-	public ArrayList<String> getRegistersUsed() {
-		return registersUsed;
+	public void addConstantUsed(Number newRegisterUsed) {
+		this.constantsUsed.add(newRegisterUsed);
 	}
 
 	public void addRegisterUsed(String newRegisterUsed) {
@@ -42,4 +52,41 @@ public class LLVMLine {
 	public void setRegisterDefined(String registerDefined) {
 		this.registerDefined = registerDefined;
 	}
+	
+	public int getNumConstants() {
+		return this.constantsUsed.size();
+	}
+	
+	public int getNumRegistersUsed() {
+		return this.registersUsed.size();
+	}
+	
+	public String getRegisterUsed(int regNum) {
+		return this.registersUsed.get(regNum);
+	}
+	
+	public Number getConstantUsed(int conNum) {
+		return this.constantsUsed.get(conNum);
+	}
+	
+	public int getConstantSum() {
+		int sum = 0;
+		for(Number n : constantsUsed)
+			sum += n.intValue();
+		
+		return sum;
+	}
+	
+	public String toString() {
+		String lineRepresentation = "----------------\n";
+		lineRepresentation += code + "\n";
+		lineRepresentation += operation + "\n";
+		lineRepresentation += "defs:\t" + registerDefined + "\n";
+		lineRepresentation += "uses:\t" + registersUsed.toString() + "\n";
+		lineRepresentation += "consts:\t" + constantsUsed.toString();
+		
+		return lineRepresentation;
+	}
+
+	
 }

@@ -60,9 +60,8 @@ public class FieldMut extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		LLVMLine currentLine;
-		
 		//compile newVal
 		this.code.addAll(this.newval.compile(env, funcdecs, fieldTable).getCode());
 		
@@ -73,16 +72,19 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine = new LLVMLine("call void @type_check( i32 " + this.obj.getReg() + ", i32 1 )\n");
 		currentLine.setOperation("call");
 		currentLine.addRegisterUsed(this.obj.getReg());
+		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.shftreg + " = lshr i32 " + this.obj.getReg() + ", 2\n");
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.obj.getReg());
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.castreg + " = inttoptr i32 " + this.shftreg + 
 				" to %pobj*\n");
+
 		currentLine.setOperation("inttoptr");
 		currentLine.setRegisterDefined(this.castreg);
 		currentLine.addRegisterUsed(this.shftreg);
@@ -94,6 +96,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.idslotsptrreg);
 		currentLine.addRegisterUsed(this.castreg);
+		currentLine.addConstantUsed(4*0);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.objid + " = load %slots** " + this.idslotsptrreg + "\n");
@@ -112,6 +115,7 @@ public class FieldMut extends AbstractCodeAndReg {
 				", i32 0, i32 1\n");
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.slotsptrreg);
+		currentLine.addConstantUsed(4*1);
 		currentLine.addRegisterUsed(this.castreg);
 		this.code.add(currentLine);
 		
@@ -130,6 +134,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			currentLine = new LLVMLine(this.newslotreg + " = malloc %slots\n");
 			currentLine.setOperation("malloc");
 			currentLine.setRegisterDefined(this.newslotreg);
+			currentLine.addConstantUsed(-1);//TODO sizeof slots
 			this.code.add(currentLine);
 			
 			//store old front of list to next
@@ -138,6 +143,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.newsptr);
 			currentLine.addRegisterUsed(this.newslotreg);
+			currentLine.addConstantUsed(4*1);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine("store %slots* " + this.slotsreg + ", %slots** " + 
@@ -148,18 +154,18 @@ public class FieldMut extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 			
 			//store field id
-			currentLine = new LLVMLine(this.fieldptr + " = getelementptr %slots* " + 
-					this.newslotreg + ", i32 0, i32 0\n");
+			currentLine = new LLVMLine(this.fieldptr + " = getelementptr %slots* " + this.newslotreg + ", i32 0, i32 0\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.fieldptr);
 			currentLine.addRegisterUsed(this.newslotreg);
+			currentLine.addConstantUsed(4*0);
 			this.code.add(currentLine);
 			
-			currentLine = new LLVMLine(this.fidptr + " = getelementptr %field*" + this.fieldptr + 
-					", i32 0, i32 0\n");
+			currentLine = new LLVMLine(this.fidptr + " = getelementptr %field*" + this.fieldptr + ", i32 0, i32 0\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.fidptr);
 			currentLine.addRegisterUsed(this.fieldptr);
+			currentLine.addConstantUsed(4*0);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine("store i32 " + fid + ", i32* " + this.fidptr + "\n");
@@ -168,12 +174,13 @@ public class FieldMut extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 			
 			//store field value
-			currentLine = new LLVMLine(this.valptr + " = getelementptr %field*" + this.fieldptr + 
-					", i32 0, i32 1\n");
+			currentLine = new LLVMLine(this.valptr + " = getelementptr %field*" + this.fieldptr + ", i32 0, i32 1\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.valptr);
 			currentLine.addRegisterUsed(this.fieldptr);
+			currentLine.addConstantUsed(4*1);
 			this.code.add(currentLine);
+			
 			
 			currentLine = new LLVMLine("store i32 " + this.newval.getReg() + ", i32* " + this.valptr + "\n");
 			currentLine.setOperation("store");
@@ -189,24 +196,27 @@ public class FieldMut extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 			
 		}else{//store to field
-		currentLine = new LLVMLine( this.lookupreg + " = call i32* @lookup_field( i32 " + fid + 
-				", %slots* " + this.slotsreg + "\n");
-		currentLine.setOperation("call");
-		currentLine.setRegisterDefined(this.lookupreg);
-		currentLine.addRegisterUsed(this.slotsreg);
-		this.code.add(currentLine);
-		
-		currentLine = new LLVMLine("store i32 " + newval.getReg() + ", i32* " + this.lookupreg + "\n");
-		currentLine.setOperation("store");
-		currentLine.addRegisterUsed(this.newval.getReg());
-		currentLine.addRegisterUsed(this.lookupreg);
-		this.code.add(currentLine);
+			
+			currentLine = new LLVMLine(this.lookupreg + " = call i32* @lookup_field( i32 " + fid + ", %slots* " + this.slotsreg + "\n");
+			currentLine.setOperation("call");
+			currentLine.setRegisterDefined(this.lookupreg);
+			currentLine.addRegisterUsed(this.slotsreg);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine("store i32 " + newval.getReg() + ", i32* " + this.lookupreg + "\n");
+			currentLine.setOperation("store");
+			currentLine.addRegisterUsed(newval.getReg());
+			currentLine.addRegisterUsed(this.lookupreg);
+			this.code.add(currentLine);
 		}
 		
 		//store retval
-		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n"); //return void
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + this.newval.getReg() + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
+		currentLine.addRegisterUsed(this.newval.getReg());
+		currentLine.addConstantUsed(0);
 		this.code.add(currentLine);
 		
 		return this;

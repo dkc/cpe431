@@ -17,7 +17,7 @@ public class FReturn extends AbstractCodeAndReg {
 	
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
 		
 		this.code.addAll(target.compile(env, funcdecs, fieldTable).getCode());
@@ -26,6 +26,7 @@ public class FReturn extends AbstractCodeAndReg {
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(target.getReg());
+		currentLine.addConstantUsed(0);
 			
 		return this;
 	}

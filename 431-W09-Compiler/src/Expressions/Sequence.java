@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import Environment.Env;
 import Expressions.Const.FVoid;
+import LLVMObjects.LLVMLine;
 
 public class Sequence extends AbstractCodeAndReg{
 
@@ -19,7 +20,7 @@ public class Sequence extends AbstractCodeAndReg{
 			reg.staticPass(env, funcid, stringdecs);
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){// throws ReturnException {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){// throws ReturnException {
 
 		if(seq.size() == 0){
 			return new FVoid(this.regnum).compile(env, funcdecs, fieldTable);

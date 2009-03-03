@@ -18,21 +18,25 @@ public class FBoolean extends AbstractCodeAndReg {
 		this.bool = bool;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
 		if(bool == true){
 			//true is 0 with 10 tag
 			currentLine = new LLVMLine(this.reg + " = add i32 0, 2\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
+			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 		}else{
 			//false is 1 with 10 tag
 			currentLine = new LLVMLine(this.reg + " = add i32 0, 3\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
+			currentLine.addConstantUsed(3);
 			this.code.add(currentLine);
 		}
+		this.code.add(currentLine);
 		return this;
 	}
 }

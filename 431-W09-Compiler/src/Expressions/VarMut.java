@@ -18,13 +18,14 @@ public class VarMut extends AbstractCodeAndReg{
 		this.ptrreg = "%ptrreg" + regnum;
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		LLVMLine currentLine;
 		this.code.addAll(newVal.compile(env, funcdecs, fieldTable).getCode());
 		// load val to eframe
 		RegAndIndex regind = Env.lookup(id, env);
 		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + 
 				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
+
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
@@ -32,6 +33,7 @@ public class VarMut extends AbstractCodeAndReg{
 		
 		currentLine = new LLVMLine("store i32 " + newVal.getReg() + ", i32* " + this.ptrreg + "\n");
 		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(newVal.getReg());
 		currentLine.addRegisterUsed(this.ptrreg);
 		this.code.add(currentLine);
 		

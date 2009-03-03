@@ -17,11 +17,15 @@ public class FInteger extends AbstractCodeAndReg{
 	}
 	
 	//public CodeAndReg compile(Env env,String scope){
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
-		LLVMLine currentLine = new LLVMLine(this.reg + " = add i32 0, " + (number << 2) + "\n");
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
+		LLVMLine currentLine;
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, " + (number << 2) + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
+		currentLine.addConstantUsed(number<<2);
 		this.code.add(currentLine);
+		
 		return this;
 	}
 }

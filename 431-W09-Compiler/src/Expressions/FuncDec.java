@@ -74,7 +74,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		//this.mbody.staticPass(this.mscope, funcid);
 	}
 	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable){
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
 		
 		//build closure obj
@@ -113,7 +113,6 @@ public class FuncDec extends AbstractCodeAndReg{
 				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
 		currentLine = new LLVMLine("store i32 " + this.reg
 				+ ", i32* " + this.ptrreg + "\n");
-		
 		
 		
 		/*
@@ -158,16 +157,14 @@ public class FuncDec extends AbstractCodeAndReg{
 		*/
 		
 		//write func dec?
-		funcdecs.add("define i32 @footle_fun" + this.functionid + "(%eframe* " + this.fscope.getCurrentScope() + "){\n");
+		currentLine = new LLVMLine("define i32 @footle_fun" + this.functionid + "(%eframe* " + this.fscope.getCurrentScope() + "){\n");
+		funcdecs.add(currentLine);
 		int savedindex = funcdecs.size();
 		// can't handle func dec in func body, save index, use insert? done?
-		ArrayList<LLVMLine> llvmbody = this.body.compile(this.fscope, funcdecs, fieldTable).getCode();
-		ArrayList<String> body = new ArrayList<String>();
-		for(LLVMLine l: llvmbody){
-			body.add(l.getCode());
-		}
-		body.add("ret i32 10\n");
-		body.add("}\n");
+		ArrayList<LLVMLine> body = this.body.compile(this.fscope, funcdecs, fieldTable).getCode();
+		currentLine = new LLVMLine("ret i32 10\n");
+		body.add(currentLine);
+		body.add(new LLVMLine("}\n"));
 		funcdecs.addAll(savedindex,body);
 		
 		//TODO define method

@@ -27,9 +27,8 @@ public class WhileExp extends AbstractCodeAndReg{
 		this.envlinkptr += regnum;
 	}
 	
-	
-	
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
+
 		LLVMLine currentLine;
 		//call while func with env
 		

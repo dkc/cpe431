@@ -6,7 +6,6 @@ import java.util.Hashtable;
 
 import Environment.Env;
 import Environment.RegAndIndex;
-import Expressions.Objects.PObjectExp;
 import LLVMObjects.LLVMLine;
 import Values.*;
 
@@ -46,7 +45,7 @@ public class FieldLookup extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public CodeAndReg compile(Env env, ArrayList<String> funcdecs, Hashtable<String, Integer> fieldTable) {
+	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 			LLVMLine currentLine;
 		
 			//get obj pointer
