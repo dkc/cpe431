@@ -120,6 +120,7 @@ tokens
    CONST_STRING;
    ELSEF;
    FIELD_LOOKUP;
+   FUNCTION_DEC;
    FUNCTION_NAME;
    FUNCTION_BODY;
    FUNCTION_COLLECTION;
@@ -180,7 +181,7 @@ functions
 function
 	:! 	FUNCTION name:identifier params:paramlist LBRACE! body:stmtlist RBRACE!
 		{
-			#function = #(FUNCTION, #([FUNCTION_NAME, "FUNCTION_NAME"], #name), #params, #([FUNCTION_BODY, "FUNCTION_BODY"], #body));
+			#function = #([FUNCTION_DEC, "FUNCTION_DEC"], #([FUNCTION_NAME, "FUNCTION_NAME"], #name), #params, #([FUNCTION_BODY, "FUNCTION_BODY"], #body));
 			functionCounter++;
 		}
 ;
@@ -379,23 +380,25 @@ sequence returns [Sequence compiledSequence = null]
 /* statements:
  x _expr_ ;
  x _id_ = _expr_ ;
- * _expr_ . _id_ = _expr_ ;
+ x _expr_ . _id_ = _expr_ ;
  x var _id_ = _expr_ ;
  x return _expr_ ;
  x if ( _expr_ ) { _stmt_* } -- pretty sure all if/thens have an empty else slapped on by the parser if it's not present, so we only need one rule
  x if ( _expr_ ) { _stmt_* } else { _stmt_* }
  x while ( _expr_ ) { _stmt_* }
- * function _id_ ( _paramlist_ ) { _stmt_* } -- grouped into FUNCTION_COLLECTIONs
+ x function _id_ ( _paramlist_ ) { _stmt_* } -- grouped into FUNCTION_COLLECTIONs
  */
 stmt returns [CodeAndReg stmtResult = null]
 {
 	CodeAndReg exprResult, stmtListResult, thenResult, elseResult, assignResult;
+	FuncDec funcDec;
+	ArrayList<FuncDec> funcDecList = new ArrayList<FuncDec>();
 }
 	:	stmtResult=expr
 	|	#(IFF exprResult=expr #(THENF thenResult=sequence) #(ELSEF elseResult=sequence))
 		{	stmtResult = new IfExp(exprResult, thenResult, elseResult, nextUniqueRegisterId++);
 		}
-	|!	(#(ASSIGN #(CONST_IDENTIFIER ID) expr)) => #(ASSIGN #(CONST_IDENTIFIER id:ID) exprResult=expr)
+	|	(#(ASSIGN #(CONST_IDENTIFIER ID) expr)) => #(ASSIGN #(CONST_IDENTIFIER id:ID) exprResult=expr)
 		{	/* binding to variables; VarMuts should always work if the static pass determines use before initialization */
 			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
@@ -411,6 +414,23 @@ stmt returns [CodeAndReg stmtResult = null]
 	|	#(RETURN exprResult=expr)
 		{	stmtResult = new FReturn(exprResult, nextUniqueRegisterId++);
 		}
+	|	#(FUNCTION_COLLECTION (funcDec=function {funcDecList.add(funcDec);} )+)
+		{	stmtResult = new FuncBind(funcDecList);
+		}
+;
+
+function returns [FuncDec funcDecReturn = null]
+{
+	Sequence functionBody;
+	ArrayList<String> params;
+}
+	:	#(FUNCTION_DEC #(FUNCTION_NAME name:ID) params=paramlist #(FUNCTION_BODY functionBody=sequence))
+		{	funcDecReturn = new FuncDec(name.toString(), params, functionBody, nextUniqueRegisterId++);
+		}
+;
+
+paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
+	:	(name:ID {parameters.add(name.toString());} )*
 ;
 
 /* expressions:
@@ -422,12 +442,12 @@ stmt returns [CodeAndReg stmtResult = null]
  x _string_
  | ( _expr_ ) -- parser stripped parentheses
  x _id_ ( _arglist_ ) -- application
- * ( _expr_ ) ( _arglist_ )
+ ? ( _expr_ ) ( _arglist_ )
  x _expr_ _binop_ _expr_
  x ! _expr_
  x _expr_ . _id_
  x _expr_ . _id_ ( _arglist_ ) -- "args" isn't implemented yet, though
- * new _id_ ( _arglist_ )
+ x new _id_ ( _arglist_ )
  */
 expr returns [CodeAndReg result = null]
 {
@@ -440,14 +460,18 @@ expr returns [CodeAndReg result = null]
 		{	result = new UnaryOperation("not", expression, nextUniqueRegisterId++);
 		}
 	|	#(FIELD_LOOKUP expression=expr #(CONST_IDENTIFIER fieldId:ID))
-		{	// result = new FieldLookup(expression, fieldId.toString());
+		{	result = new FieldLookup(expression, fieldId.toString(), nextUniqueRegisterId++);
 		}
 	|	#(METHOD_CALL expression=expr #(CONST_IDENTIFIER methodId:ID) argumentList=args)
-		{	// result = new MethodCall(expression, methodId.toString(), argumentList, nextUniqueRegisterId++);
+		{	result = new MethodCall(new FieldLookup(expression, methodId.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		} 
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
 		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
+	|	#(NEW objectName:ID argumentList=args)
+		{	result = new NewObj(objectName.toString(), argumentList, nextUniqueRegisterId++);
+		}
+		
 ;
 
 binop returns [CodeAndReg resultRegister = null]
@@ -509,7 +533,7 @@ const_val returns [CodeAndReg constValue = null]
 		{	constValue = new VarRef(id.toString(), nextUniqueRegisterId++);
 		}
 	|	CONST_STRING str:STRING
-		{	// constValue = new FString(str, nextUniqueRegisterId++);
+		{	constValue = new FString(str.toString(), nextUniqueRegisterId++);
 		}
 ;
 
