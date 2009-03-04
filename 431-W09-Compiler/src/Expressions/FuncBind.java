@@ -20,6 +20,7 @@ public class FuncBind extends AbstractCodeAndReg {
 			//env.add(funs.get(i).name + "met");
 		}
 		for(FuncDec f: funs){
+			System.out.println(env + " " + funcid + " " + stringdecs);
 			f.staticPass(env, funcid, stringdecs);
 		}
 	}

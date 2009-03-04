@@ -173,7 +173,7 @@ public FootleTreeParser() {
 			}
 			case WHILE:
 			{
-				AST __t149 = _t;
+				AST __t150 = _t;
 				AST tmp5_AST_in = (AST)_t;
 				match(_t,WHILE);
 				_t = _t.getFirstChild();
@@ -181,7 +181,7 @@ public FootleTreeParser() {
 				_t = _retTree;
 				stmtListResult=sequence(_t);
 				_t = _retTree;
-				_t = __t149;
+				_t = __t150;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						stmtResult = new WhileExp(exprResult, stmtListResult, nextUniqueRegisterId++);
@@ -191,22 +191,22 @@ public FootleTreeParser() {
 			}
 			case VAR:
 			{
-				AST __t150 = _t;
+				AST __t151 = _t;
 				AST tmp6_AST_in = (AST)_t;
 				match(_t,VAR);
 				_t = _t.getFirstChild();
-				AST __t151 = _t;
+				AST __t152 = _t;
 				AST tmp7_AST_in = (AST)_t;
 				match(_t,CONST_IDENTIFIER);
 				_t = _t.getFirstChild();
 				id2 = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				_t = __t151;
+				_t = __t152;
 				_t = _t.getNextSibling();
 				exprResult=expr(_t);
 				_t = _retTree;
-				_t = __t150;
+				_t = __t151;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						stmtResult = new Bind(id2.toString(), exprResult, nextUniqueRegisterId++);
@@ -216,13 +216,13 @@ public FootleTreeParser() {
 			}
 			case RETURN:
 			{
-				AST __t152 = _t;
+				AST __t153 = _t;
 				AST tmp8_AST_in = (AST)_t;
 				match(_t,RETURN);
 				_t = _t.getFirstChild();
 				exprResult=expr(_t);
 				_t = _retTree;
-				_t = __t152;
+				_t = __t153;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						stmtResult = new FReturn(exprResult, nextUniqueRegisterId++);
@@ -232,13 +232,13 @@ public FootleTreeParser() {
 			}
 			case FUNCTION_COLLECTION:
 			{
-				AST __t153 = _t;
+				AST __t154 = _t;
 				AST tmp9_AST_in = (AST)_t;
 				match(_t,FUNCTION_COLLECTION);
 				_t = _t.getFirstChild();
 				{
-				int _cnt155=0;
-				_loop155:
+				int _cnt156=0;
+				_loop156:
 				do {
 					if (_t==null) _t=ASTNULL;
 					if ((_t.getType()==FUNCTION_DEC)) {
@@ -249,13 +249,13 @@ public FootleTreeParser() {
 						}
 					}
 					else {
-						if ( _cnt155>=1 ) { break _loop155; } else {throw new NoViableAltException(_t);}
+						if ( _cnt156>=1 ) { break _loop156; } else {throw new NoViableAltException(_t);}
 					}
 					
-					_cnt155++;
+					_cnt156++;
 				} while (true);
 				}
-				_t = __t153;
+				_t = __t154;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						stmtResult = new FuncBind(funcDecList);
@@ -332,8 +332,14 @@ inputState.guessing--;
 					_t = _t.getFirstChild();
 					exprResult=expr(_t);
 					_t = _retTree;
+					AST __t149 = _t;
+					AST tmp17_AST_in = (AST)_t;
+					match(_t,CONST_IDENTIFIER);
+					_t = _t.getFirstChild();
 					fieldId = (AST)_t;
 					match(_t,ID);
+					_t = _t.getNextSibling();
+					_t = __t149;
 					_t = _t.getNextSibling();
 					_t = __t148;
 					_t = _t.getNextSibling();
@@ -397,13 +403,13 @@ inputState.guessing--;
 			}
 			case NOT:
 			{
-				AST __t164 = _t;
-				AST tmp17_AST_in = (AST)_t;
+				AST __t168 = _t;
+				AST tmp18_AST_in = (AST)_t;
 				match(_t,NOT);
 				_t = _t.getFirstChild();
 				expression=expr(_t);
 				_t = _retTree;
-				_t = __t164;
+				_t = __t168;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						result = new UnaryOperation("not", expression, nextUniqueRegisterId++);
@@ -413,22 +419,22 @@ inputState.guessing--;
 			}
 			case FIELD_LOOKUP:
 			{
-				AST __t165 = _t;
-				AST tmp18_AST_in = (AST)_t;
+				AST __t169 = _t;
+				AST tmp19_AST_in = (AST)_t;
 				match(_t,FIELD_LOOKUP);
 				_t = _t.getFirstChild();
 				expression=expr(_t);
 				_t = _retTree;
-				AST __t166 = _t;
-				AST tmp19_AST_in = (AST)_t;
+				AST __t170 = _t;
+				AST tmp20_AST_in = (AST)_t;
 				match(_t,CONST_IDENTIFIER);
 				_t = _t.getFirstChild();
 				fieldId = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				_t = __t166;
+				_t = __t170;
 				_t = _t.getNextSibling();
-				_t = __t165;
+				_t = __t169;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						result = new FieldLookup(expression, fieldId.toString(), nextUniqueRegisterId++);
@@ -438,24 +444,24 @@ inputState.guessing--;
 			}
 			case METHOD_CALL:
 			{
-				AST __t167 = _t;
-				AST tmp20_AST_in = (AST)_t;
+				AST __t171 = _t;
+				AST tmp21_AST_in = (AST)_t;
 				match(_t,METHOD_CALL);
 				_t = _t.getFirstChild();
 				expression=expr(_t);
 				_t = _retTree;
-				AST __t168 = _t;
-				AST tmp21_AST_in = (AST)_t;
+				AST __t172 = _t;
+				AST tmp22_AST_in = (AST)_t;
 				match(_t,CONST_IDENTIFIER);
 				_t = _t.getFirstChild();
 				methodId = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				_t = __t168;
+				_t = __t172;
 				_t = _t.getNextSibling();
 				argumentList=args(_t);
 				_t = _retTree;
-				_t = __t167;
+				_t = __t171;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						result = new MethodCall(new FieldLookup(expression, methodId.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
@@ -465,22 +471,22 @@ inputState.guessing--;
 			}
 			case INVOKE:
 			{
-				AST __t169 = _t;
-				AST tmp22_AST_in = (AST)_t;
+				AST __t173 = _t;
+				AST tmp23_AST_in = (AST)_t;
 				match(_t,INVOKE);
 				_t = _t.getFirstChild();
-				AST __t170 = _t;
-				AST tmp23_AST_in = (AST)_t;
+				AST __t174 = _t;
+				AST tmp24_AST_in = (AST)_t;
 				match(_t,CONST_IDENTIFIER);
 				_t = _t.getFirstChild();
 				functionName = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				_t = __t170;
+				_t = __t174;
 				_t = _t.getNextSibling();
 				argumentList=args(_t);
 				_t = _retTree;
-				_t = __t169;
+				_t = __t173;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
@@ -490,16 +496,22 @@ inputState.guessing--;
 			}
 			case NEW:
 			{
-				AST __t171 = _t;
-				AST tmp24_AST_in = (AST)_t;
+				AST __t175 = _t;
+				AST tmp25_AST_in = (AST)_t;
 				match(_t,NEW);
+				_t = _t.getFirstChild();
+				AST __t176 = _t;
+				AST tmp26_AST_in = (AST)_t;
+				match(_t,CONST_IDENTIFIER);
 				_t = _t.getFirstChild();
 				objectName = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
+				_t = __t176;
+				_t = _t.getNextSibling();
 				argumentList=args(_t);
 				_t = _retTree;
-				_t = __t171;
+				_t = __t175;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						result = new NewObj(objectName.toString(), argumentList, nextUniqueRegisterId++);
@@ -536,30 +548,36 @@ inputState.guessing--;
 		
 		
 		try {      // for error handling
-			AST __t157 = _t;
-			AST tmp25_AST_in = (AST)_t;
+			AST __t158 = _t;
+			AST tmp27_AST_in = (AST)_t;
 			match(_t,FUNCTION_DEC);
 			_t = _t.getFirstChild();
-			AST __t158 = _t;
-			AST tmp26_AST_in = (AST)_t;
+			AST __t159 = _t;
+			AST tmp28_AST_in = (AST)_t;
 			match(_t,FUNCTION_NAME);
+			_t = _t.getFirstChild();
+			AST __t160 = _t;
+			AST tmp29_AST_in = (AST)_t;
+			match(_t,CONST_IDENTIFIER);
 			_t = _t.getFirstChild();
 			name = (AST)_t;
 			match(_t,ID);
 			_t = _t.getNextSibling();
-			_t = __t158;
+			_t = __t160;
+			_t = _t.getNextSibling();
+			_t = __t159;
 			_t = _t.getNextSibling();
 			params=paramlist(_t);
 			_t = _retTree;
-			AST __t159 = _t;
-			AST tmp27_AST_in = (AST)_t;
+			AST __t161 = _t;
+			AST tmp30_AST_in = (AST)_t;
 			match(_t,FUNCTION_BODY);
 			_t = _t.getFirstChild();
 			functionBody=sequence(_t);
 			_t = _retTree;
-			_t = __t159;
+			_t = __t161;
 			_t = _t.getNextSibling();
-			_t = __t157;
+			_t = __t158;
 			_t = _t.getNextSibling();
 			if ( inputState.guessing==0 ) {
 					funcDecReturn = new FuncDec(name.toString(), params, functionBody, nextUniqueRegisterId++);
@@ -586,7 +604,12 @@ inputState.guessing--;
 		
 		try {      // for error handling
 			{
-			_loop162:
+			AST __t164 = _t;
+			AST tmp31_AST_in = (AST)_t;
+			match(_t,CONST_IDENTIFIER);
+			_t = _t.getFirstChild();
+			{
+			_loop166:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==ID)) {
@@ -598,10 +621,16 @@ inputState.guessing--;
 					}
 				}
 				else {
-					break _loop162;
+					break _loop166;
 				}
 				
 			} while (true);
+			}
+			_t = __t164;
+			_t = _t.getNextSibling();
+			}
+			if ( inputState.guessing==0 ) {
+				System.out.println(parameters);
 			}
 		}
 		catch (RecognitionException ex) {
@@ -625,48 +654,48 @@ inputState.guessing--;
 		
 		
 		try {      // for error handling
-			boolean synPredMatched175 = false;
+			boolean synPredMatched180 = false;
 			if (_t==null) _t=ASTNULL;
 			if (((_t.getType()==BINOP))) {
-				AST __t175 = _t;
-				synPredMatched175 = true;
+				AST __t180 = _t;
+				synPredMatched180 = true;
 				inputState.guessing++;
 				try {
 					{
-					AST __t174 = _t;
-					AST tmp28_AST_in = (AST)_t;
+					AST __t179 = _t;
+					AST tmp32_AST_in = (AST)_t;
 					match(_t,BINOP);
 					_t = _t.getFirstChild();
-					AST tmp29_AST_in = (AST)_t;
+					AST tmp33_AST_in = (AST)_t;
 					match(_t,AND);
 					_t = _t.getNextSibling();
 					expr(_t);
 					_t = _retTree;
 					expr(_t);
 					_t = _retTree;
-					_t = __t174;
+					_t = __t179;
 					_t = _t.getNextSibling();
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched175 = false;
+					synPredMatched180 = false;
 				}
-				_t = __t175;
+				_t = __t180;
 inputState.guessing--;
 			}
-			if ( synPredMatched175 ) {
-				AST __t176 = _t;
-				AST tmp30_AST_in = (AST)_t;
+			if ( synPredMatched180 ) {
+				AST __t181 = _t;
+				AST tmp34_AST_in = (AST)_t;
 				match(_t,BINOP);
 				_t = _t.getFirstChild();
-				AST tmp31_AST_in = (AST)_t;
+				AST tmp35_AST_in = (AST)_t;
 				match(_t,AND);
 				_t = _t.getNextSibling();
 				lhs=expr(_t);
 				_t = _retTree;
 				rhs=expr(_t);
 				_t = _retTree;
-				_t = __t176;
+				_t = __t181;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						resultRegister = new Binop(lhs, "&&", rhs, nextUniqueRegisterId++);
@@ -674,48 +703,48 @@ inputState.guessing--;
 				}
 			}
 			else {
-				boolean synPredMatched179 = false;
+				boolean synPredMatched184 = false;
 				if (_t==null) _t=ASTNULL;
 				if (((_t.getType()==BINOP))) {
-					AST __t179 = _t;
-					synPredMatched179 = true;
+					AST __t184 = _t;
+					synPredMatched184 = true;
 					inputState.guessing++;
 					try {
 						{
-						AST __t178 = _t;
-						AST tmp32_AST_in = (AST)_t;
+						AST __t183 = _t;
+						AST tmp36_AST_in = (AST)_t;
 						match(_t,BINOP);
 						_t = _t.getFirstChild();
-						AST tmp33_AST_in = (AST)_t;
+						AST tmp37_AST_in = (AST)_t;
 						match(_t,OR);
 						_t = _t.getNextSibling();
 						expr(_t);
 						_t = _retTree;
 						expr(_t);
 						_t = _retTree;
-						_t = __t178;
+						_t = __t183;
 						_t = _t.getNextSibling();
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched179 = false;
+						synPredMatched184 = false;
 					}
-					_t = __t179;
+					_t = __t184;
 inputState.guessing--;
 				}
-				if ( synPredMatched179 ) {
-					AST __t180 = _t;
-					AST tmp34_AST_in = (AST)_t;
+				if ( synPredMatched184 ) {
+					AST __t185 = _t;
+					AST tmp38_AST_in = (AST)_t;
 					match(_t,BINOP);
 					_t = _t.getFirstChild();
-					AST tmp35_AST_in = (AST)_t;
+					AST tmp39_AST_in = (AST)_t;
 					match(_t,OR);
 					_t = _t.getNextSibling();
 					lhs=expr(_t);
 					_t = _retTree;
 					rhs=expr(_t);
 					_t = _retTree;
-					_t = __t180;
+					_t = __t185;
 					_t = _t.getNextSibling();
 					if ( inputState.guessing==0 ) {
 							resultRegister = new Binop(lhs, "||", rhs, nextUniqueRegisterId++);
@@ -723,48 +752,48 @@ inputState.guessing--;
 					}
 				}
 				else {
-					boolean synPredMatched183 = false;
+					boolean synPredMatched188 = false;
 					if (_t==null) _t=ASTNULL;
 					if (((_t.getType()==BINOP))) {
-						AST __t183 = _t;
-						synPredMatched183 = true;
+						AST __t188 = _t;
+						synPredMatched188 = true;
 						inputState.guessing++;
 						try {
 							{
-							AST __t182 = _t;
-							AST tmp36_AST_in = (AST)_t;
+							AST __t187 = _t;
+							AST tmp40_AST_in = (AST)_t;
 							match(_t,BINOP);
 							_t = _t.getFirstChild();
-							AST tmp37_AST_in = (AST)_t;
+							AST tmp41_AST_in = (AST)_t;
 							match(_t,EQ);
 							_t = _t.getNextSibling();
 							expr(_t);
 							_t = _retTree;
 							expr(_t);
 							_t = _retTree;
-							_t = __t182;
+							_t = __t187;
 							_t = _t.getNextSibling();
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched183 = false;
+							synPredMatched188 = false;
 						}
-						_t = __t183;
+						_t = __t188;
 inputState.guessing--;
 					}
-					if ( synPredMatched183 ) {
-						AST __t184 = _t;
-						AST tmp38_AST_in = (AST)_t;
+					if ( synPredMatched188 ) {
+						AST __t189 = _t;
+						AST tmp42_AST_in = (AST)_t;
 						match(_t,BINOP);
 						_t = _t.getFirstChild();
-						AST tmp39_AST_in = (AST)_t;
+						AST tmp43_AST_in = (AST)_t;
 						match(_t,EQ);
 						_t = _t.getNextSibling();
 						lhs=expr(_t);
 						_t = _retTree;
 						rhs=expr(_t);
 						_t = _retTree;
-						_t = __t184;
+						_t = __t189;
 						_t = _t.getNextSibling();
 						if ( inputState.guessing==0 ) {
 								resultRegister = new Binop(lhs, "==", rhs, nextUniqueRegisterId++);
@@ -772,48 +801,48 @@ inputState.guessing--;
 						}
 					}
 					else {
-						boolean synPredMatched187 = false;
+						boolean synPredMatched192 = false;
 						if (_t==null) _t=ASTNULL;
 						if (((_t.getType()==BINOP))) {
-							AST __t187 = _t;
-							synPredMatched187 = true;
+							AST __t192 = _t;
+							synPredMatched192 = true;
 							inputState.guessing++;
 							try {
 								{
-								AST __t186 = _t;
-								AST tmp40_AST_in = (AST)_t;
+								AST __t191 = _t;
+								AST tmp44_AST_in = (AST)_t;
 								match(_t,BINOP);
 								_t = _t.getFirstChild();
-								AST tmp41_AST_in = (AST)_t;
+								AST tmp45_AST_in = (AST)_t;
 								match(_t,LT);
 								_t = _t.getNextSibling();
 								expr(_t);
 								_t = _retTree;
 								expr(_t);
 								_t = _retTree;
-								_t = __t186;
+								_t = __t191;
 								_t = _t.getNextSibling();
 								}
 							}
 							catch (RecognitionException pe) {
-								synPredMatched187 = false;
+								synPredMatched192 = false;
 							}
-							_t = __t187;
+							_t = __t192;
 inputState.guessing--;
 						}
-						if ( synPredMatched187 ) {
-							AST __t188 = _t;
-							AST tmp42_AST_in = (AST)_t;
+						if ( synPredMatched192 ) {
+							AST __t193 = _t;
+							AST tmp46_AST_in = (AST)_t;
 							match(_t,BINOP);
 							_t = _t.getFirstChild();
-							AST tmp43_AST_in = (AST)_t;
+							AST tmp47_AST_in = (AST)_t;
 							match(_t,LT);
 							_t = _t.getNextSibling();
 							lhs=expr(_t);
 							_t = _retTree;
 							rhs=expr(_t);
 							_t = _retTree;
-							_t = __t188;
+							_t = __t193;
 							_t = _t.getNextSibling();
 							if ( inputState.guessing==0 ) {
 									resultRegister = new Binop(lhs, "<", rhs, nextUniqueRegisterId++);
@@ -821,48 +850,48 @@ inputState.guessing--;
 							}
 						}
 						else {
-							boolean synPredMatched191 = false;
+							boolean synPredMatched196 = false;
 							if (_t==null) _t=ASTNULL;
 							if (((_t.getType()==BINOP))) {
-								AST __t191 = _t;
-								synPredMatched191 = true;
+								AST __t196 = _t;
+								synPredMatched196 = true;
 								inputState.guessing++;
 								try {
 									{
-									AST __t190 = _t;
-									AST tmp44_AST_in = (AST)_t;
+									AST __t195 = _t;
+									AST tmp48_AST_in = (AST)_t;
 									match(_t,BINOP);
 									_t = _t.getFirstChild();
-									AST tmp45_AST_in = (AST)_t;
+									AST tmp49_AST_in = (AST)_t;
 									match(_t,GT);
 									_t = _t.getNextSibling();
 									expr(_t);
 									_t = _retTree;
 									expr(_t);
 									_t = _retTree;
-									_t = __t190;
+									_t = __t195;
 									_t = _t.getNextSibling();
 									}
 								}
 								catch (RecognitionException pe) {
-									synPredMatched191 = false;
+									synPredMatched196 = false;
 								}
-								_t = __t191;
+								_t = __t196;
 inputState.guessing--;
 							}
-							if ( synPredMatched191 ) {
-								AST __t192 = _t;
-								AST tmp46_AST_in = (AST)_t;
+							if ( synPredMatched196 ) {
+								AST __t197 = _t;
+								AST tmp50_AST_in = (AST)_t;
 								match(_t,BINOP);
 								_t = _t.getFirstChild();
-								AST tmp47_AST_in = (AST)_t;
+								AST tmp51_AST_in = (AST)_t;
 								match(_t,GT);
 								_t = _t.getNextSibling();
 								lhs=expr(_t);
 								_t = _retTree;
 								rhs=expr(_t);
 								_t = _retTree;
-								_t = __t192;
+								_t = __t197;
 								_t = _t.getNextSibling();
 								if ( inputState.guessing==0 ) {
 										resultRegister = new Binop(lhs, ">", rhs, nextUniqueRegisterId++);
@@ -870,48 +899,48 @@ inputState.guessing--;
 								}
 							}
 							else {
-								boolean synPredMatched195 = false;
+								boolean synPredMatched200 = false;
 								if (_t==null) _t=ASTNULL;
 								if (((_t.getType()==BINOP))) {
-									AST __t195 = _t;
-									synPredMatched195 = true;
+									AST __t200 = _t;
+									synPredMatched200 = true;
 									inputState.guessing++;
 									try {
 										{
-										AST __t194 = _t;
-										AST tmp48_AST_in = (AST)_t;
+										AST __t199 = _t;
+										AST tmp52_AST_in = (AST)_t;
 										match(_t,BINOP);
 										_t = _t.getFirstChild();
-										AST tmp49_AST_in = (AST)_t;
+										AST tmp53_AST_in = (AST)_t;
 										match(_t,NE);
 										_t = _t.getNextSibling();
 										expr(_t);
 										_t = _retTree;
 										expr(_t);
 										_t = _retTree;
-										_t = __t194;
+										_t = __t199;
 										_t = _t.getNextSibling();
 										}
 									}
 									catch (RecognitionException pe) {
-										synPredMatched195 = false;
+										synPredMatched200 = false;
 									}
-									_t = __t195;
+									_t = __t200;
 inputState.guessing--;
 								}
-								if ( synPredMatched195 ) {
-									AST __t196 = _t;
-									AST tmp50_AST_in = (AST)_t;
+								if ( synPredMatched200 ) {
+									AST __t201 = _t;
+									AST tmp54_AST_in = (AST)_t;
 									match(_t,BINOP);
 									_t = _t.getFirstChild();
-									AST tmp51_AST_in = (AST)_t;
+									AST tmp55_AST_in = (AST)_t;
 									match(_t,NE);
 									_t = _t.getNextSibling();
 									lhs=expr(_t);
 									_t = _retTree;
 									rhs=expr(_t);
 									_t = _retTree;
-									_t = __t196;
+									_t = __t201;
 									_t = _t.getNextSibling();
 									if ( inputState.guessing==0 ) {
 											resultRegister = new Binop(lhs, "!=", rhs, nextUniqueRegisterId++);
@@ -919,48 +948,48 @@ inputState.guessing--;
 									}
 								}
 								else {
-									boolean synPredMatched199 = false;
+									boolean synPredMatched204 = false;
 									if (_t==null) _t=ASTNULL;
 									if (((_t.getType()==BINOP))) {
-										AST __t199 = _t;
-										synPredMatched199 = true;
+										AST __t204 = _t;
+										synPredMatched204 = true;
 										inputState.guessing++;
 										try {
 											{
-											AST __t198 = _t;
-											AST tmp52_AST_in = (AST)_t;
+											AST __t203 = _t;
+											AST tmp56_AST_in = (AST)_t;
 											match(_t,BINOP);
 											_t = _t.getFirstChild();
-											AST tmp53_AST_in = (AST)_t;
+											AST tmp57_AST_in = (AST)_t;
 											match(_t,LTE);
 											_t = _t.getNextSibling();
 											expr(_t);
 											_t = _retTree;
 											expr(_t);
 											_t = _retTree;
-											_t = __t198;
+											_t = __t203;
 											_t = _t.getNextSibling();
 											}
 										}
 										catch (RecognitionException pe) {
-											synPredMatched199 = false;
+											synPredMatched204 = false;
 										}
-										_t = __t199;
+										_t = __t204;
 inputState.guessing--;
 									}
-									if ( synPredMatched199 ) {
-										AST __t200 = _t;
-										AST tmp54_AST_in = (AST)_t;
+									if ( synPredMatched204 ) {
+										AST __t205 = _t;
+										AST tmp58_AST_in = (AST)_t;
 										match(_t,BINOP);
 										_t = _t.getFirstChild();
-										AST tmp55_AST_in = (AST)_t;
+										AST tmp59_AST_in = (AST)_t;
 										match(_t,LTE);
 										_t = _t.getNextSibling();
 										lhs=expr(_t);
 										_t = _retTree;
 										rhs=expr(_t);
 										_t = _retTree;
-										_t = __t200;
+										_t = __t205;
 										_t = _t.getNextSibling();
 										if ( inputState.guessing==0 ) {
 												resultRegister = new Binop(lhs, "<=", rhs, nextUniqueRegisterId++);
@@ -968,48 +997,48 @@ inputState.guessing--;
 										}
 									}
 									else {
-										boolean synPredMatched203 = false;
+										boolean synPredMatched208 = false;
 										if (_t==null) _t=ASTNULL;
 										if (((_t.getType()==BINOP))) {
-											AST __t203 = _t;
-											synPredMatched203 = true;
+											AST __t208 = _t;
+											synPredMatched208 = true;
 											inputState.guessing++;
 											try {
 												{
-												AST __t202 = _t;
-												AST tmp56_AST_in = (AST)_t;
+												AST __t207 = _t;
+												AST tmp60_AST_in = (AST)_t;
 												match(_t,BINOP);
 												_t = _t.getFirstChild();
-												AST tmp57_AST_in = (AST)_t;
+												AST tmp61_AST_in = (AST)_t;
 												match(_t,GTE);
 												_t = _t.getNextSibling();
 												expr(_t);
 												_t = _retTree;
 												expr(_t);
 												_t = _retTree;
-												_t = __t202;
+												_t = __t207;
 												_t = _t.getNextSibling();
 												}
 											}
 											catch (RecognitionException pe) {
-												synPredMatched203 = false;
+												synPredMatched208 = false;
 											}
-											_t = __t203;
+											_t = __t208;
 inputState.guessing--;
 										}
-										if ( synPredMatched203 ) {
-											AST __t204 = _t;
-											AST tmp58_AST_in = (AST)_t;
+										if ( synPredMatched208 ) {
+											AST __t209 = _t;
+											AST tmp62_AST_in = (AST)_t;
 											match(_t,BINOP);
 											_t = _t.getFirstChild();
-											AST tmp59_AST_in = (AST)_t;
+											AST tmp63_AST_in = (AST)_t;
 											match(_t,GTE);
 											_t = _t.getNextSibling();
 											lhs=expr(_t);
 											_t = _retTree;
 											rhs=expr(_t);
 											_t = _retTree;
-											_t = __t204;
+											_t = __t209;
 											_t = _t.getNextSibling();
 											if ( inputState.guessing==0 ) {
 													resultRegister = new Binop(lhs, ">=", rhs, nextUniqueRegisterId++);
@@ -1017,48 +1046,48 @@ inputState.guessing--;
 											}
 										}
 										else {
-											boolean synPredMatched207 = false;
+											boolean synPredMatched212 = false;
 											if (_t==null) _t=ASTNULL;
 											if (((_t.getType()==BINOP))) {
-												AST __t207 = _t;
-												synPredMatched207 = true;
+												AST __t212 = _t;
+												synPredMatched212 = true;
 												inputState.guessing++;
 												try {
 													{
-													AST __t206 = _t;
-													AST tmp60_AST_in = (AST)_t;
+													AST __t211 = _t;
+													AST tmp64_AST_in = (AST)_t;
 													match(_t,BINOP);
 													_t = _t.getFirstChild();
-													AST tmp61_AST_in = (AST)_t;
+													AST tmp65_AST_in = (AST)_t;
 													match(_t,PLUS);
 													_t = _t.getNextSibling();
 													expr(_t);
 													_t = _retTree;
 													expr(_t);
 													_t = _retTree;
-													_t = __t206;
+													_t = __t211;
 													_t = _t.getNextSibling();
 													}
 												}
 												catch (RecognitionException pe) {
-													synPredMatched207 = false;
+													synPredMatched212 = false;
 												}
-												_t = __t207;
+												_t = __t212;
 inputState.guessing--;
 											}
-											if ( synPredMatched207 ) {
-												AST __t208 = _t;
-												AST tmp62_AST_in = (AST)_t;
+											if ( synPredMatched212 ) {
+												AST __t213 = _t;
+												AST tmp66_AST_in = (AST)_t;
 												match(_t,BINOP);
 												_t = _t.getFirstChild();
-												AST tmp63_AST_in = (AST)_t;
+												AST tmp67_AST_in = (AST)_t;
 												match(_t,PLUS);
 												_t = _t.getNextSibling();
 												lhs=expr(_t);
 												_t = _retTree;
 												rhs=expr(_t);
 												_t = _retTree;
-												_t = __t208;
+												_t = __t213;
 												_t = _t.getNextSibling();
 												if ( inputState.guessing==0 ) {
 														resultRegister = new Binop(lhs, "+", rhs, nextUniqueRegisterId++);
@@ -1066,48 +1095,48 @@ inputState.guessing--;
 												}
 											}
 											else {
-												boolean synPredMatched211 = false;
+												boolean synPredMatched216 = false;
 												if (_t==null) _t=ASTNULL;
 												if (((_t.getType()==BINOP))) {
-													AST __t211 = _t;
-													synPredMatched211 = true;
+													AST __t216 = _t;
+													synPredMatched216 = true;
 													inputState.guessing++;
 													try {
 														{
-														AST __t210 = _t;
-														AST tmp64_AST_in = (AST)_t;
+														AST __t215 = _t;
+														AST tmp68_AST_in = (AST)_t;
 														match(_t,BINOP);
 														_t = _t.getFirstChild();
-														AST tmp65_AST_in = (AST)_t;
+														AST tmp69_AST_in = (AST)_t;
 														match(_t,MINUS);
 														_t = _t.getNextSibling();
 														expr(_t);
 														_t = _retTree;
 														expr(_t);
 														_t = _retTree;
-														_t = __t210;
+														_t = __t215;
 														_t = _t.getNextSibling();
 														}
 													}
 													catch (RecognitionException pe) {
-														synPredMatched211 = false;
+														synPredMatched216 = false;
 													}
-													_t = __t211;
+													_t = __t216;
 inputState.guessing--;
 												}
-												if ( synPredMatched211 ) {
-													AST __t212 = _t;
-													AST tmp66_AST_in = (AST)_t;
+												if ( synPredMatched216 ) {
+													AST __t217 = _t;
+													AST tmp70_AST_in = (AST)_t;
 													match(_t,BINOP);
 													_t = _t.getFirstChild();
-													AST tmp67_AST_in = (AST)_t;
+													AST tmp71_AST_in = (AST)_t;
 													match(_t,MINUS);
 													_t = _t.getNextSibling();
 													lhs=expr(_t);
 													_t = _retTree;
 													rhs=expr(_t);
 													_t = _retTree;
-													_t = __t212;
+													_t = __t217;
 													_t = _t.getNextSibling();
 													if ( inputState.guessing==0 ) {
 															resultRegister = new Binop(lhs, "-", rhs, nextUniqueRegisterId++);
@@ -1115,48 +1144,48 @@ inputState.guessing--;
 													}
 												}
 												else {
-													boolean synPredMatched215 = false;
+													boolean synPredMatched220 = false;
 													if (_t==null) _t=ASTNULL;
 													if (((_t.getType()==BINOP))) {
-														AST __t215 = _t;
-														synPredMatched215 = true;
+														AST __t220 = _t;
+														synPredMatched220 = true;
 														inputState.guessing++;
 														try {
 															{
-															AST __t214 = _t;
-															AST tmp68_AST_in = (AST)_t;
+															AST __t219 = _t;
+															AST tmp72_AST_in = (AST)_t;
 															match(_t,BINOP);
 															_t = _t.getFirstChild();
-															AST tmp69_AST_in = (AST)_t;
+															AST tmp73_AST_in = (AST)_t;
 															match(_t,TIMES);
 															_t = _t.getNextSibling();
 															expr(_t);
 															_t = _retTree;
 															expr(_t);
 															_t = _retTree;
-															_t = __t214;
+															_t = __t219;
 															_t = _t.getNextSibling();
 															}
 														}
 														catch (RecognitionException pe) {
-															synPredMatched215 = false;
+															synPredMatched220 = false;
 														}
-														_t = __t215;
+														_t = __t220;
 inputState.guessing--;
 													}
-													if ( synPredMatched215 ) {
-														AST __t216 = _t;
-														AST tmp70_AST_in = (AST)_t;
+													if ( synPredMatched220 ) {
+														AST __t221 = _t;
+														AST tmp74_AST_in = (AST)_t;
 														match(_t,BINOP);
 														_t = _t.getFirstChild();
-														AST tmp71_AST_in = (AST)_t;
+														AST tmp75_AST_in = (AST)_t;
 														match(_t,TIMES);
 														_t = _t.getNextSibling();
 														lhs=expr(_t);
 														_t = _retTree;
 														rhs=expr(_t);
 														_t = _retTree;
-														_t = __t216;
+														_t = __t221;
 														_t = _t.getNextSibling();
 														if ( inputState.guessing==0 ) {
 																resultRegister = new Binop(lhs, "*", rhs, nextUniqueRegisterId++);
@@ -1164,48 +1193,48 @@ inputState.guessing--;
 														}
 													}
 													else {
-														boolean synPredMatched219 = false;
+														boolean synPredMatched224 = false;
 														if (_t==null) _t=ASTNULL;
 														if (((_t.getType()==BINOP))) {
-															AST __t219 = _t;
-															synPredMatched219 = true;
+															AST __t224 = _t;
+															synPredMatched224 = true;
 															inputState.guessing++;
 															try {
 																{
-																AST __t218 = _t;
-																AST tmp72_AST_in = (AST)_t;
+																AST __t223 = _t;
+																AST tmp76_AST_in = (AST)_t;
 																match(_t,BINOP);
 																_t = _t.getFirstChild();
-																AST tmp73_AST_in = (AST)_t;
+																AST tmp77_AST_in = (AST)_t;
 																match(_t,DIVIDE);
 																_t = _t.getNextSibling();
 																expr(_t);
 																_t = _retTree;
 																expr(_t);
 																_t = _retTree;
-																_t = __t218;
+																_t = __t223;
 																_t = _t.getNextSibling();
 																}
 															}
 															catch (RecognitionException pe) {
-																synPredMatched219 = false;
+																synPredMatched224 = false;
 															}
-															_t = __t219;
+															_t = __t224;
 inputState.guessing--;
 														}
-														if ( synPredMatched219 ) {
-															AST __t220 = _t;
-															AST tmp74_AST_in = (AST)_t;
+														if ( synPredMatched224 ) {
+															AST __t225 = _t;
+															AST tmp78_AST_in = (AST)_t;
 															match(_t,BINOP);
 															_t = _t.getFirstChild();
-															AST tmp75_AST_in = (AST)_t;
+															AST tmp79_AST_in = (AST)_t;
 															match(_t,DIVIDE);
 															_t = _t.getNextSibling();
 															lhs=expr(_t);
 															_t = _retTree;
 															rhs=expr(_t);
 															_t = _retTree;
-															_t = __t220;
+															_t = __t225;
 															_t = _t.getNextSibling();
 															if ( inputState.guessing==0 ) {
 																	resultRegister = new Binop(lhs, "/", rhs, nextUniqueRegisterId++);
@@ -1243,14 +1272,14 @@ inputState.guessing--;
 			switch ( _t.getType()) {
 			case CONST_INT:
 			{
-				AST __t222 = _t;
-				AST tmp76_AST_in = (AST)_t;
+				AST __t227 = _t;
+				AST tmp80_AST_in = (AST)_t;
 				match(_t,CONST_INT);
 				_t = _t.getFirstChild();
 				i = (AST)_t;
 				match(_t,INT);
 				_t = _t.getNextSibling();
-				_t = __t222;
+				_t = __t227;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						constValue = new FInteger(new Integer(Integer.parseInt(i.toString())), nextUniqueRegisterId++);
@@ -1260,14 +1289,14 @@ inputState.guessing--;
 			}
 			case CONST_FLOAT:
 			{
-				AST __t223 = _t;
-				AST tmp77_AST_in = (AST)_t;
+				AST __t228 = _t;
+				AST tmp81_AST_in = (AST)_t;
 				match(_t,CONST_FLOAT);
 				_t = _t.getFirstChild();
 				f = (AST)_t;
 				match(_t,FLOAT);
 				_t = _t.getNextSibling();
-				_t = __t223;
+				_t = __t228;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						constValue = new FFloat(new Float(Float.parseFloat(f.toString())), nextUniqueRegisterId++);
@@ -1277,14 +1306,14 @@ inputState.guessing--;
 			}
 			case CONST_IDENTIFIER:
 			{
-				AST __t232 = _t;
-				AST tmp78_AST_in = (AST)_t;
+				AST __t237 = _t;
+				AST tmp82_AST_in = (AST)_t;
 				match(_t,CONST_IDENTIFIER);
 				_t = _t.getFirstChild();
 				id = (AST)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				_t = __t232;
+				_t = __t237;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						constValue = new VarRef(id.toString(), nextUniqueRegisterId++);
@@ -1294,11 +1323,14 @@ inputState.guessing--;
 			}
 			case CONST_STRING:
 			{
-				AST tmp79_AST_in = (AST)_t;
+				AST __t238 = _t;
+				AST tmp83_AST_in = (AST)_t;
 				match(_t,CONST_STRING);
-				_t = _t.getNextSibling();
+				_t = _t.getFirstChild();
 				str = (AST)_t;
 				match(_t,STRING);
+				_t = _t.getNextSibling();
+				_t = __t238;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
 						constValue = new FString(str.toString(), nextUniqueRegisterId++);
@@ -1307,40 +1339,40 @@ inputState.guessing--;
 				break;
 			}
 			default:
-				boolean synPredMatched226 = false;
+				boolean synPredMatched231 = false;
 				if (_t==null) _t=ASTNULL;
 				if (((_t.getType()==CONST_BOOLEAN))) {
-					AST __t226 = _t;
-					synPredMatched226 = true;
+					AST __t231 = _t;
+					synPredMatched231 = true;
 					inputState.guessing++;
 					try {
 						{
-						AST __t225 = _t;
-						AST tmp80_AST_in = (AST)_t;
+						AST __t230 = _t;
+						AST tmp84_AST_in = (AST)_t;
 						match(_t,CONST_BOOLEAN);
 						_t = _t.getFirstChild();
-						AST tmp81_AST_in = (AST)_t;
+						AST tmp85_AST_in = (AST)_t;
 						match(_t,TRUE);
 						_t = _t.getNextSibling();
-						_t = __t225;
+						_t = __t230;
 						_t = _t.getNextSibling();
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched226 = false;
+						synPredMatched231 = false;
 					}
-					_t = __t226;
+					_t = __t231;
 inputState.guessing--;
 				}
-				if ( synPredMatched226 ) {
-					AST __t227 = _t;
-					AST tmp82_AST_in = (AST)_t;
+				if ( synPredMatched231 ) {
+					AST __t232 = _t;
+					AST tmp86_AST_in = (AST)_t;
 					match(_t,CONST_BOOLEAN);
 					_t = _t.getFirstChild();
-					AST tmp83_AST_in = (AST)_t;
+					AST tmp87_AST_in = (AST)_t;
 					match(_t,TRUE);
 					_t = _t.getNextSibling();
-					_t = __t227;
+					_t = __t232;
 					_t = _t.getNextSibling();
 					if ( inputState.guessing==0 ) {
 							constValue = new FBoolean(new Boolean(true), nextUniqueRegisterId++);
@@ -1348,40 +1380,40 @@ inputState.guessing--;
 					}
 				}
 				else {
-					boolean synPredMatched230 = false;
+					boolean synPredMatched235 = false;
 					if (_t==null) _t=ASTNULL;
 					if (((_t.getType()==CONST_BOOLEAN))) {
-						AST __t230 = _t;
-						synPredMatched230 = true;
+						AST __t235 = _t;
+						synPredMatched235 = true;
 						inputState.guessing++;
 						try {
 							{
-							AST __t229 = _t;
-							AST tmp84_AST_in = (AST)_t;
+							AST __t234 = _t;
+							AST tmp88_AST_in = (AST)_t;
 							match(_t,CONST_BOOLEAN);
 							_t = _t.getFirstChild();
-							AST tmp85_AST_in = (AST)_t;
+							AST tmp89_AST_in = (AST)_t;
 							match(_t,FALSE);
 							_t = _t.getNextSibling();
-							_t = __t229;
+							_t = __t234;
 							_t = _t.getNextSibling();
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched230 = false;
+							synPredMatched235 = false;
 						}
-						_t = __t230;
+						_t = __t235;
 inputState.guessing--;
 					}
-					if ( synPredMatched230 ) {
-						AST __t231 = _t;
-						AST tmp86_AST_in = (AST)_t;
+					if ( synPredMatched235 ) {
+						AST __t236 = _t;
+						AST tmp90_AST_in = (AST)_t;
 						match(_t,CONST_BOOLEAN);
 						_t = _t.getFirstChild();
-						AST tmp87_AST_in = (AST)_t;
+						AST tmp91_AST_in = (AST)_t;
 						match(_t,FALSE);
 						_t = _t.getNextSibling();
-						_t = __t231;
+						_t = __t236;
 						_t = _t.getNextSibling();
 						if ( inputState.guessing==0 ) {
 								constValue = new FBoolean(new Boolean(false), nextUniqueRegisterId++);
@@ -1414,12 +1446,12 @@ inputState.guessing--;
 		
 		
 		try {      // for error handling
-			AST __t235 = _t;
-			AST tmp88_AST_in = (AST)_t;
+			AST __t241 = _t;
+			AST tmp92_AST_in = (AST)_t;
 			match(_t,ARGUMENTS);
 			_t = _t.getFirstChild();
 			{
-			_loop237:
+			_loop243:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_tokenSet_1.member(_t.getType()))) {
@@ -1430,12 +1462,12 @@ inputState.guessing--;
 					}
 				}
 				else {
-					break _loop237;
+					break _loop243;
 				}
 				
 			} while (true);
 			}
-			_t = __t235;
+			_t = __t241;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1459,84 +1491,84 @@ inputState.guessing--;
 			switch ( _t.getType()) {
 			case AND:
 			{
-				AST tmp89_AST_in = (AST)_t;
+				AST tmp93_AST_in = (AST)_t;
 				match(_t,AND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case OR:
 			{
-				AST tmp90_AST_in = (AST)_t;
+				AST tmp94_AST_in = (AST)_t;
 				match(_t,OR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case EQ:
 			{
-				AST tmp91_AST_in = (AST)_t;
+				AST tmp95_AST_in = (AST)_t;
 				match(_t,EQ);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LT:
 			{
-				AST tmp92_AST_in = (AST)_t;
+				AST tmp96_AST_in = (AST)_t;
 				match(_t,LT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case GT:
 			{
-				AST tmp93_AST_in = (AST)_t;
+				AST tmp97_AST_in = (AST)_t;
 				match(_t,GT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NE:
 			{
-				AST tmp94_AST_in = (AST)_t;
+				AST tmp98_AST_in = (AST)_t;
 				match(_t,NE);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LTE:
 			{
-				AST tmp95_AST_in = (AST)_t;
+				AST tmp99_AST_in = (AST)_t;
 				match(_t,LTE);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case GTE:
 			{
-				AST tmp96_AST_in = (AST)_t;
+				AST tmp100_AST_in = (AST)_t;
 				match(_t,GTE);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case PLUS:
 			{
-				AST tmp97_AST_in = (AST)_t;
+				AST tmp101_AST_in = (AST)_t;
 				match(_t,PLUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MINUS:
 			{
-				AST tmp98_AST_in = (AST)_t;
+				AST tmp102_AST_in = (AST)_t;
 				match(_t,MINUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case TIMES:
 			{
-				AST tmp99_AST_in = (AST)_t;
+				AST tmp103_AST_in = (AST)_t;
 				match(_t,TIMES);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DIVIDE:
 			{
-				AST tmp100_AST_in = (AST)_t;
+				AST tmp104_AST_in = (AST)_t;
 				match(_t,DIVIDE);
 				_t = _t.getNextSibling();
 				break;
@@ -1614,7 +1646,6 @@ inputState.guessing--;
 		"FUNCTION_NAME",
 		"FUNCTION_BODY",
 		"FUNCTION_COLLECTION",
-		"IDENTIFIER",
 		"IFF",
 		"INVOKE",
 		"METHOD_CALL",
@@ -1623,12 +1654,12 @@ inputState.guessing--;
 	};
 	
 	private static final long[] mk_tokenSet_0() {
-		long[] data = { 262048805273735472L, 0L};
+		long[] data = { 135948015707361584L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
 	private static final long[] mk_tokenSet_1() {
-		long[] data = { 217012808999505920L, 0L};
+		long[] data = { 108926417942614016L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());

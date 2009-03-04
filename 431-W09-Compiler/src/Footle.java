@@ -67,6 +67,7 @@ public class Footle
       ArrayList<String> stringdecs = new ArrayList<String>();
       Hashtable<String, Integer> fieldTable = new Hashtable<String, Integer>();
       Integer funcid = 0;
+      System.out.println(compiledCode.seq);
       compiledCode.staticPass(env, funcid, stringdecs);
       
       	//compile creates llvm code
@@ -213,7 +214,7 @@ public class Footle
    private static final String DISPLAYAST = "-displayAST";
  
    private static String inputFile = null;
-   private static boolean displayAST = false;
+   private static boolean displayAST = true;
  
    private static void parseParameters(String [] args)
    {

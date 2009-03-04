@@ -54,10 +54,9 @@ public interface FootleLexerTokenTypes {
 	int FUNCTION_NAME = 51;
 	int FUNCTION_BODY = 52;
 	int FUNCTION_COLLECTION = 53;
-	int IDENTIFIER = 54;
-	int IFF = 55;
-	int INVOKE = 56;
-	int METHOD_CALL = 57;
-	int PROGRAM = 58;
-	int THENF = 59;
+	int IFF = 54;
+	int INVOKE = 55;
+	int METHOD_CALL = 56;
+	int PROGRAM = 57;
+	int THENF = 58;
 }

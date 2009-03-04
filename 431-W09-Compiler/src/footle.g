@@ -124,7 +124,6 @@ tokens
    FUNCTION_NAME;
    FUNCTION_BODY;
    FUNCTION_COLLECTION;
-   IDENTIFIER;
    IFF;
    INVOKE;
    METHOD_CALL;
@@ -402,7 +401,7 @@ stmt returns [CodeAndReg stmtResult = null]
 		{	/* binding to variables; VarMuts should always work if the static pass determines use before initialization */
 			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
-	|	#(ASSIGN #(FIELD_LOOKUP exprResult=expr fieldId:ID) assignResult=expr) 
+	|	#(ASSIGN #(FIELD_LOOKUP exprResult=expr #(CONST_IDENTIFIER fieldId:ID)) assignResult=expr) 
 		{	/* fieldmut */
 		}
 	|	#(WHILE exprResult=expr stmtListResult=sequence)
@@ -424,13 +423,14 @@ function returns [FuncDec funcDecReturn = null]
 	Sequence functionBody;
 	ArrayList<String> params;
 }
-	:	#(FUNCTION_DEC #(FUNCTION_NAME name:ID) params=paramlist #(FUNCTION_BODY functionBody=sequence))
+	:	#(FUNCTION_DEC #(FUNCTION_NAME #(CONST_IDENTIFIER name:ID)) params=paramlist #(FUNCTION_BODY functionBody=sequence))
 		{	funcDecReturn = new FuncDec(name.toString(), params, functionBody, nextUniqueRegisterId++);
 		}
 ;
 
 paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
-	:	(name:ID {parameters.add(name.toString());} )*
+	:	(#(CONST_IDENTIFIER (name:ID {parameters.add(name.toString());})*))
+		{System.out.println(parameters);}
 ;
 
 /* expressions:
@@ -468,7 +468,7 @@ expr returns [CodeAndReg result = null]
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
 		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
-	|	#(NEW objectName:ID argumentList=args)
+	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
 		{	result = new NewObj(objectName.toString(), argumentList, nextUniqueRegisterId++);
 		}
 		
@@ -532,7 +532,7 @@ const_val returns [CodeAndReg constValue = null]
 	|	#(CONST_IDENTIFIER id:ID)
 		{	constValue = new VarRef(id.toString(), nextUniqueRegisterId++);
 		}
-	|	CONST_STRING str:STRING
+	|	#(CONST_STRING str:STRING)
 		{	constValue = new FString(str.toString(), nextUniqueRegisterId++);
 		}
 ;
