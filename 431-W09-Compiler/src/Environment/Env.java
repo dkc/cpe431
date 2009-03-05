@@ -46,18 +46,12 @@ public class Env {
 		LLVMLine currentLine;
 		Env v = env;
 		int index = 0;
-		//int i = 0;
 		RegAndIndex retVal = new RegAndIndex();
 		while(v != null){
 			for(index = 0;index < v.ids.size();index++){
 				if(v.ids.get(index).equals(id)){
 					retVal.index = index;
 					retVal.reg = v.getCurrentScope();
-					/*if(i == 0){
-						retVal.reg = env.scopeReg;
-					}else{//TODO val is in higher scope
-						retVal.reg = "%scopereg" + v.scopenum;
-					}*/
 					return retVal;
 				}
 			}
@@ -73,6 +67,12 @@ public class Env {
 			//i++;
 			v = v.prev;
 			
+			if(v==null)
+			{
+				System.out.println("lookup not found: " + id);
+				return null;
+			}
+				
 			currentLine = new LLVMLine(v.scopeReg + " = load %eframe** " + eframeptr + "\n");
 			currentLine.setOperation("load");
 			currentLine.setRegisterDefined(v.scopeReg);

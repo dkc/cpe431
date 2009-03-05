@@ -49,31 +49,71 @@ ret %eframe* %env
 declare void @type_check(i32, i32)
 declare void @obj_type_check(i32, i32)
 declare void @neg_float_check(i32)
+define i32 @footle_fun0(%eframe* %scopereg11){
+%pttrreg0 = getelementptr %eframe* %scopereg11, i32 0, i32 2, i32 0
+%r0 = load i32* %pttrreg0
+%r1 = add i32 0, 0
+%lrshft2 = lshr i32 %r0, 2
+%rrshft2 = lshr i32 %r1, 2
+%boolreg2 = icmp eq i32 %lrshft2, %rrshft2
+%shftans2 = zext i1 %boolreg2 to i32
+%r2 = shl i32 %shftans2, 2
+%r2 = add i32 2, %r2
+%tstreg9 = icmp eq i32 2, %r2
+br i1 %tstreg9, label %then, label %else
+then:
+%r3 = add i32 0, 3
+%r3 = add i32 0, 3
+br label %end
+else:
+%r6 = add i32 0, 2
+%r6 = add i32 0, 2
+br label %end
+end:
+%r9 = phi i32 [%r4,%then], [%r7,%else]
+ret i32 10
+}
 define i32 @llvm_fun(){
 %scomalreg0 = malloc {%eframe*, i32, [2 x i32]}
 %scopereg0 = bitcast {%eframe*, i32, [2 x i32]}* %scomalreg0 to %eframe*
-%r0 = add i32 0, 12
-%ptrreg1 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
-store i32 %r0, i32* %ptrreg1
-%r1 = add i32 0, 10
-%pttrreg2 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
-%r2 = load i32* %pttrreg2
-%ptrreg3 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 1
-store i32 %r2, i32* %ptrreg3
-%r3 = add i32 0, 10
-%r4 = add i32 0, 2
-%r4 = add i32 0, 2
-%tstreg9 = icmp eq i32 2, %r4
-br i1 %tstreg9, label %then, label %else
-then:
-%pttrreg5 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
-%r5 = load i32* %pttrreg5
-br label %end
-else:
-%pttrreg7 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 1
-%r7 = load i32* %pttrreg7
-br label %end
-end:
-%r9 = phi i32 [%r5,%then], [%r7,%else]
-ret i32 %r9
+%r-1 = add i32 0, 10
+%pttrreg13 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 0
+%r13 = load i32* %pttrreg13
+call void @type_check( i32 %r13, i32 1)
+%shftreg14 = lshr i32 %r13, 2
+%clos14 = inttoptr i32 %shftreg14 to %cobj*
+%idslots14 = getelementptr %cobj* %clos14, i32 0, i32 0
+%objid14 = load %slots** %idslots14
+call void @obj_type_check( i32 %objid14, i32 1 )
+%argptr14 = malloc [1 x i32], align 4
+%argsreg14 = bitcast [1 x i32]* %argptr14 to i32*
+%r12 = add i32 0, 16
+%14argslistptr0 = getelementptr i32* %argsreg14, i32 0
+store i32 %r12, i32* %14argslistptr0
+%r14 = call i32 @dispatch_fun( %cobj* %clos14, i32 1, i32* %argsreg14 ) nounwind
+%ptrreg15 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 1
+store i32 %r14, i32* %ptrreg15
+%r15 = add i32 0, 10
+%r17 = add i32 0, 20
+%pttrreg16 = getelementptr %eframe* %scopereg0, i32 0, i32 2, i32 1
+%r16 = load i32* %pttrreg16
+call void @type_check( i32 %r16, i32 1 )
+%shftreg18 = lshr i32 %r16, 2
+%castreg18 = inttoptr i32 %shftreg18 to %pobj*
+%idslots18 = getelementptr %pobj* %castreg18, i32 0, i32 0
+%objid18 = load %slots** %idslots18
+call void @neg_float_check( i32 %objid18 )
+%slotptrsreg18 = getelementptr %pobj* %castreg18, i32 0, i32 1
+%slotsreg18 = load %slots** %slotptrsreg18
+%newslotreg18 = malloc %slots
+%newsptr18 = getelementptr %slots* %newslotreg18, i32 0, i32 1
+store %slots* %slotsreg18, %slots** %newsptr18
+%fieldptr18 = getelementptr %slots* %newslotreg18, i32 0, i32 0
+%fidptr18 = getelementptr %field*%fieldptr18, i32 0, i32 0
+store i32 null, i32* %fidptr18
+%valptr18 = getelementptr %field*%fieldptr18, i32 0, i32 1
+store i32 %r17, i32* %valptr18
+store %slots* %newslotreg18, %slots** %slotptrsreg18
+%r18 = add i32 0, %r17
+ret i32 %r18
 }

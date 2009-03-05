@@ -7,6 +7,9 @@ public class LLVMToSPARC {
 		ArrayList<LLVMLine> program = (ArrayList<LLVMLine>) funcdecs.clone();
 		program.addAll(compiledCode);
 		
+		for(LLVMLine line : program)
+			System.out.println(line.toString());
+		
 		LLVMLine currentLine;
 		String SPARCcode;
 		for(int lineNumber = 0; lineNumber < program.size(); lineNumber++) {
@@ -100,10 +103,11 @@ public class LLVMToSPARC {
 				SPARCcode += "\tret" + "\n";
 				SPARCcode += "\trestore"; 
 			} else if(currentLine.getOperation().equals("call")) {
-				// need a label to call
+				// move arguments into "output" registers %o0 -> %o5 (?... 1-5?)
+				// call the label with the correct name
 				
 				currentLine.setOperation("call");
-				
+				SPARCcode += "\tcall\t" + "";
 			} else if(currentLine.getOperation().equals("")) {
 				
 			} else if(currentLine.getOperation().equals("")) {
@@ -127,5 +131,9 @@ public class LLVMToSPARC {
 		{
 			System.out.println(line.getSPARCTranslation());
 		}
+	}
+	
+	public static void mapRegisters(ArrayList<LLVMLine> program) {
+		
 	}
 }

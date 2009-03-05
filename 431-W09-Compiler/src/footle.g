@@ -402,7 +402,7 @@ stmt returns [CodeAndReg stmtResult = null]
 			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
 	|	#(ASSIGN #(FIELD_LOOKUP exprResult=expr #(CONST_IDENTIFIER fieldId:ID)) assignResult=expr) 
-		{	/* fieldmut */
+		{	stmtResult = new FieldMut(exprResult, fieldId.toString(), assignResult, nextUniqueRegisterId++);
 		}
 	|	#(WHILE exprResult=expr stmtListResult=sequence)
 		{	stmtResult = new WhileExp(exprResult, stmtListResult, nextUniqueRegisterId++);
@@ -417,6 +417,9 @@ stmt returns [CodeAndReg stmtResult = null]
 		{	stmtResult = new FuncBind(funcDecList);
 		}
 ;
+
+
+/* field mutations like c.abc = 5; are broken? curious */
 
 function returns [FuncDec funcDecReturn = null]
 {
@@ -469,10 +472,10 @@ expr returns [CodeAndReg result = null]
 		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
 	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
-		{	result = new NewObj(objectName.toString(), argumentList, nextUniqueRegisterId++);
+		{	result = new NewObj(new VarRef(objectName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
-		
 ;
+
 
 binop returns [CodeAndReg resultRegister = null]
 {

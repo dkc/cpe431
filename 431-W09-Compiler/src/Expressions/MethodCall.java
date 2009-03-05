@@ -32,7 +32,7 @@ public class MethodCall extends AbstractCodeAndReg {
 	private String cobjid = "%cobjid";
 	private String cidptr = "%cidptr";
 	
-	public MethodCall(CodeAndReg funclookup, ArrayList<CodeAndReg> args, int regnum){
+	public MethodCall(FieldLookup funclookup, ArrayList<CodeAndReg> args, int regnum){
 		super(regnum);
 		this.funclookup = funclookup;
 		this.args = args;

@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060906): "src/footle.g" -> "FootleTreeParser.java"$
+// $ANTLR 2.7.7 (20060906): "footle.g" -> "FootleTreeParser.java"$
 
 
 import antlr.TreeParser;
@@ -348,7 +348,7 @@ inputState.guessing--;
 					_t = __t147;
 					_t = _t.getNextSibling();
 					if ( inputState.guessing==0 ) {
-							/* fieldmut */
+							stmtResult = new FieldMut(exprResult, fieldId.toString(), assignResult, nextUniqueRegisterId++);
 								
 					}
 				}
@@ -513,10 +513,6 @@ inputState.guessing--;
 				_t = _retTree;
 				_t = __t175;
 				_t = _t.getNextSibling();
-				if ( inputState.guessing==0 ) {
-						result = new NewObj(objectName.toString(), argumentList, nextUniqueRegisterId++);
-							
-				}
 				break;
 			}
 			default:

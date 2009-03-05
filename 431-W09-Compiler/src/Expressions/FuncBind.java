@@ -15,12 +15,11 @@ public class FuncBind extends AbstractCodeAndReg {
 	}
 	
 	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
-		for(int i = 1; i < funs.size(); i++){
+		for(int i = 0; i < funs.size(); i++){
 			env.add(funs.get(i).name);
 			//env.add(funs.get(i).name + "met");
 		}
 		for(FuncDec f: funs){
-			System.out.println(env + " " + funcid + " " + stringdecs);
 			f.staticPass(env, funcid, stringdecs);
 		}
 	}
