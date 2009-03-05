@@ -22,14 +22,14 @@ public class IfExp extends AbstractCodeAndReg{
 		this.testreg += regnum;
 	}
 	
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
 		//this.thenscope = Env.addScope(new Env(), env);
 		//this.elsescope = Env.addScope(new Env(), env);
-		this.test.staticPass(env, funcid, stringdecs);
+		this.test.staticPass(env, funcids, stringdecs);
 		//this.fthen.staticPass(this.thenscope);
 		//this.felse.staticPass(this.elsescope);
-		this.fthen.staticPass(env, funcid, stringdecs);
-		this.felse.staticPass(env, funcid, stringdecs);
+		this.fthen.staticPass(env, funcids, stringdecs);
+		this.felse.staticPass(env, funcids, stringdecs);
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){

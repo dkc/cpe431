@@ -95,8 +95,8 @@ public class FString extends AbstractCodeAndReg {
 		currentLine.addRegisterUsed(this.objreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.shftreg + " = lhs i32 " + this.castreg + ", 2\n");
-		currentLine.setOperation("lhs");
+		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.castreg + ", 2\n");
+		currentLine.setOperation("shl");
 		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.castreg);
 		this.code.add(currentLine);
@@ -111,9 +111,9 @@ public class FString extends AbstractCodeAndReg {
 	}
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		stringdecs.add("@strconst" + this.regnum + " = internal constant [" + this.content.length() + 
-				" x i8] c\"" + this.content + "\"");
+				" x i8] c\"" + this.content + "\"\n");
 	}
 
 }

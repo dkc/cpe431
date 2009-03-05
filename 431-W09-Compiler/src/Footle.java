@@ -1,11 +1,6 @@
-import Environment.Env;
-import Expressions.Application;
-import Expressions.CodeAndReg;
-import Expressions.FReturn;
-import Expressions.FuncDec;
-import Expressions.Sequence;
-import Expressions.VarRef;
-import Expressions.Const.FInteger;
+import Environment.*;
+import Expressions.*;
+import Expressions.Const.*;
 import LLVMObjects.*;
 import antlr.*;
 import antlr.collections.*;
@@ -60,27 +55,51 @@ public class Footle
 		}
             
       //System.out.println("initial sequence: " + compiledCode.seq.toString());
-      
+		
+		int tstreg = 0;
+		Sequence testseq;
+		ArrayList<CodeAndReg> seqlist = new ArrayList<CodeAndReg>();
+		
+		ArrayList<FuncDec> flist = new ArrayList<FuncDec>();
+		ArrayList<String> slist = new ArrayList<String>();
+		flist.add(new FuncDec("f",slist,new FReturn(new FInteger(1,tstreg++),tstreg++),tstreg++));
+		FuncBind fbind = new FuncBind(flist,tstreg++);
+		//seqlist.add(fbind);
+		
+		ArrayList<CodeAndReg> arglist = new ArrayList<CodeAndReg>();
+		Application app = new Application(new VarRef("f",tstreg++),arglist, tstreg++);
+		//seqlist.add(app);
+		
+		FString fstr = new FString("Hello World", tstreg++);
+		seqlist.add(fstr);
+		FFloat ffloat = new FFloat(new Float(1.233), tstreg++);
+		//seqlist.add(ffloat);
+		
+		
+		testseq = new Sequence(seqlist,tstreg++);
+		
       //Static Pass initializes env
       Env env = new Env(0);
       //ArrayList<Integer> funcids = new ArrayList<Integer>();
       ArrayList<String> stringdecs = new ArrayList<String>();
       Hashtable<String, Integer> fieldTable = new Hashtable<String, Integer>();
-      Integer funcid = 0;
-      compiledCode.staticPass(env, funcid, stringdecs);
+      ArrayList<Integer> funcids = new ArrayList<Integer>();
+      //compiledCode.staticPass(env, funcids, stringdecs);
+      testseq.staticPass(env, funcids, stringdecs);
       
       	//compile creates llvm code
       	ArrayList<LLVMLine> funcdecs = new ArrayList<LLVMLine>();
-      	compiledCode.compile(env, funcdecs, fieldTable);
-      	//seq.compile(env, funcdecs, fieldTable);
+      	//compiledCode.compile(env, funcdecs, fieldTable);
+      	testseq.compile(env, funcdecs, fieldTable);
 
       //write output
-      writeLLVM(compiledCode, env, funcdecs, funcid, stringdecs);
+      //writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
+      writeLLVM(testseq, env, funcdecs, funcids, stringdecs);
 
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
-		   Integer funcid, ArrayList<String> stringdecs){
+		   ArrayList<Integer> funcids, ArrayList<String> stringdecs){
 	   	ArrayList<LLVMLine> code = compiledCode.getCode();
 	      Writer output = null;
 	      try{
@@ -97,8 +116,8 @@ public class Footle
 	    	  
 	    	  output.write("%eframe = type{%eframe*, i32, [0 x i32]}\n");
 	    	  
-	    	  output.write("%strobj = type{i32, %slots*, i8*}\n");
-	    	  output.write("%floatobj = type{i32, float}\n");
+	    	  output.write("%sobj = type{i32, %slots*, i8*}\n");
+	    	  output.write("%fobj = type{i32, float}\n");
 	    	  output.write("%cobj = type{i32, %slots*, %eframe*}\n");
 	    	  output.write("%pobj = type{i32, %slots*}\n");
 	    	  
@@ -121,7 +140,7 @@ public class Footle
 	    	  output.write("}\n");
 	    	  
 	    	  //dispatch fun
-	    	  output.write("define i32 @dispatch_fun(%cobj* %clos, i32 %len, i32* %args){\n");
+	    	  output.write("define i32 @dispatch_fun(%cobj* %clos, i32 %len, i32* %args, i32 %parent){\n");
 	    	  output.write("%frameptr = getelementptr %cobj* %clos, i32 0, i32 2\n");
 	    	  //output.write("%envptr = load %eframe** %frameptr\n");
 	    	  output.write("%envframe = load %eframe** %frameptr\n");
@@ -130,17 +149,31 @@ public class Footle
 	    	  output.write("%fid = lshr i32 %shftreg, 2\n");
 	    	  output.write("switch i32 %fid, label %default [");
 	    	  //for(Integer i: funcids){
-	    	  for(int i = 0; i < funcid; i++){
+	    	  for(Integer i: funcids){
 	    		  output.write(" i32 " + i + ", label %funccall" + i + " ");
 	    	  }
 	    	  output.write("]\n");
 	    	  //for(Integer i: funcids){
-	    	  for(int i = 0; i < funcid; i++){
+	    	  for(Integer i : funcids){
 	    		  output.write("funccall" + i + ":\n");
+	    		  //args check, call c
+	    		  
 	    		  //build eframe from args, recursive helper fun? probably
 	    		  output.write("%funcenv = call %eframe* @createArgsList ( i32 %len, i32* %args, %eframe* %envframe, i32 0)\n");
-	    		  output.write("%r" + i + " = call i32 @footle_fun" + i + " ( %eframe* %envframe )\n");
-	    		  output.write("ret i32 %r" + i + "\n");
+	    		  
+	    		  //branch on parent, 0 = void ie function call
+	    		  output.write("%ftest" + i + " = icmp eq i32 %parent, 0\n");
+	    		  output.write("br i1 %ftest" + i + ",  label %ffun" + i + ", label %fmet" + i + "\n");
+	    		  
+	    		  //fun call
+	    		  output.write("ffun" + i + ":\n");
+	    		  output.write("%rfun" + i + " = call i32 @footle_fun" + i + " ( %eframe* %envframe )\n");
+	    		  output.write("ret i32 %rfun" + i + "\n");
+	    		  
+	    		  //met call
+	    		  output.write("fmet" + i + ":\n");
+	    		  output.write("%rmet" + i + " = call i32 @footle_met" + i + " ( %eframe* %envframe, i32 %parent )\n");
+	    		  output.write("ret i32 %rmet" + i + "\n");
 	    	  }
 	    	  output.write("default:\n");
 	    	  output.write("ret i32 0\n");

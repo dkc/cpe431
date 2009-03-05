@@ -22,9 +22,16 @@ public class VarRef extends AbstractCodeAndReg{
 
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
+		if(this.id.equals("this")){
+			currentLine = new LLVMLine(this.reg + " = add i32 0, %this\n");
+			currentLine.setOperation("add");
+			currentLine.setRegisterDefined(this.reg);
+			currentLine.addRegisterUsed("%this");
+			currentLine.addConstantUsed(0);
+		}else{
+		
 		RegAndIndex regind = Env.lookup(id, env);
 		
-		if(regind != null){
 			//this.code.add(this.eframereg + " = add i32 0," + regind.reg + "\n");
 			this.code.addAll(regind.code);
 			currentLine = new LLVMLine(this.pttreg + " = getelementptr %eframe* " + 
@@ -40,19 +47,19 @@ public class VarRef extends AbstractCodeAndReg{
 			currentLine.addRegisterUsed(this.pttreg);
 			this.code.add(currentLine);
 			
-			return this;
+		
 		}
-		//TODO error???
-		//System.err.println();
-		return null;
+		return this;
 	}
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+		if(!this.id.equals("this")){
 		RegAndIndex regind = Env.lookup(id, env);
 		if(regind == null){
 			System.err.println("Error in Static Pass: Variable reference before bind");
 			System.exit(-1);
+		}
 		}
 	}
 }

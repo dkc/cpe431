@@ -47,7 +47,7 @@ public class VarMut extends AbstractCodeAndReg{
 	}
 	
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		RegAndIndex regind = Env.lookup(id, env);
 		if(regind == null){
 			System.err.println("Error in Static Pass: Variable mutation before bind");

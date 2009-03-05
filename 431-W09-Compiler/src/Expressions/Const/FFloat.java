@@ -72,8 +72,8 @@ public class FFloat extends AbstractCodeAndReg{
 		currentLine.addRegisterUsed(this.objreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.shftreg + " = lhs i32 " + this.castreg + ", 2\n");
-		currentLine.setOperation("lhs");
+		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.castreg + ", 2\n");
+		currentLine.setOperation("shl");
 		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.castreg);
 		this.code.add(currentLine);

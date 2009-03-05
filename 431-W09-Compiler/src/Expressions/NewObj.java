@@ -9,7 +9,7 @@ import LLVMObjects.LLVMLine;
 import Values.*;
 
 public class NewObj extends AbstractCodeAndReg{
-	String fname;
+	VarRef fname;
 	ArrayList<CodeAndReg> args;
 	
 	private String objreg = "%objreg";
@@ -31,7 +31,7 @@ public class NewObj extends AbstractCodeAndReg{
 	private String cidptr = "%cidptr";
 	private String cobjid = "%cobjid";
 	
-	public NewObj(String fname, ArrayList<CodeAndReg> args, int regnum){
+	public NewObj(VarRef fname, ArrayList<CodeAndReg> args, int regnum){
 		super(regnum);
 		this.fname = fname;
 		this.args = args;
@@ -75,7 +75,7 @@ public class NewObj extends AbstractCodeAndReg{
 		
 		//store pobj to env
 		currentLine = new LLVMLine(this.castreg + " = ptrtoint %pobj* " + this.objreg + " to i32\n");
-		currentLine = new LLVMLine(this.shftreg + " = lhs i32 " + this.castreg + ", 2\n");
+		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.castreg + ", 2\n");
 		currentLine = new LLVMLine(this.reg + " = add i32 1, " + this.shftreg + "\n");
 		//tag is 01 cuz its ptr
 		
@@ -88,18 +88,13 @@ public class NewObj extends AbstractCodeAndReg{
 		
 		//TODO call new?
 		//Lookup closure by name in env
-		RegAndIndex regind = Env.lookup(this.fname, env);
-		this.code.addAll(regind.code);
+		this.code.addAll(this.fname.compile(env, funcdecs, fieldTable).getCode());
 		
 		//get fun id
-		//TODO bitcast to cobj
-		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + 
-				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
-		currentLine = new LLVMLine(this.typereg + " = load i32* " + this.ptrreg + "\n");
 		//type check for ptr
-		currentLine = new LLVMLine("call void @type_check( i32 " + this.typereg + ", i32 1)\n");//1 is cobj type
+		currentLine = new LLVMLine("call void @type_check( i32 " + this.fname.getReg() + ", i32 1)\n");//1 is cobj type
 		//shift
-		currentLine = new LLVMLine(this.fshftreg + " = lshr i32 " + this.typereg + ", 2\n");
+		currentLine = new LLVMLine(this.fshftreg + " = lshr i32 " + this.fname.getReg() + ", 2\n");
 		currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.fshftreg + 
 				" to %cobj*\n");
 		
@@ -135,10 +130,10 @@ public class NewObj extends AbstractCodeAndReg{
 	}
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		//call staticPass on args?
 		for(CodeAndReg arg: args){
-			arg.staticPass(env, funcid, stringdecs);
+			arg.staticPass(env, funcids, stringdecs);
 		}
 	}
 	

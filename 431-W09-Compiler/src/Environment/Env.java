@@ -79,6 +79,11 @@ public class Env {
 			//i++;
 			v = v.prev;
 			
+			if(v == null)
+			{
+				return null;
+			}
+			
 			currentLine = new LLVMLine(v.scopeReg + " = load %eframe** " + eframeptr + "\n");
 			currentLine.setOperation("load");
 			currentLine.setRegisterDefined(v.scopeReg);

@@ -1,7 +1,1 @@
-<<<<<<< HEAD:431-W09-Compiler/src/TreeParserTestCase
-var x = 3; x;
-=======
-var x = 1-5;
-var y = x;
-if (true) { x; } else { y; }
->>>>>>> bc7fa67dbc2553d820758be67724382e7704dd39:431-W09-Compiler/src/TreeParserTestCase
+function f ( ) { 1; };

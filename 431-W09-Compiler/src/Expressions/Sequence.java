@@ -15,9 +15,9 @@ public class Sequence extends AbstractCodeAndReg{
 		this.seq = seq;
 	}
 	
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
 		for(CodeAndReg reg : seq)
-			reg.staticPass(env, funcid, stringdecs);
+			reg.staticPass(env, funcids, stringdecs);
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){// throws ReturnException {

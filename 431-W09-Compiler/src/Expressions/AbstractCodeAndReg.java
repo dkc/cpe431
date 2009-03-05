@@ -18,7 +18,7 @@ public abstract class AbstractCodeAndReg implements CodeAndReg{
 		this.code = new ArrayList<LLVMLine>();
 	}
 	
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){}
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){}
 	
 	public int getRegnum(){
 		return this.regnum;

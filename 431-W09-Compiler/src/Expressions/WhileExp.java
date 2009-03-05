@@ -161,11 +161,11 @@ public class WhileExp extends AbstractCodeAndReg{
 
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		// TODO Auto-generated method stub
 		this.scope = new Env(this.regnum);
 		Env.addScope(this.scope, env);
-		this.test.staticPass(this.scope, funcid, stringdecs);
-		this.body.staticPass(this.scope, funcid, stringdecs);
+		this.test.staticPass(this.scope, funcids, stringdecs);
+		this.body.staticPass(this.scope, funcids, stringdecs);
 	}
 }
