@@ -22,20 +22,19 @@ public class FReturn extends AbstractCodeAndReg {
 		
 		this.code.addAll(target.compile(env, funcdecs, fieldTable).getCode());
 		
-		currentLine = new LLVMLine(this.reg + " = add i32 0, " + target.getReg() + "\n");
-		currentLine.setOperation("add");
-		currentLine.setRegisterDefined(this.reg);
+		currentLine = new LLVMLine("ret i32 " + target.getReg() + "\n");
+		currentLine.setOperation("ret");
 		currentLine.addRegisterUsed(target.getReg());
-		currentLine.addConstantUsed(0);
+		this.code.add(currentLine);
 			
 		return this;
 	}
 
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		// TODO Auto-generated method stub
-		super.staticPass(env, funcid, stringdecs);
+		super.staticPass(env, funcids, stringdecs);
 	}
 
 }

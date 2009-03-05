@@ -9,18 +9,20 @@ import LLVMObjects.LLVMLine;
 public class FuncBind extends AbstractCodeAndReg {
 	public ArrayList<FuncDec> funs;
 
-	public FuncBind(ArrayList<FuncDec> funs){
-		super(-1);
+	public FuncBind(ArrayList<FuncDec> funs, int regnum){
+		super(regnum);
+		//System.out.println("made funcbind");
 		this.funs = funs;
 	}
 	
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
-		for(int i = 0; i < funs.size(); i++){
-			env.add(funs.get(i).name);
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+		for(FuncDec f: funs){
+			env.add(f.name);
+			//System.out.println("added " + f.name);
 			//env.add(funs.get(i).name + "met");
 		}
 		for(FuncDec f: funs){
-			f.staticPass(env, funcid, stringdecs);
+			f.staticPass(env, funcids, stringdecs);
 		}
 	}
 	

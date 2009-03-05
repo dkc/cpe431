@@ -50,7 +50,7 @@ public class FString extends AbstractCodeAndReg {
 		currentLine.addRegisterUsed(this.objreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine("store i32 3, i32* " + this.idptr + "\n");//tag 2 for string
+		currentLine = new LLVMLine("store i32 2, i32* " + this.idptr + "\n");//tag 2 for string
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.idptr);
 		this.code.add(currentLine);
@@ -66,7 +66,8 @@ public class FString extends AbstractCodeAndReg {
 		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.slotsptr + "\n");
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.slotsptr);
-		this.code.add(currentLine);
+		//TODO fix later
+		//this.code.add(currentLine);
 		
 		//store string to obj
 		currentLine = new LLVMLine(this.stringptr + " = getelementptr %sobj* " + this.objreg + 
@@ -113,9 +114,9 @@ public class FString extends AbstractCodeAndReg {
 	}
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		stringdecs.add("@strconst" + this.regnum + " = internal constant [" + this.content.length() + 
-				" x i8] c\"" + this.content + "\"");
+				" x i8] c\"" + this.content + "\"\n");
 	}
 
 }

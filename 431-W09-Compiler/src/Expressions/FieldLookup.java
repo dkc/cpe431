@@ -40,8 +40,8 @@ public class FieldLookup extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
-		this.obj.staticPass(env, funcid, stringdecs);
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+		this.obj.staticPass(env, funcids, stringdecs);
 	}
 	
 	@Override

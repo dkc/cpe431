@@ -69,10 +69,10 @@ public class Env {
 			
 			if(v==null)
 			{
-				System.out.println("lookup not found: " + id);
+				System.err.println("lookup not found: " + id);
 				return null;
 			}
-				
+			
 			currentLine = new LLVMLine(v.scopeReg + " = load %eframe** " + eframeptr + "\n");
 			currentLine.setOperation("load");
 			currentLine.setRegisterDefined(v.scopeReg);

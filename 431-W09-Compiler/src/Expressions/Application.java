@@ -16,7 +16,7 @@ public class Application extends AbstractCodeAndReg{
 	private String shftreg = "%shftreg";
 	private String argsreg = "%argsreg";
 	private String argptr = "%argptr";
-	private String argslistptr = "%";
+	private String argslistptr = "%alist";
 	private String cobjreg = "%clos";
 	private String numargs = "%numargs";
 	
@@ -32,7 +32,7 @@ public class Application extends AbstractCodeAndReg{
 		this.shftreg += regnum;
 		this.argsreg += regnum;
 		this.argptr += regnum;
-		this.argslistptr += regnum + "argslistptr";
+		this.argslistptr += regnum + "p";
 		this.cobjreg += regnum;
 		this.numargs += regnum;
 		this.idslotsptrreg += regnum;
@@ -40,11 +40,11 @@ public class Application extends AbstractCodeAndReg{
 	}
 	
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
-		this.func.staticPass(env, funcid, stringdecs);
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+		this.func.staticPass(env, funcids, stringdecs);
 		//call staticPass on args?
 		for(CodeAndReg arg: args){
-			arg.staticPass(env, funcid, stringdecs);
+			arg.staticPass(env, funcids, stringdecs);
 		}
 	}
 	
@@ -87,8 +87,8 @@ public class Application extends AbstractCodeAndReg{
 			currentLine.addRegisterUsed(this.cobjreg);
 			this.code.add(currentLine);
 			
-			currentLine = new LLVMLine(this.objid + " = load %slots** " + this.idslotsptrreg + "\n");
-			currentLine.setOperation("load");
+			currentLine = new LLVMLine(this.objid + " = load i32* " + this.idslotsptrreg + "\n");
+ 			currentLine.setOperation("load");
 			currentLine.setRegisterDefined(this.objid);
 			currentLine.addRegisterUsed(this.idslotsptrreg);
 			this.code.add(currentLine);
@@ -132,12 +132,14 @@ public class Application extends AbstractCodeAndReg{
 			//send compiled args and closure id # to dispatch
 			
 			currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
-					this.cobjreg + ", i32 " + this.args.size() + ", i32* " + this.argsreg + " ) nounwind\n");
+					this.cobjreg + ", i32 " + this.args.size() + ", i32* " + this.argsreg + ", i32 0 ) nounwind\n");
 			currentLine.setOperation("call");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.cobjreg);
 			currentLine.addRegisterUsed(this.numargs);
 			currentLine.addRegisterUsed(this.argsreg);
+			currentLine.addConstantUsed(this.args.size());
+			currentLine.addConstantUsed(0);
 			this.code.add(currentLine);
 			
 			return this;

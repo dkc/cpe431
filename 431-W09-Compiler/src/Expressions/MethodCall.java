@@ -23,7 +23,7 @@ public class MethodCall extends AbstractCodeAndReg {
 	private String cshftreg = "%cshftreg";
 	private String argsreg = "%argsreg";
 	private String argptr = "%argptr";
-	private String argslistptr = "%";
+	private String argslistptr = "%alist";
 	private String cobjreg = "%clos";
 	private String numargs = "%numargs";
 	private String thisptr = "%thisptr";
@@ -55,7 +55,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		this.cshftreg += regnum;
 		this.argsreg += regnum;
 		this.argptr += regnum;
-		this.argslistptr += regnum + "argslistptr";
+		this.argslistptr += regnum + "p";
 		this.cobjreg += regnum;
 		this.numargs += regnum;
 		
@@ -98,7 +98,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.addRegisterUsed(this.cobjreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.cobjid + " = load %slots** " + this.cidptr + "\n");
+		currentLine = new LLVMLine(this.cobjid + " = load i32* " + this.cidptr + "\n");
 		currentLine.setOperation("load");
 		currentLine.setRegisterDefined(this.cobjid);
 		currentLine.addRegisterUsed(this.cidptr);
@@ -111,13 +111,13 @@ public class MethodCall extends AbstractCodeAndReg {
 		this.code.add(currentLine);
 		
 		//evaluate args
-		currentLine = new LLVMLine(this.argptr + " = malloc [" + (args.size() + 1) + " x i32], align 4\n");
+		currentLine = new LLVMLine(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.argptr);
 		currentLine.addConstantUsed(4*(args.size()+1));
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + (args.size() + 1) + " x i32]* " + 
+		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + 
 				this.argptr + " to i32*\n");
 		currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.argsreg);
@@ -144,7 +144,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		}
 		
 		//add this reference
-		currentLine = new LLVMLine(this.thisptr + " = getelementptr i32* " + this.argsreg + 
+		/* = new LLVMLine(this.thisptr + " = getelementptr i32* " + this.argsreg + 
 				", i32 " + args.size() + "\n");
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.thisptr);
@@ -155,17 +155,17 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.objreg);
 		currentLine.addRegisterUsed(this.thisptr);
-		this.code.add(currentLine);
+		this.code.add(currentLine);*/
 		
 		//TODO add 1 to func id?
 		//send compiled args and closure id # to dispatch
 		//currentLine = new LLVMLine(this.numargs + " = add i32 0, " + args.size() + "\n");
 		currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + (args.size() + 1) + ", i32* " + this.argsreg + " ) nounwind\n");
+				this.cobjreg + ", i32 " + args.size() + ", i32* " + this.argsreg + ", i32 " + this.objreg + " ) nounwind\n");
 		currentLine.setOperation("call");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.cobjreg);
-		currentLine.addConstantUsed(4*(args.size()+1));
+		currentLine.addConstantUsed(4*args.size());
 		currentLine.addRegisterUsed(this.argsreg);
 		this.code.add(currentLine);
 		
@@ -173,11 +173,11 @@ public class MethodCall extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
-		this.funclookup.staticPass(env, funcid, stringdecs);
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+		this.funclookup.staticPass(env, funcids, stringdecs);
 		//call staticPass on args?
 		for(CodeAndReg arg: args){
-			arg.staticPass(env, funcid, stringdecs);
+			arg.staticPass(env, funcids, stringdecs);
 		}
 	}
 }

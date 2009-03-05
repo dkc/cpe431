@@ -31,7 +31,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs){
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
 		operandScope = Env.addScope(new Env(this.regnum), env);
 		this.operand.staticPass(this.operandScope, null, stringdecs);
 	}

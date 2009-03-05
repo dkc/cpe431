@@ -414,7 +414,7 @@ stmt returns [CodeAndReg stmtResult = null]
 		{	stmtResult = new FReturn(exprResult, nextUniqueRegisterId++);
 		}
 	|	#(FUNCTION_COLLECTION (funcDec=function {funcDecList.add(funcDec);} )+)
-		{	stmtResult = new FuncBind(funcDecList);
+		{	stmtResult = new FuncBind(funcDecList, nextUniqueRegisterId++);
 		}
 ;
 

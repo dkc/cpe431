@@ -9,7 +9,7 @@ import LLVMObjects.LLVMLine;
 import Values.*;
 
 public class NewObj extends AbstractCodeAndReg{
-	String fname;
+	VarRef fname;
 	ArrayList<CodeAndReg> args;
 	
 	private String objreg = "%objreg";
@@ -31,7 +31,7 @@ public class NewObj extends AbstractCodeAndReg{
 	private String cidptr = "%cidptr";
 	private String cobjid = "%cobjid";
 	
-	public NewObj(String fname, ArrayList<CodeAndReg> args, int regnum){
+	public NewObj(VarRef fname, ArrayList<CodeAndReg> args, int regnum){
 		super(regnum);
 		this.fname = fname;
 		this.args = args;
@@ -62,83 +62,97 @@ public class NewObj extends AbstractCodeAndReg{
 		LLVMLine currentLine;
 		
 		currentLine = new LLVMLine(this.objreg + " = malloc %pobj\n");
+		this.code.add(currentLine);
 		
 		//store id
 		currentLine = new LLVMLine(this.idptr + " = getelementptr %pobj* " + this.objreg + 
 				", i32 0, i32 0\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine("store i32 0, i32* " + this.idptr + "\n");//tag 0 for pobj
+		this.code.add(currentLine);
 		
 		//store empty slots
 		currentLine = new LLVMLine(this.slotsptr + " = getelementptr %pobj* " + this.objreg + 
 				", i32 0, i32 1\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.slotsptr + "\n");
+		//TODO add later
+		//this.code.add(currentLine);
 		
 		//store pobj to env
 		currentLine = new LLVMLine(this.castreg + " = ptrtoint %pobj* " + this.objreg + " to i32\n");
-		currentLine = new LLVMLine(this.shftreg + " = lhs i32 " + this.castreg + ", 2\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.castreg + ", 2\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine(this.reg + " = add i32 1, " + this.shftreg + "\n");
+		this.code.add(currentLine);
+		
 		//tag is 01 cuz its ptr
 		
-		//RegAndIndex regind = Env.lookup(objid, env);
-		//currentLine = new LLVMLineAll(regind.code);
-		//currentLine = new LLVMLine(this.pttreg + " = getelementptr %eframe* " + 
-				//regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
-		//currentLine = new LLVMLine("store i32 " + this.tagreg + ", i32* "+ this.pttreg + "\n");
-		//currentLine = new LLVMLine("\n");
-		
-		//TODO call new?
+		//CALL NEW
 		//Lookup closure by name in env
-		RegAndIndex regind = Env.lookup(this.fname, env);
-		this.code.addAll(regind.code);
+		this.code.addAll(this.fname.compile(env, funcdecs, fieldTable).getCode());
+		this.code.add(currentLine);
 		
-		//get fun id
-		//TODO bitcast to cobj
-		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + 
-				regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
-		currentLine = new LLVMLine(this.typereg + " = load i32* " + this.ptrreg + "\n");
 		//type check for ptr
-		currentLine = new LLVMLine("call void @type_check( i32 " + this.typereg + ", i32 1)\n");//1 is cobj type
+		currentLine = new LLVMLine("call void @type_check( i32 " + this.fname.getReg() + ", i32 1)\n");//1 is cobj type
+		this.code.add(currentLine);
+		
 		//shift
-		currentLine = new LLVMLine(this.fshftreg + " = lshr i32 " + this.typereg + ", 2\n");
+		currentLine = new LLVMLine(this.fshftreg + " = lshr i32 " + this.fname.getReg() + ", 2\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.fshftreg + 
 				" to %cobj*\n");
+		this.code.add(currentLine);
 		
 		//Type check for closure
 		currentLine = new LLVMLine(this.cidptr + " = getelementptr %cobj* " + this.cobjreg + 
 		", i32 0, i32 0\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine(this.cobjid + " = load %slots** " + this.cidptr + "\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine("call void @obj_type_check( i32 " + this.cobjid + ", i32 1)\n");//1 is cobj type
+		this.code.add(currentLine);
 		
 		//evaluate args
 		currentLine = new LLVMLine(this.argptr + " = malloc [" + (args.size() + 1) + " x i32], align 4\n");
+		this.code.add(currentLine);
+		
 		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + (args.size() + 1) + " x i32]* " + 
 				this.argptr + " to i32*\n");
+		this.code.add(currentLine);
 		for(int i = 0;i < args.size();i++){
 			this.code.addAll(args.get(i).compile(env, funcdecs, fieldTable).getCode());
 			currentLine = new LLVMLine(this.argslistptr + i + " = getelementptr i32* " + 
 					this.argsreg + ", i32 " + i + "\n");
+			this.code.add(currentLine);
+			
 			currentLine = new LLVMLine("store i32 " + args.get(i).getReg() + ", i32* " + 
 					this.argslistptr + i + "\n");
+			this.code.add(currentLine);
 		}
 		
-		//add this reference
-		currentLine = new LLVMLine(this.thisptr + " = getelementptr i32* " + this.argsreg + 
-				", i32 " + args.size() + "\n");
-		currentLine = new LLVMLine("store i32 " + this.objreg + ", i32* " + this.thisptr + "\n");
-		
-		//TODO Dipatch function nounwind needed?
 		//send compiled args and closure id # to dispatch
 		currentLine = new LLVMLine("call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + (this.args.size() + 1) + ", i32* " + this.argsreg + " ) nounwind\n");
+				this.cobjreg + ", i32 " + (this.args.size() + 1) + ", i32* " + this.argsreg + ", i32 " + this.objreg + " ) nounwind\n");
+		this.code.add(currentLine);
 		
 		return this;
 	}
 
 	@Override
-	public void staticPass(Env env, Integer funcid, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+		this.fname.staticPass(env, funcids, stringdecs);
 		//call staticPass on args?
 		for(CodeAndReg arg: args){
-			arg.staticPass(env, funcid, stringdecs);
+			arg.staticPass(env, funcids, stringdecs);
 		}
 	}
 	
