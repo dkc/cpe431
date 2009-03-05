@@ -50,10 +50,10 @@ public interface FootleLexerTokenTypes {
 	int CONST_STRING = 47;
 	int ELSEF = 48;
 	int FIELD_LOOKUP = 49;
-	int FUNCTION_NAME = 50;
-	int FUNCTION_BODY = 51;
-	int FUNCTION_COLLECTION = 52;
-	int IDENTIFIER = 53;
+	int FUNCTION_DEC = 50;
+	int FUNCTION_NAME = 51;
+	int FUNCTION_BODY = 52;
+	int FUNCTION_COLLECTION = 53;
 	int IFF = 54;
 	int INVOKE = 55;
 	int METHOD_CALL = 56;

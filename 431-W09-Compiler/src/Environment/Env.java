@@ -33,11 +33,6 @@ public class Env {
 	public String getMallocReg(){
 		return this.mallocReg;
 	}
-	
-	/* just defining this to make Application shut up as of 02/17/09 */
-	public void setNewScope(int x){
-		/* TOTALLY WORTHLESS RIGHT NOW I DON'T EVEN KNOW WHETHER THIS IS NEEDED */
-	}
 
 	public void add(String id){
 		ids.add(id);
@@ -73,8 +68,7 @@ public class Env {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(eframeptr);
 			currentLine.addRegisterUsed(v.scopeReg);
-			
-			
+			currentLine.addConstantUsed(4*1);
 			
 			//i++;
 			v = v.prev;

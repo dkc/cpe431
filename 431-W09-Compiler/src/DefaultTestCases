@@ -1,11 +1,10 @@
-print(even(duck.grid()));
 if(1) {2;}
 2 * 4 * 5;
 function odd(x) {
   if (x == 0) {
     return false;
   } else {
-    return even(x - 1, "fiffle");
+    return even(x-1);
   }
 }
 function even(x) {
@@ -15,4 +14,6 @@ function even(x) {
     return odd(x - 1);
   }
 }
+var c = 1;
+c.abc = 5;
 3 + 4 / ! c . abc * 6 == 5 + 6 + 7 && true || false;

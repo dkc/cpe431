@@ -56,7 +56,7 @@ public class Footle
             
       //System.out.println("initial sequence: " + compiledCode.seq.toString());
 		
-		int tstreg = 0;
+		/*int tstreg = 0;
 		Sequence testseq;
 		ArrayList<CodeAndReg> seqlist = new ArrayList<CodeAndReg>();
 		
@@ -77,24 +77,25 @@ public class Footle
 		
 		
 		testseq = new Sequence(seqlist,tstreg++);
-		
+		*/
       //Static Pass initializes env
       Env env = new Env(0);
       //ArrayList<Integer> funcids = new ArrayList<Integer>();
       ArrayList<String> stringdecs = new ArrayList<String>();
       Hashtable<String, Integer> fieldTable = new Hashtable<String, Integer>();
+      //System.out.println(compiledCode.seq);
       ArrayList<Integer> funcids = new ArrayList<Integer>();
-      //compiledCode.staticPass(env, funcids, stringdecs);
-      testseq.staticPass(env, funcids, stringdecs);
+      compiledCode.staticPass(env, funcids, stringdecs);
+      //testseq.staticPass(env, funcids, stringdecs);
       
       	//compile creates llvm code
       	ArrayList<LLVMLine> funcdecs = new ArrayList<LLVMLine>();
-      	//compiledCode.compile(env, funcdecs, fieldTable);
-      	testseq.compile(env, funcdecs, fieldTable);
+      	compiledCode.compile(env, funcdecs, fieldTable);
+      	//testseq.compile(env, funcdecs, fieldTable);
 
       //write output
-      //writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
-      writeLLVM(testseq, env, funcdecs, funcids, stringdecs);
+      writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
+      //writeLLVM(testseq, env, funcdecs, funcids, stringdecs);
 
    }
    
@@ -246,7 +247,7 @@ public class Footle
    private static final String DISPLAYAST = "-displayAST";
  
    private static String inputFile = null;
-   private static boolean displayAST = false;
+   private static boolean displayAST = true;
  
    private static void parseParameters(String [] args)
    {

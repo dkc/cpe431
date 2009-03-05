@@ -34,7 +34,7 @@ public class LLVMToSPARC {
 					// then we have no registers involved
 					currentLine.setOperation("mov");
 					SPARCcode += "\tset\t" + currentLine.getConstantUsed(0) + ", " + currentLine.getRegisterDefined();
-				} 
+				}
 			} else if(currentLine.getOperation().equals("sub")) {
 				// SUB (op-op->%reg)
 				// as far as I can tell we will only ever subtract two regs! constants get loaded and shifted before use
@@ -77,12 +77,48 @@ public class LLVMToSPARC {
 				currentLine.setOperation("ld");
 				SPARCcode += "\tld\t[" + currentLine.getRegisterUsed(0) + "], " + currentLine.getRegisterDefined();
 			} else if(currentLine.getOperation().equals("bitcast")) {
+				// unnecessary in SPARC
 				
+				SPARCcode += "! bitcast removed by the LLVM->SPARC translation";
+			} else if(currentLine.getOperation().equals("inttoptr")) {
+				// unnecessary in SPARC
+				
+				SPARCcode += "! inttoptr removed by the LLVM->SPARC translation";
 			} else if(currentLine.getOperation().equals("malloc")) {
+				// set %o0 to bytes wanted, call malloc, nop, mov return val %o0 to "defined" register
+				
+				currentLine.setOperation("malloc");
+				SPARCcode += "\tset\t" + currentLine.getConstantSum() + ", " + "%o0" + "\n";
+				SPARCcode += "\tcall\t" + "malloc" + "\n";
+				SPARCcode += "\tnop"+ "\n";
+				SPARCcode += "\tmov\t" + "%o0" + ", " + currentLine.getRegisterDefined();
+			} else if(currentLine.getOperation().equals("ret")) {
+				// move register used to %i0, ret, restore
+				
+				currentLine.setOperation("ret");
+				SPARCcode += "\tmov\t" + currentLine.getRegisterUsed(0) + ", " + "%i0" + "\n";
+				SPARCcode += "\tret" + "\n";
+				SPARCcode += "\trestore"; 
+			} else if(currentLine.getOperation().equals("call")) {
+				// need a label to call
+				
+				currentLine.setOperation("call");
 				
 			} else if(currentLine.getOperation().equals("")) {
 				
-			}
+			} else if(currentLine.getOperation().equals("")) {
+				
+			} else if(currentLine.getOperation().equals("")) {
+				
+			} else if(currentLine.getOperation().equals("")) {
+				
+			} else if(currentLine.getOperation().equals("")) {
+				
+			} else if(currentLine.getOperation().equals("")) {
+				
+			} else if(currentLine.getOperation().equals("")) {
+				
+			} 
 			
 			currentLine.setSPARCTranslation(SPARCcode);
 		}
