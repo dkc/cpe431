@@ -247,7 +247,7 @@ public class Footle
    private static final String DISPLAYAST = "-displayAST";
  
    private static String inputFile = null;
-   private static boolean displayAST = true;
+   private static boolean displayAST = false;
  
    private static void parseParameters(String [] args)
    {

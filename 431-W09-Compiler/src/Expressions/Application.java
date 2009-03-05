@@ -16,7 +16,7 @@ public class Application extends AbstractCodeAndReg{
 	private String shftreg = "%shftreg";
 	private String argsreg = "%argsreg";
 	private String argptr = "%argptr";
-	private String argslistptr = "%";
+	private String argslistptr = "%alist";
 	private String cobjreg = "%clos";
 	private String numargs = "%numargs";
 	
@@ -32,7 +32,7 @@ public class Application extends AbstractCodeAndReg{
 		this.shftreg += regnum;
 		this.argsreg += regnum;
 		this.argptr += regnum;
-		this.argslistptr += regnum + "argslistptr";
+		this.argslistptr += regnum + "p";
 		this.cobjreg += regnum;
 		this.numargs += regnum;
 		this.idslotsptrreg += regnum;

@@ -630,7 +630,7 @@ inputState.guessing--;
 			_t = _t.getNextSibling();
 			}
 			if ( inputState.guessing==0 ) {
-				System.out.println(parameters);
+				//System.out.println(parameters);
 			}
 		}
 		catch (RecognitionException ex) {

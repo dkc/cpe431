@@ -22,6 +22,7 @@ public class Bind extends AbstractCodeAndReg{
 	
 	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
 		env.add(name);
+		this.val.staticPass(env, funcids, stringdecs);
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
