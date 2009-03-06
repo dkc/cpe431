@@ -46,11 +46,14 @@ public class IfExp extends AbstractCodeAndReg{
 		currentLine.setOperation("icmp eq");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.test.getReg());
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("br i1 " + this.testreg + ", label %then, label %else\n");
-		currentLine.setOperation("br");
+		currentLine.setOperation("br i1");
 		currentLine.addRegisterUsed(this.testreg);
+		currentLine.addRegisterUsed("%then");
+		currentLine.addRegisterUsed("%else");
 		this.code.add(currentLine);
 		
 		//then
@@ -59,12 +62,14 @@ public class IfExp extends AbstractCodeAndReg{
 		
 		currentLine = new LLVMLine("then:\n");
 		currentLine.setOperation("label");
+		currentLine.setLabel("then");
 		this.code.add(currentLine);
 		
 		this.code.addAll(this.fthen.getCode());
 		
 		currentLine = new LLVMLine("br label %end\n");
 		currentLine.setOperation("br");
+		currentLine.setLabel("%end");
 		this.code.add(currentLine);
 		
 		//else
@@ -72,17 +77,20 @@ public class IfExp extends AbstractCodeAndReg{
 		this.felse.compile(env, funcdecs, fieldTable);
 		currentLine = new LLVMLine("else:\n");
 		currentLine.setOperation("label");
+		currentLine.setLabel("else");
 		this.code.add(currentLine);
 		
 		this.code.addAll(this.felse.getCode());
 		
 		currentLine = new LLVMLine("br label %end\n");
 		currentLine.setOperation("br");
+		currentLine.setLabel("%end");
 		this.code.add(currentLine);
 		
 		//end
 		currentLine = new LLVMLine("end:\n");
 		currentLine.setOperation("label");
+		currentLine.setLabel("end");
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.reg + " = phi i32 [" + this.fthen.getReg() + ",%then], [" + this.felse.getReg() + ",%else]\n");

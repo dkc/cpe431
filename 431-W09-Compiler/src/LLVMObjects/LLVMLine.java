@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 public class LLVMLine {
 	private String code;
+	private String SPARCTranslation;
+	
 	private String operation;
 	private String registerDefined;
+	private String targetBlock;
+
+	private String label;
 	private ArrayList<String> registersUsed;
 	private ArrayList<Number> constantsUsed;
-	private String SPARCTranslation;
 	
 	public LLVMLine(String code)
 	{
@@ -77,6 +81,14 @@ public class LLVMLine {
 		return sum;
 	}
 	
+	public String getTargetBlock() {
+		return targetBlock;
+	}
+
+	public void setTargetBlock(String targetBlock) {
+		this.targetBlock = targetBlock;
+	}
+	
 	public String toString() {
 		String lineRepresentation = "----------------\n";
 		lineRepresentation += code + "\n";
@@ -86,6 +98,14 @@ public class LLVMLine {
 		lineRepresentation += "consts:\t" + constantsUsed.toString();
 		
 		return lineRepresentation;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getLabel() {
+		return label;
 	}
 
 	

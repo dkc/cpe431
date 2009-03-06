@@ -91,8 +91,10 @@ public class WhileExp extends AbstractCodeAndReg{
 		whilefunc.add(currentLine);
 		
 		currentLine = new LLVMLine("br i1 " + this.testreg + ", label %cont, label %fin\n");
-		currentLine.setOperation("br");
+		currentLine.setOperation("br i1");
 		currentLine.addRegisterUsed(this.testreg);
+		currentLine.addRegisterUsed("%cont");
+		currentLine.addRegisterUsed("%fin");
 		whilefunc.add(currentLine);
 		
 		//run body
