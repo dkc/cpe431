@@ -432,8 +432,17 @@ function returns [FuncDec funcDecReturn = null]
 ;
 
 paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
-	:	(#(CONST_IDENTIFIER (name:ID {parameters.add(name.toString());})*))
+{
+	String paramName;
+}
+	:	(
+			paramName=param_id {parameters.add(paramName);}
+		)*
 		{System.out.println(parameters);}
+;
+
+param_id returns [String paramName = null]
+	:	#(CONST_IDENTIFIER (name:ID))
 ;
 
 /* expressions:
