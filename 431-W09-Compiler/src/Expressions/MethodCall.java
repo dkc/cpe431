@@ -32,7 +32,7 @@ public class MethodCall extends AbstractCodeAndReg {
 	private String cobjid = "%cobjid";
 	private String cidptr = "%cidptr";
 	
-	public MethodCall(CodeAndReg funclookup, ArrayList<CodeAndReg> args, int regnum){
+	public MethodCall(FieldLookup funclookup, ArrayList<CodeAndReg> args, int regnum){
 		super(regnum);
 		this.funclookup = funclookup;
 		this.args = args;
@@ -81,6 +81,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.cshftreg);
 		currentLine.addRegisterUsed(this.typereg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.cshftreg + 

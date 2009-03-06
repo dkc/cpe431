@@ -40,8 +40,7 @@ public class FFloat extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		//store id
-		currentLine = new LLVMLine(this.idptr + " = getelementptr %fobj* " + this.objreg + 
-				", i32 0, i32 0\n");
+		currentLine = new LLVMLine(this.idptr + " = getelementptr %fobj* " + this.objreg + ", i32 0, i32 0\n");
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.idptr);
 		currentLine.addRegisterUsed(this.objreg);
@@ -82,6 +81,7 @@ public class FFloat extends AbstractCodeAndReg{
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.shftreg);
+		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
 		
 		return this;

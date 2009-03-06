@@ -258,7 +258,7 @@ public FootleTreeParser() {
 				_t = __t154;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						stmtResult = new FuncBind(funcDecList,this.nextUniqueRegisterId++);
+						stmtResult = new FuncBind(funcDecList, nextUniqueRegisterId++);
 							
 				}
 				break;
@@ -348,7 +348,7 @@ inputState.guessing--;
 					_t = __t147;
 					_t = _t.getNextSibling();
 					if ( inputState.guessing==0 ) {
-							/* fieldmut */
+							stmtResult = new FieldMut(exprResult, fieldId.toString(), assignResult, nextUniqueRegisterId++);
 								
 					}
 				}
@@ -514,7 +514,7 @@ inputState.guessing--;
 				_t = __t175;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						result = new NewObj(new VarRef(objectName.toString(),this.nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+						result = new NewObj(new VarRef(objectName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 							
 				}
 				break;
@@ -630,7 +630,7 @@ inputState.guessing--;
 			_t = _t.getNextSibling();
 			}
 			if ( inputState.guessing==0 ) {
-				//System.out.println(parameters);
+				System.out.println(parameters);
 			}
 		}
 		catch (RecognitionException ex) {

@@ -100,12 +100,14 @@ public class FString extends AbstractCodeAndReg {
 		currentLine.setOperation("shl");
 		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.castreg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.reg + " = add i32 1, " + this.shftreg + "\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.shftreg);
+		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
 		
 		return this;

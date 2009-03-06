@@ -57,13 +57,16 @@ public class IfExp extends AbstractCodeAndReg{
 		currentLine.setOperation("icmp eq");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.test.getReg());
+		currentLine.addConstantUsed(6);
 		iffunc.add(currentLine);
 		
 		currentLine = new LLVMLine("br i1 " + this.testreg + ", label %" + this.thenlbl + 
 				", label %" + this.elselbl + "\n");
-		currentLine.setOperation("br");
+		currentLine.setOperation("br i1");
 		currentLine.addRegisterUsed(this.testreg);
-		iffunc.add(currentLine);
+		currentLine.addRegisterUsed(this.thenlbl);
+		currentLine.addRegisterUsed(this.elselbl);
+		this.code.add(currentLine);
 		
 		//then
 		//TODO malloc then scope
@@ -73,12 +76,14 @@ public class IfExp extends AbstractCodeAndReg{
 		
 		currentLine = new LLVMLine(this.thenlbl + ":\n");
 		currentLine.setOperation("label");
+		currentLine.setLabel(this.thenlbl);
 		iffunc.add(currentLine);
 		
 		iffunc.addAll(this.fthen.getCode());
 		
 		currentLine = new LLVMLine("ret i32 " + this.fthen.getReg() + "\n");
 		currentLine.setOperation("ret");
+		currentLine.addRegisterUsed(this.fthen.getReg());
 		iffunc.add(currentLine);
 		
 		//else
@@ -88,7 +93,9 @@ public class IfExp extends AbstractCodeAndReg{
 		this.felse.compile(env, funcdecs, fieldTable);
 		currentLine = new LLVMLine(this.elselbl + ":\n");
 		currentLine.setOperation("label");
+		currentLine.setLabel(this.elselbl);
 		iffunc.add(currentLine);
+
 		
 		iffunc.addAll(this.felse.getCode());
 		

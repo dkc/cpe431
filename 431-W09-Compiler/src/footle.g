@@ -402,7 +402,7 @@ stmt returns [CodeAndReg stmtResult = null]
 			stmtResult = new VarMut(id.toString(), exprResult, nextUniqueRegisterId++);
 		}
 	|	#(ASSIGN #(FIELD_LOOKUP exprResult=expr #(CONST_IDENTIFIER fieldId:ID)) assignResult=expr) 
-		{	/* fieldmut */
+		{	stmtResult = new FieldMut(exprResult, fieldId.toString(), assignResult, nextUniqueRegisterId++);
 		}
 	|	#(WHILE exprResult=expr stmtListResult=sequence)
 		{	stmtResult = new WhileExp(exprResult, stmtListResult, nextUniqueRegisterId++);
@@ -414,9 +414,12 @@ stmt returns [CodeAndReg stmtResult = null]
 		{	stmtResult = new FReturn(exprResult, nextUniqueRegisterId++);
 		}
 	|	#(FUNCTION_COLLECTION (funcDec=function {funcDecList.add(funcDec);} )+)
-		{	stmtResult = new FuncBind(funcDecList);
+		{	stmtResult = new FuncBind(funcDecList, nextUniqueRegisterId++);
 		}
 ;
+
+
+/* field mutations like c.abc = 5; are broken? curious */
 
 function returns [FuncDec funcDecReturn = null]
 {
@@ -429,8 +432,17 @@ function returns [FuncDec funcDecReturn = null]
 ;
 
 paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
-	:	(#(CONST_IDENTIFIER (name:ID {parameters.add(name.toString());})*))
+{
+	String paramName;
+}
+	:	(
+			paramName=param_id {parameters.add(paramName);}
+		)*
 		{System.out.println(parameters);}
+;
+
+param_id returns [String paramName = null]
+	:	#(CONST_IDENTIFIER (name:ID))
 ;
 
 /* expressions:
@@ -469,10 +481,10 @@ expr returns [CodeAndReg result = null]
 		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
 	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
-		{	result = new NewObj(objectName.toString(), argumentList, nextUniqueRegisterId++);
+		{	result = new NewObj(new VarRef(objectName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
-		
 ;
+
 
 binop returns [CodeAndReg resultRegister = null]
 {

@@ -70,6 +70,7 @@ public class Application extends AbstractCodeAndReg{
 			currentLine.setOperation("lshr");
 			currentLine.setRegisterDefined(this.shftreg);
 			currentLine.addRegisterUsed(this.func.getReg());
+			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.shftreg + 
@@ -80,8 +81,7 @@ public class Application extends AbstractCodeAndReg{
 			this.code.add(currentLine);
 			
 			//type check cobj
-			currentLine = new LLVMLine(this.idslotsptrreg + " = getelementptr %cobj* " + this.cobjreg + 
-			", i32 0, i32 0\n");
+			currentLine = new LLVMLine(this.idslotsptrreg + " = getelementptr %cobj* " + this.cobjreg + ", i32 0, i32 0\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.idslotsptrreg);
 			currentLine.addRegisterUsed(this.cobjreg);
@@ -96,16 +96,17 @@ public class Application extends AbstractCodeAndReg{
 			currentLine = new LLVMLine("call void @obj_type_check( i32 " + this.objid + ", i32 1 )\n");
 			currentLine.setOperation("call");
 			currentLine.addRegisterUsed(this.objid);
+			currentLine.setLabel("@obj_type_check");
 			this.code.add(currentLine);
 			
 			//evaluate args
 			currentLine = new LLVMLine(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
 			currentLine.setOperation("malloc");
 			currentLine.setRegisterDefined(this.argptr);
+			currentLine.addConstantUsed(4 * args.size());
 			this.code.add(currentLine);
 			
-			currentLine = new LLVMLine(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + 
-					this.argptr + " to i32*\n");
+			currentLine = new LLVMLine(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + this.argptr + " to i32*\n");
 			currentLine.setOperation("bitcast");
 			currentLine.setRegisterDefined(this.argsreg);
 			currentLine.addRegisterUsed(this.argptr);
@@ -114,15 +115,14 @@ public class Application extends AbstractCodeAndReg{
 			for(int i = 0;i < args.size();i++){
 				this.code.addAll(args.get(i).compile(env, funcdecs, fieldTable).getCode());
 				
-				currentLine = new LLVMLine(this.argslistptr + i + " = getelementptr i32* " + 
-						this.argsreg + ", i32 " + i + "\n");
+				currentLine = new LLVMLine(this.argslistptr + i + " = getelementptr i32* " + this.argsreg + ", i32 " + i + "\n");
 				currentLine.setOperation("getelementptr");
 				currentLine.setRegisterDefined(this.argslistptr + i);
 				currentLine.addRegisterUsed(this.argsreg);
+				currentLine.addConstantUsed(4 * i);
 				this.code.add(currentLine);
 				
-				currentLine = new LLVMLine("store i32 " + args.get(i).getReg() + ", i32* " + 
-						this.argslistptr + i + "\n");
+				currentLine = new LLVMLine("store i32 " + args.get(i).getReg() + ", i32* " + this.argslistptr + i + "\n");
 				currentLine.setOperation("store");
 				currentLine.addRegisterUsed(args.get(i).getReg());
 				currentLine.addRegisterUsed(this.argslistptr + i);
@@ -131,9 +131,9 @@ public class Application extends AbstractCodeAndReg{
 			
 			//send compiled args and closure id # to dispatch
 			
-			currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
-					this.cobjreg + ", i32 " + this.args.size() + ", i32* " + this.argsreg + ", i32 0 ) nounwind\n");
+			currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + this.cobjreg + ", i32 " + this.args.size() + ", i32* " + this.argsreg + ", i32 0 ) nounwind\n");
 			currentLine.setOperation("call");
+			currentLine.setLabel("@dispatch_fun");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.cobjreg);
 			currentLine.addRegisterUsed(this.numargs);

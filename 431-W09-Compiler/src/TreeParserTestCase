@@ -1,5 +1,7 @@
-if(false){
-	1;
+var c = true;
+if(c) {
+	c = false;
 } else {
-	2;
+	c = true;
 }
+c;

@@ -61,6 +61,7 @@ public class FieldLookup extends AbstractCodeAndReg {
 			currentLine.setOperation("lshr");
 			currentLine.setRegisterDefined(this.shftreg);
 			currentLine.addRegisterUsed(this.obj.getReg());
+			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.castreg + " = inttoptr i32 " + this.shftreg + 

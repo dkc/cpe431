@@ -95,8 +95,9 @@ public class Footle
 
       //write output
       writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
-      //writeLLVM(testseq, env, funcdecs, funcids, stringdecs);
 
+      //convert to SPARC 
+      LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
