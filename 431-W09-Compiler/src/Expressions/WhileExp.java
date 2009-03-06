@@ -53,7 +53,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		
  	   	currentLine = new LLVMLine(this.scopereg + " = bitcast {%eframe*, i32, [" + scope.numIds() + 
  	   			  " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
- 	   currentLine.setOperation("bitcast");
+ 	   	currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.scopereg);
 		currentLine.addRegisterUsed(this.scope.getMallocReg());
 		whilefunc.add(currentLine);
@@ -61,14 +61,14 @@ public class WhileExp extends AbstractCodeAndReg{
  	   	//set env link pointer
  	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* + " + this.scopereg + 
  	   			", i32 0, i32 0\n");
- 	   currentLine.setOperation("getelementptr");
+ 	   	currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.scopereg);
 		whilefunc.add(currentLine);
  	   	
- 	   currentLine = new LLVMLine("store %eframe* " + env.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
- 	  currentLine.setOperation("store");
- 	 currentLine.addRegisterUsed(env.getCurrentScope());
+		currentLine = new LLVMLine("store %eframe* " + env.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
+ 	   	currentLine.setOperation("store");
+		currentLine.addRegisterUsed(env.getCurrentScope());
 		currentLine.addRegisterUsed(this.envlinkptr);
 		whilefunc.add(currentLine);
 		
@@ -80,6 +80,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n"); // ret void
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
+		currentLine.addConstantUsed(10);
 		this.code.add(currentLine);
 		
 		//compile and branch on test
@@ -111,7 +112,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		
  	   	currentLine = new LLVMLine(this.scopereg + " = bitcast {%eframe*, i32, [" + scope.numIds() + 
  	   			  " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
- 	   currentLine.setOperation("bitcast");
+ 	   	currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.scopereg);
 		currentLine.addRegisterUsed(this.scope.getMallocReg());
 		whilefunc.add(currentLine);
@@ -119,14 +120,14 @@ public class WhileExp extends AbstractCodeAndReg{
  	   	//set env link pointer
  	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* + " + this.scopereg + 
  	   			", i32 0, i32 0\n");
- 	   currentLine.setOperation("getelementptr");
+ 	   	currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.scopereg);
 		whilefunc.add(currentLine);
  	   	
- 	   currentLine = new LLVMLine("store %eframe* " + this.scope.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
- 	  currentLine.setOperation("store");
- 	 currentLine.addRegisterUsed(this.scope.getCurrentScope());
+		currentLine = new LLVMLine("store %eframe* " + this.scope.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
+		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(this.scope.getCurrentScope());
 		currentLine.addRegisterUsed(this.envlinkptr);
 		whilefunc.add(currentLine);
 		

@@ -81,6 +81,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.cshftreg);
 		currentLine.addRegisterUsed(this.typereg);
+		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.cshftreg + 

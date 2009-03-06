@@ -70,6 +70,7 @@ public class Application extends AbstractCodeAndReg{
 			currentLine.setOperation("lshr");
 			currentLine.setRegisterDefined(this.shftreg);
 			currentLine.addRegisterUsed(this.func.getReg());
+			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.cobjreg + " = inttoptr i32 " + this.shftreg + 
@@ -80,8 +81,7 @@ public class Application extends AbstractCodeAndReg{
 			this.code.add(currentLine);
 			
 			//type check cobj
-			currentLine = new LLVMLine(this.idslotsptrreg + " = getelementptr %cobj* " + this.cobjreg + 
-			", i32 0, i32 0\n");
+			currentLine = new LLVMLine(this.idslotsptrreg + " = getelementptr %cobj* " + this.cobjreg + ", i32 0, i32 0\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.idslotsptrreg);
 			currentLine.addRegisterUsed(this.cobjreg);

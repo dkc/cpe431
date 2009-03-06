@@ -7,12 +7,13 @@ public class LLVMToSPARC {
 		ArrayList<LLVMLine> program = (ArrayList<LLVMLine>) funcdecs.clone();
 		program.addAll(compiledCode);
 		
-		for(LLVMLine line : program)
-			System.out.println(line.toString());
+		// for(LLVMLine line : program)
+		//	System.out.println(line.toString());
 		
 		LLVMLine currentLine;
 		String SPARCcode;
 		for(int lineNumber = 0; lineNumber < program.size(); lineNumber++) {
+			
 			SPARCcode = "";
 			currentLine = program.get(lineNumber);
 			if(currentLine.getOperation() == null) {
@@ -24,7 +25,7 @@ public class LLVMToSPARC {
 				// MOV (const->%reg)
 				
 				if(currentLine.getNumConstants() == 0) {
-					if(currentLine.getNumRegistersUsed() == 0) {
+					if(currentLine.getNumRegistersUsed() == 2) {
 						// then we have two registers to add
 						currentLine.setOperation("add"); // redundant, but here for consistency
 						SPARCcode += "\tadd\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
@@ -33,10 +34,14 @@ public class LLVMToSPARC {
 						currentLine.setOperation("mov");
 						SPARCcode += "\tmov\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterDefined();
 					}
-				} else if(currentLine.getNumConstants() == 1) {
-					// then we have no registers involved
-					currentLine.setOperation("mov");
-					SPARCcode += "\tset\t" + currentLine.getConstantUsed(0) + ", " + currentLine.getRegisterDefined();
+				} else { // we have at least one constant
+					if(currentLine.getNumRegistersUsed() == 1) { 
+						currentLine.setOperation("add");
+						SPARCcode += "\tadd\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getConstantUsed(0) + ", " + currentLine.getRegisterDefined();
+					} else { // we have no registers involved and 1 or 2 constants
+						currentLine.setOperation("set");
+						SPARCcode += "\tset\t" + currentLine.getConstantSum() + ", " + currentLine.getRegisterDefined();
+					}
 				}
 			} else if(currentLine.getOperation().equals("sub")) {
 				// SUB (op-op->%reg)
@@ -72,6 +77,7 @@ public class LLVMToSPARC {
 			} else if(currentLine.getOperation().equals("store")) {
 				// ST from, [to]
 				
+				System.err.println(currentLine.getCode());
 				currentLine.setOperation("st");
 				SPARCcode += "\tst\t" + currentLine.getRegisterUsed(0) + ", [" + currentLine.getRegisterUsed(1) + "]";
 			} else if(currentLine.getOperation().equals("load")) {
