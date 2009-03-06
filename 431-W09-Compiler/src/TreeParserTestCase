@@ -1,5 +1,5 @@
-var i = 5;
-while ( i > 0){
-	i = i - 1;
+if(false){
+	1;
+} else {
+	2;
 }
-i;
