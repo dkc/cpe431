@@ -30,10 +30,11 @@ public class VarRef extends AbstractCodeAndReg{
 			currentLine.addConstantUsed(0);
 		}else{
 		
-		RegAndIndex regind = Env.lookup(id, env);
+		RegAndIndex regind = Env.lookup(id, env, this.regnum);
 		
 			//this.code.add(this.eframereg + " = add i32 0," + regind.reg + "\n");
 			this.code.addAll(regind.code);
+			
 			currentLine = new LLVMLine(this.pttreg + " = getelementptr %eframe* " + 
 					regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
 			currentLine.setOperation("getelementptr");
@@ -55,7 +56,7 @@ public class VarRef extends AbstractCodeAndReg{
 	@Override
 	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
 		if(!this.id.equals("this")){
-		RegAndIndex regind = Env.lookup(id, env);
+		RegAndIndex regind = Env.lookup(id, env, this.regnum);
 		if(regind == null){
 			System.err.println("Error in Static Pass: Variable reference before bind");
 			System.exit(-1);

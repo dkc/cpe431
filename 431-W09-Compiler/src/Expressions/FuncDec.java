@@ -122,7 +122,9 @@ public class FuncDec extends AbstractCodeAndReg{
 		
 		
 		//setup pointer to func obj
-		RegAndIndex regind = Env.lookup(this.name, env);
+		RegAndIndex regind = Env.lookup(this.name, env, this.regnum);
+		this.code.addAll(regind.code);
+		
 		currentLine = new LLVMLine(this.objreg + " = ptrtoint %cobj* " + this.mallocreg + " to i32\n");
 		this.code.add(currentLine);
 		

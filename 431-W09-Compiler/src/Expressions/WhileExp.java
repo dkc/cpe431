@@ -28,51 +28,40 @@ public class WhileExp extends AbstractCodeAndReg{
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
-
+		ArrayList<LLVMLine> whilefunc = new ArrayList<LLVMLine>();
 		LLVMLine currentLine;
 		//call while func with env
 		
-		
-		//define while func
-		ArrayList<LLVMLine> whilefunc = new ArrayList<LLVMLine>();
-		currentLine = new LLVMLine("define @while"  + "( %eframe " + this.scope.getCurrentScope() + " ){\n");
-		currentLine.setOperation("fundec");
-		whilefunc.add(currentLine);
-		
-		
-		whilefunc.addAll(this.test.compile(this.scope, funcdecs, fieldTable).getCode());
-		
-		//type check boolean?
-		//setup env and func call
-		//closure env
-		currentLine = new LLVMLine(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.numIds() +
+		//create first env
+		/*currentLine = new LLVMLine(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.numIds() +
  	   	  " x i32]}, align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.scope.getMallocReg());
-		whilefunc.add(currentLine);
+		this.code.add(currentLine);
 		
  	   	currentLine = new LLVMLine(this.scopereg + " = bitcast {%eframe*, i32, [" + scope.numIds() + 
  	   			  " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
  	   	currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.scopereg);
 		currentLine.addRegisterUsed(this.scope.getMallocReg());
-		whilefunc.add(currentLine);
+		this.code.add(currentLine);
  	   	
  	   	//set env link pointer
- 	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* + " + this.scopereg + 
+ 	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* " + this.scopereg + 
  	   			", i32 0, i32 0\n");
  	   	currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.scopereg);
-		whilefunc.add(currentLine);
+		this.code.add(currentLine);
  	   	
 		currentLine = new LLVMLine("store %eframe* " + env.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
  	   	currentLine.setOperation("store");
 		currentLine.addRegisterUsed(env.getCurrentScope());
 		currentLine.addRegisterUsed(this.envlinkptr);
-		whilefunc.add(currentLine);
-		
-		currentLine = new LLVMLine("call @while" + "( %eframe* " + this.scopereg + ")\n");
+		this.code.add(currentLine);
+		*/
+		//call while
+		currentLine = new LLVMLine("call i32 @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
 		currentLine.setOperation("call");
 		currentLine.addRegisterUsed(this.scopereg);
 		this.code.add(currentLine);
@@ -83,8 +72,18 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine.addConstantUsed(10);
 		this.code.add(currentLine);
 		
+		
+		
+		
+		//func def
+		currentLine = new LLVMLine("define i32 @while" + regnum + "( %eframe* " + env.getCurrentScope() + " ){\n");
+		currentLine.setOperation("fundec");
+		whilefunc.add(currentLine);
+		
+		whilefunc.addAll(this.test.compile(env, funcdecs, fieldTable).getCode());
+		
 		//compile and branch on test
-		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 2, " + this.test.getReg() + "\n");
+		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 6, " + this.test.getReg() + "\n");
 		currentLine.setOperation("icmp eq");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.test.getReg());
@@ -97,22 +96,19 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine.addRegisterUsed("%fin");
 		whilefunc.add(currentLine);
 		
-		//run body
+		//continue label
 		currentLine = new LLVMLine("cont:\n");
 		currentLine.setOperation("lablel");
 		whilefunc.add(currentLine);
 		
-		whilefunc.addAll(this.body.compile(this.scope, funcdecs, fieldTable).getCode());
-			
-		//setup env and func call
-		//closure env
+		//setup env 
 		currentLine = new LLVMLine(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.numIds() +
  	   	  " x i32]}, align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.scope.getMallocReg());
 		whilefunc.add(currentLine);
 		
- 	   	currentLine = new LLVMLine(this.scopereg + " = bitcast {%eframe*, i32, [" + scope.numIds() + 
+ 	   	currentLine = new LLVMLine(scope.getCurrentScope() + " = bitcast {%eframe*, i32, [" + scope.numIds() + 
  	   			  " x i32]}* " + scope.getMallocReg() + " to %eframe*\n");
  	   	currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.scopereg);
@@ -120,20 +116,24 @@ public class WhileExp extends AbstractCodeAndReg{
 		whilefunc.add(currentLine);
  	   	
  	   	//set env link pointer
- 	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* + " + this.scopereg + 
+ 	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* " + this.scope.getCurrentScope() + 
  	   			", i32 0, i32 0\n");
  	   	currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.scopereg);
 		whilefunc.add(currentLine);
  	   	
-		currentLine = new LLVMLine("store %eframe* " + this.scope.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
-		currentLine.setOperation("store");
-		currentLine.addRegisterUsed(this.scope.getCurrentScope());
+ 	   currentLine = new LLVMLine("store %eframe* " + env.getCurrentScope() + ", %eframe** " + this.envlinkptr + "\n");
+ 	   currentLine.setOperation("store");
+ 	   currentLine.addRegisterUsed(env.getCurrentScope());
 		currentLine.addRegisterUsed(this.envlinkptr);
 		whilefunc.add(currentLine);
 		
-		currentLine = new LLVMLine(this.retreg + " = call @while" + "( %eframe* " + this.scopereg + ")\n");
+		//run body after env creation
+		whilefunc.addAll(this.body.compile(this.scope, funcdecs, fieldTable).getCode());
+		
+		//recursive call
+		currentLine = new LLVMLine(this.retreg + " = call i32 @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
 		currentLine.setOperation("call");
 		currentLine.setRegisterDefined(this.retreg);
 		currentLine.addRegisterUsed(this.scopereg);
@@ -145,11 +145,11 @@ public class WhileExp extends AbstractCodeAndReg{
 		whilefunc.add(currentLine);
 		
 		//if false return with call val in this.reg
-		currentLine = new LLVMLine("fin:");
+		currentLine = new LLVMLine("fin:\n");
 		currentLine.setOperation("label");
 		whilefunc.add(currentLine);
 		
-		currentLine = new LLVMLine("ret i32 0\n");
+		currentLine = new LLVMLine("ret i32 10\n");
 		currentLine.setOperation("ret");
 		whilefunc.add(currentLine);
 		
@@ -157,10 +157,11 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine.setOperation("endfunc");
 		whilefunc.add(currentLine);
 		
+		funcdecs.addAll(whilefunc);
+		
 		
 		return this;
 	}
-
 
 
 	@Override

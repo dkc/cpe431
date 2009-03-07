@@ -128,7 +128,8 @@ public class FieldMut extends AbstractCodeAndReg {
 		//lookup id
 		Integer fid = fieldTable.get(name);
 		if(fid == null){//add new field
-			fid = fieldTable.put(name, new Integer(this.regnum));
+			fieldTable.put(name, new Integer(this.regnum));
+			fid = this.regnum;
 			//TODO adding to front, is it right?
 			//malloc
 			currentLine = new LLVMLine(this.newslotreg + " = malloc %slots\n");

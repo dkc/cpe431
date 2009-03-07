@@ -13,6 +13,8 @@ public class IfExp extends AbstractCodeAndReg{
 	Env thenscope;
 	Env elsescope;
 	String testreg = "%tstreg";
+	String thenlbl = "then";
+	String elselbl = "else";
 	
 	public IfExp(CodeAndReg test, CodeAndReg fthen, CodeAndReg felse,int regnum){
 		super(regnum);
@@ -20,6 +22,8 @@ public class IfExp extends AbstractCodeAndReg{
 		this.fthen = fthen;
 		this.felse = felse;
 		this.testreg += regnum;
+		this.thenlbl += regnum;
+		this.elselbl += regnum;
 	}
 	
 	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
@@ -33,89 +37,78 @@ public class IfExp extends AbstractCodeAndReg{
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
-
+		ArrayList<LLVMLine> iffunc = new ArrayList<LLVMLine>();
 		LLVMLine currentLine;
+		
+		currentLine = new LLVMLine(this.reg + " =  call i32 @if_func" + this.regnum + "( %eframe* " + env.getCurrentScope() + " )\n");
+		this.code.add(currentLine);
+		
+		//define func
+		currentLine = new LLVMLine("define i32 @if_func" + this.regnum + "( %eframe* " + env.getCurrentScope() + " ){\n");
+		iffunc.add(currentLine);
 		
 		//test
 		this.test.compile(env, funcdecs, fieldTable);
-		this.code.addAll(this.test.getCode());
+		iffunc.addAll(this.test.getCode());
 		
 		//TODO type check boolean?
 		
-		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 2, " + this.test.getReg() + "\n");
+		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 6, " + this.test.getReg() + "\n");
 		currentLine.setOperation("icmp eq");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addRegisterUsed(this.test.getReg());
-		currentLine.addConstantUsed(2);
-		this.code.add(currentLine);
+		currentLine.addConstantUsed(6);
+		iffunc.add(currentLine);
 		
-		currentLine = new LLVMLine("br i1 " + this.testreg + ", label %then, label %else\n");
+		currentLine = new LLVMLine("br i1 " + this.testreg + ", label %" + this.thenlbl + 
+				", label %" + this.elselbl + "\n");
 		currentLine.setOperation("br i1");
 		currentLine.addRegisterUsed(this.testreg);
-		currentLine.addRegisterUsed("%then");
-		currentLine.addRegisterUsed("%else");
+		currentLine.addRegisterUsed(this.thenlbl);
+		currentLine.addRegisterUsed(this.elselbl);
 		this.code.add(currentLine);
 		
 		//then
+		//TODO malloc then scope
+		
 		//this.fthen.compile(this.thenscope);
 		this.fthen.compile(env, funcdecs, fieldTable);
 		
-		currentLine = new LLVMLine("then:\n");
+		currentLine = new LLVMLine(this.thenlbl + ":\n");
 		currentLine.setOperation("label");
-		currentLine.setLabel("then");
-		this.code.add(currentLine);
+		currentLine.setLabel(this.thenlbl);
+		iffunc.add(currentLine);
 		
-		this.code.addAll(this.fthen.getCode());
+		iffunc.addAll(this.fthen.getCode());
 		
-		currentLine = new LLVMLine("br label %end\n");
-		currentLine.setOperation("br");
-		currentLine.setLabel("%end");
-		this.code.add(currentLine);
+		currentLine = new LLVMLine("ret i32 " + this.fthen.getReg() + "\n");
+		currentLine.setOperation("ret");
+		currentLine.addRegisterUsed(this.fthen.getReg());
+		iffunc.add(currentLine);
 		
 		//else
+		//TODO malloc else sccope
+		
 		//this.felse.compile(this.elsescope);
 		this.felse.compile(env, funcdecs, fieldTable);
-		currentLine = new LLVMLine("else:\n");
+		currentLine = new LLVMLine(this.elselbl + ":\n");
 		currentLine.setOperation("label");
-		currentLine.setLabel("else");
-		this.code.add(currentLine);
+		currentLine.setLabel(this.elselbl);
+		iffunc.add(currentLine);
+
 		
-		this.code.addAll(this.felse.getCode());
+		iffunc.addAll(this.felse.getCode());
 		
-		currentLine = new LLVMLine("br label %end\n");
-		currentLine.setOperation("br");
-		currentLine.setLabel("%end");
-		this.code.add(currentLine);
+		currentLine = new LLVMLine("ret i32 " + this.felse.getReg() + "\n");
+		currentLine.setOperation("ret");
+		iffunc.add(currentLine);
 		
-		//end
-		currentLine = new LLVMLine("end:\n");
-		currentLine.setOperation("label");
-		currentLine.setLabel("end");
-		this.code.add(currentLine);
+		currentLine = new LLVMLine("}\n");
+		iffunc.add(currentLine);
 		
-		currentLine = new LLVMLine(this.reg + " = phi i32 [" + this.fthen.getReg() + ",%then], [" + this.felse.getReg() + ",%else]\n");
-		currentLine.setOperation("phi");
-		currentLine.setRegisterDefined(this.reg);
-		currentLine.addRegisterUsed(this.fthen.getReg());
-		currentLine.addRegisterUsed(this.felse.getReg());
-		this.code.add(currentLine);
+
+		funcdecs.addAll(iffunc);
 		
-		//add fundef then
-		/*funcdecs.add("define i32 @if_then_fun" + this.regnum + "(%eframe* " + env.getCurrentScope() + "){\n");
-		int savedindex = funcdecs.size();
-		// can't handle func dec in func body, save index, use insert? done?
-		ArrayList<String> body = this.fthen.compile(env, funcdecs, fieldTable).getCode();
-		body.add("}\n");
-		funcdecs.addAll(savedindex,body);
-		
-		//add fundef else
-		funcdecs.add("define i32 @if_else_fun" + this.regnum + "(%eframe* " + env.getCurrentScope() + "){\n");
-		savedindex = funcdecs.size();
-		// can't handle func dec in func body, save index, use insert? done?
-		body = this.felse.compile(env, funcdecs, fieldTable).getCode();
-		body.add("}\n");
-		funcdecs.addAll(savedindex,body);
-		*/
 		return this;
 	}
 }

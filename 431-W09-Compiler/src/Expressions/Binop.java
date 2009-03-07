@@ -14,7 +14,7 @@ public class Binop extends AbstractCodeAndReg{
 	public String exp;
 	public CodeAndReg right;
 	public String type;
-	private String lshftreg,rshftreg,ashftreg,aboolreg;
+	private String lshftreg,rshftreg,ashftreg,aboolreg,shftreg;
 	
 	public  Binop(CodeAndReg left, String op, CodeAndReg right,int regnum){
 		super(regnum);
@@ -25,6 +25,7 @@ public class Binop extends AbstractCodeAndReg{
 		this.rshftreg = "%rrshft" + regnum;
 		this.ashftreg = "%shftans" + regnum;
 		this.aboolreg = "%boolreg" + regnum;
+		this.shftreg = "%shftreg" + regnum;
 	}
 	
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
@@ -133,7 +134,7 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals(">")){
 			this.type = "BOOLEAN";
 
-			currentLine = new LLVMLine(this.aboolreg + " = icmp ugt i32 " + left.getReg() + ", " + right.getReg() + "\n");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp ugt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp ugt");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
@@ -149,7 +150,7 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals(">=")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(this.aboolreg + " = icmp uge i32 " + left.getReg() + ", " + right.getReg() + "\n");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp uge i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp >=");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
@@ -165,7 +166,7 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals("<")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(this.aboolreg + " = icmp ult i32 " + left.getReg() + ", " + right.getReg() + "\n");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp ult i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp ult");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
@@ -181,7 +182,7 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals("<=")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(this.aboolreg + " = icmp ule i32 " + left.getReg() + ", " + right.getReg() + "\n");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp ule i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp ule");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
@@ -197,7 +198,7 @@ public class Binop extends AbstractCodeAndReg{
 		}
 		
 		//bit shift answer left
-		currentLine = new LLVMLine(this.reg + " = shl i32 " + this.ashftreg + ", 2\n");
+		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.ashftreg + ", 2\n");
 		currentLine.setOperation("shl");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.ashftreg);
@@ -206,11 +207,18 @@ public class Binop extends AbstractCodeAndReg{
 		
 		//add tag
 		if(this.type == "BOOLEAN"){//add 2 for the tag
-			currentLine = new LLVMLine(this.reg + " = add i32 2, " + this.getReg() + "\n");
+			currentLine = new LLVMLine(this.reg + " = add i32 2, " + this.shftreg + "\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.getReg());
 			currentLine.addConstantUsed(2);
+			this.code.add(currentLine);
+		}else{
+			currentLine = new LLVMLine(this.reg + " = add i32 0, " + this.shftreg + "\n");
+			currentLine.setOperation("add");
+			currentLine.setRegisterDefined(this.reg);
+			currentLine.addRegisterUsed(this.getReg());
+			currentLine.addConstantUsed(0);
 			this.code.add(currentLine);
 		}
 		

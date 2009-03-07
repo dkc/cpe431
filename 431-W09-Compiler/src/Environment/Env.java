@@ -42,29 +42,44 @@ public class Env {
 		return ids.size();
 	}
 	
-	public static RegAndIndex lookup(String id, Env env){
+	public static RegAndIndex lookup(String id, Env env, int regnum){
 		LLVMLine currentLine;
 		Env v = env;
 		int index = 0;
+		int i = 0;
 		RegAndIndex retVal = new RegAndIndex();
 		while(v != null){
 			for(index = 0;index < v.ids.size();index++){
 				if(v.ids.get(index).equals(id)){
 					retVal.index = index;
-					retVal.reg = v.getCurrentScope();
+					//retVal.reg = v.getCurrentScope() + regnum;
+					if(i == 0){
+						retVal.reg = v.getCurrentScope();
+					}else{//TODO val is in higher scope
+						retVal.reg = v.getCurrentScope() + "_" + regnum;
+					}
 					return retVal;
 				}
 			}
+			String eframeptr = "%eframeptr" + regnum;
 			//TODO add code to get element ptr to next scope in local reg
+			if(i == 0){
 			
-			String eframeptr = "%eframeptr" + v.scopenum;
-			currentLine = new LLVMLine(eframeptr + " = getelementptr %eframe* " + v.scopeReg + ", i32 0, i32 1\n");
+			currentLine = new LLVMLine(eframeptr + " = getelementptr %eframe* " + v.scopeReg + ", i32 0, i32 0\n");
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(eframeptr);
 			currentLine.addRegisterUsed(v.scopeReg);
 			currentLine.addConstantUsed(4*1);
-			
-			//i++;
+			retVal.code.add(currentLine);
+			}else{
+				currentLine = new LLVMLine(eframeptr + " = getelementptr %eframe* " + v.scopeReg + "_" + regnum + ", i32 0, i32 0\n");
+				currentLine.setOperation("getelementptr");
+				currentLine.setRegisterDefined(eframeptr);
+				currentLine.addRegisterUsed(v.scopeReg);
+				currentLine.addConstantUsed(4*1);
+				retVal.code.add(currentLine);
+			}
+			i++;
 			v = v.prev;
 			
 			if(v==null)
@@ -73,10 +88,11 @@ public class Env {
 				return null;
 			}
 			
-			currentLine = new LLVMLine(v.scopeReg + " = load %eframe** " + eframeptr + "\n");
+			currentLine = new LLVMLine(v.scopeReg + "_" + regnum + " = load %eframe** " + eframeptr + "\n");
 			currentLine.setOperation("load");
 			currentLine.setRegisterDefined(v.scopeReg);
 			currentLine.addRegisterUsed(eframeptr);
+			retVal.code.add(currentLine);
 			
 		}
 		return null;

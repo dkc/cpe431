@@ -30,7 +30,9 @@ public class Bind extends AbstractCodeAndReg{
 		
 		//llvm load code into eframe
 		
-		RegAndIndex regind = Env.lookup(name, env);
+		RegAndIndex regind = Env.lookup(name, env, this.regnum);
+		this.code.addAll(regind.code);
+		
 		LLVMLine currentLine;
 		
 		currentLine = new LLVMLine(this.ptrreg + " = getelementptr %eframe* " + regind.reg + ", i32 0, i32 2, i32 " + regind.index + "\n");
