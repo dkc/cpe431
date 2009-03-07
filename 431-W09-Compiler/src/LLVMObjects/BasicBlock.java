@@ -5,11 +5,12 @@ import java.util.ArrayList;
 public class BasicBlock {
 	
 	private String blockName;
-	private ArrayList<LLVMLine> contents;
+	protected ArrayList<LLVMLine> contents;
 	
-	private ArrayList<String> liveOnEntry;
-	private ArrayList<String> liveOnExit;
+	protected ArrayList<String> liveOnEntry;
+	protected ArrayList<String> liveOnExit;
 	private ArrayList<String> targetBlocks;
+	protected ArrayList<Conflict> conflicts;
 	
 	public BasicBlock(String label) {
 		this.blockName = label;
@@ -17,6 +18,7 @@ public class BasicBlock {
 		liveOnEntry = new ArrayList<String>();
 		liveOnExit = new ArrayList<String>();
 		targetBlocks = new ArrayList<String>();
+		conflicts = new ArrayList<Conflict>();
 	}
 	
 	public void addTargetBlock(String targetBlock) {

@@ -239,7 +239,8 @@ exprnr
 		{ #exprnr = #([CONST_STRING, "CONST_STRING"], s); }
 	|	LPAREN! expr RPAREN! (arglist)?
 	|	NOT^ expr
-	|	NEW^ identifier arglist
+	|!	n:NEW id2:identifier args:arglist
+		{ #exprnr = #(n, id2, #([ARGUMENTS, "ARGUMENTS"], args)); }
 ;
 /* any function application falls under this rule, including built-ins */
 application

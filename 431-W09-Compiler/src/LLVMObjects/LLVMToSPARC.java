@@ -16,12 +16,20 @@ public class LLVMToSPARC {
 		String SPARCcode;
 		ArrayList<BasicBlock> blocksList = new ArrayList<BasicBlock>();
 		BasicBlock currentBlock = new BasicBlock("STARTING_BLOCK");
-		
+
 		for(int lineNumber = 0; lineNumber < program.size(); lineNumber++) {
 			
 			SPARCcode = "";
 			currentLine = program.get(lineNumber);
-			if(currentLine.getOperation() == "label") {
+			if(currentLine.getLabel() != null)
+			{
+				// currentLine.setLabel(currentLine.getLabel().replaceAll("%", ""));
+			}
+			
+			if(currentLine.getOperation() == null) {
+				// some LLVM syntax-related code, ignore this
+				
+			} else if(currentLine.getOperation().equals("label")) {
 				/* any time we see a new label we want to start a new basic block */
 				
 				blocksList.add(currentBlock);
@@ -78,6 +86,10 @@ public class LLVMToSPARC {
 				
 				currentLine.setOperation("srl");
 				SPARCcode += "\tsrl\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getConstantUsed(0) + ", " + currentLine.getRegisterDefined();
+			} else if(currentLine.getOperation().equals("icmp eq")) {
+				// 
+			
+				SPARCcode += "\tsubcc\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getConstantUsed(0);
 			} else if(currentLine.getOperation().equals("getelementptr")) {
 				// ADD (op+op->%reg) -- this just moves the pointer for store; very simplistic solution, wastes an instruction
 				
@@ -115,7 +127,7 @@ public class LLVMToSPARC {
 				currentLine.setOperation("ret");
 				SPARCcode += "\tmov\t" + currentLine.getRegisterUsed(0) + ", " + "%i0" + "\n";
 				SPARCcode += "\tret" + "\n";
-				SPARCcode += "\trestore"; 
+				SPARCcode += "\trestore";
 			} else if(currentLine.getOperation().equals("call")) {
 				// move arguments into "output" registers %o0 -> %o5 (?... 1-5?)
 				// call the label with the correct name
@@ -129,7 +141,8 @@ public class LLVMToSPARC {
 				
 				currentLine.setOperation("ba");
 				currentBlock.addTargetBlock(currentLine.getLabel());
-				SPARCcode += "\tba\t" + currentLine.getLabel();
+				SPARCcode += "\tba\t" + currentLine.getLabel() + "\n";
+				SPARCcode += "\tnop";
 			} else if(currentLine.getOperation().equals("br i1")) {
 				// branch to one of two target labels depending on the value in the first register "0"
 				// beware of the bad hack going on here--registers "1" and "2" are being used to store the label names
@@ -138,6 +151,10 @@ public class LLVMToSPARC {
 				currentLine.setOperation("ba");
 				currentBlock.addTargetBlock(currentLine.getRegisterUsed(1));
 				currentBlock.addTargetBlock(currentLine.getRegisterUsed(2));
+				SPARCcode += "\tbrz\t" + currentLine.getRegisterUsed(1) + "\n";
+				SPARCcode += "\tnop\t" + "\n";
+				SPARCcode += "\tba\t" + currentLine.getRegisterUsed(2) + "\n";
+				SPARCcode += "\tnop\t";
 			} else {
 				// don't have a rule for this yet; mark it conspicuously
 				
@@ -165,6 +182,8 @@ public class LLVMToSPARC {
 		for(LLVMLine line : program) {
 			// System.out.println(line.getSPARCTranslation());
 		}
+
+		mapRegisters(blocksList);
 		
 		for(BasicBlock block : blocksList) {
 			System.out.println(block.toString());
@@ -172,7 +191,39 @@ public class LLVMToSPARC {
 	}
 	
 	public static void mapRegisters(ArrayList<BasicBlock> program) {
+		ArrayList<String> liveRegisters;
+		
 		for(BasicBlock block : program)
-			System.out.println(block.toString());
+		{
+			liveRegisters = new ArrayList<String>();
+			LLVMLine currentLine;
+			Conflict currentConflict;
+			
+			// we want to walk the lines of code in the block in reverse order to generate the interference graph
+			for(int lineNum = block.contents.size()-1; lineNum >= 0; lineNum--) {
+				currentLine = block.contents.get(lineNum);
+				
+				if(currentLine.getRegisterDefined() != null) {
+					if(!liveRegisters.remove(currentLine.getRegisterDefined()))
+					{
+						// then a register is being defined but not used later in the same basic block...? does this even matter?
+						// it becomes live on exit, I guess
+						block.liveOnExit.add(currentLine.getRegisterDefined());
+					}
+					for(String liveRegister : liveRegisters) {
+						currentConflict = new Conflict(liveRegister, currentLine.getRegisterDefined());
+						if(!block.conflicts.contains(currentConflict))
+							block.conflicts.add(currentConflict);
+					}
+					
+				}
+				
+				for(String registerUsed : currentLine.registersUsed) {	
+					if(!liveRegisters.contains(registerUsed))
+						liveRegisters.add(registerUsed);
+				}
+			}
+			
+		}
 	}
 }
