@@ -89,6 +89,7 @@ public class LLVMLine {
 		this.targetBlock = targetBlock;
 	}
 	
+	@Override
 	public String toString() {
 		String lineRepresentation = "----------------\n";
 		lineRepresentation += code + "\n";

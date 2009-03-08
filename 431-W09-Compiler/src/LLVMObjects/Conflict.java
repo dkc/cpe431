@@ -14,10 +14,12 @@ public class Conflict {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return reg1 + " " + reg2;
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if(this.toString() == o.toString())
 			return true;

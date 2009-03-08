@@ -4,13 +4,18 @@ import java.util.ArrayList;
 
 public class BasicBlock {
 	
-	private String blockName;
+	protected String blockName;
 	protected ArrayList<LLVMLine> contents;
 	
 	protected ArrayList<String> liveOnEntry;
 	protected ArrayList<String> liveOnExit;
-	private ArrayList<String> targetBlocks;
+	protected ArrayList<String> targetBlocks;
 	protected ArrayList<Conflict> conflicts;
+	
+	/* kind of a weird name here, sorry--if the end of a block is not an unconditional branch or
+	 * call, we need to give the next block a way to know whether or not it needs to provide us
+	 * its name/"label" for the purposes of matching up live on exit/entry regs */
+	protected Boolean mayFallThrough = false;
 	
 	public BasicBlock(String label) {
 		this.blockName = label;
@@ -30,6 +35,7 @@ public class BasicBlock {
 		contents.add(line);
 	}
 	
+	@Override
 	public String toString() {
 		String returnValue = "";
 		
@@ -37,6 +43,7 @@ public class BasicBlock {
 		returnValue += "Live on entry: " + liveOnEntry.toString() + "\n";
 		returnValue += "Live on exit: " + liveOnExit.toString() + "\n";
 		returnValue += "Target blocks: " + targetBlocks.toString() + "\n";
+		returnValue += "Conflicts: " + conflicts.toString() + "\n";
 		returnValue += "Pseudo-SPARC contained:\n";
 		for(LLVMLine currentLine : contents)
 			returnValue += currentLine.getSPARCTranslation() + "\n";
