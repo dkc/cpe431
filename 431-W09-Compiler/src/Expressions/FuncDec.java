@@ -32,6 +32,7 @@ public class FuncDec extends AbstractCodeAndReg{
 	private String mreg = "%mreg";
 	private int methodid = 0;
 	private int functionid = 0;
+	private String slotsptr = "%slotsptr";
 	
 	public FuncDec(String name, ArrayList<String> params, CodeAndReg body, int regnum){// CodeAndReg mbody, int regnum, int mregnum){
 		super(regnum);
@@ -56,6 +57,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		this.mobjreg += regnum;
 		this.menvlinkptr += regnum;
 		this.mreg += regnum;
+		this.slotsptr += regnum;
 	}
 	
 	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
@@ -85,7 +87,6 @@ public class FuncDec extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		//closure env
-		//TODO added slot at end for this if needed, kinda hack
 		currentLine = new LLVMLine(fscope.getMallocReg() + " = malloc {%eframe*, i32, [" + fscope.numIds() +
  	   	  " x i32]}, align 4\n");
 		this.code.add(currentLine);
@@ -120,6 +121,20 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine = new LLVMLine("store %eframe* " + this.fscope.getCurrentScope() + ", %eframe** " + this.eframereg + "\n");
 		this.code.add(currentLine);
 		
+		// TODO store empty slots
+		currentLine = new LLVMLine(this.slotsptr + " = getelementptr %cobj* "
+				+ this.mallocreg + ", i32 0, i32 1\n");
+		currentLine.setOperation("getelementptr");
+		currentLine.setRegisterDefined(this.slotsptr);
+		currentLine.addRegisterUsed(this.mallocreg);
+		this.code.add(currentLine);
+
+		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** "
+				+ this.slotsptr + "\n");
+		currentLine.setOperation("store");
+		currentLine.addRegisterUsed(this.slotsptr);
+		// TODO fix later
+		this.code.add(currentLine);
 		
 		//setup pointer to func obj
 		RegAndIndex regind = Env.lookup(this.name, env, this.regnum);
@@ -143,49 +158,6 @@ public class FuncDec extends AbstractCodeAndReg{
 				+ ", i32* " + this.ptrreg + "\n");
 		this.code.add(currentLine);
 		
-		//currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");
-		//this.code.add(currentLine);
-		/*
-		//build method closure obj
-		this.code.add(this.mmallocreg + " = malloc %cobj, align 4\n");
-		//closure env
-		//TODO added slot at end for this if needed, kinda hack
-		this.code.add(mscope.getMallocReg() + " = malloc {%eframe*, i32, [" + mscope.ids.size() +
- 	   	  " x i32]}, align 4\n");
- 	   	this.code.add(mscope.getCurrentScope() + " = bitcast {%eframe*, i32, [" + mscope.ids.size() + 
- 	   			  " x i32]}* " + mscope.getMallocReg() + " to %eframe*\n");
- 	   	//set env link pointer
- 	   	this.code.add(this.menvlinkptr + " = getelementptr %eframe* + " + this.mscope.getCurrentScope() + 
- 	   			", i32 0, i32 0\n");
- 	   this.code.add("store %eframe* " + env.getCurrentScope() + ", %eframe** " + this.menvlinkptr + "\n");
- 	   	
-		//store func num
-		this.code.add(this.mtypereg + " = getelementptr %cobj* " + 
-				this.mmallocreg + ", i32 0, i32 0\n");
-		this.code.add("store i32 " + ((this.methodid << 2) + 1) + ", i32* " + this.mtypereg + "\n");
- 	   	//1 is tag right now
-		
-		//store env ptr
-		this.code.add(this.meframereg + " = getelementptr %cobj* " + 
-				this.mmallocreg + ", i32 0, i32 2\n");
-		this.code.add("store %eframe* " + this.mscope.getCurrentScope() + ", %eframe** " + this.meframereg + "\n");
-		
-		
-		//setup pointer to method obj
-		RegAndIndex mregind = Env.lookup(this.name + "met", env);
-		this.code.add(this.mobjreg + " = ptrtoint %cobj* " + this.mmallocreg + " to i32\n");
-		this.code.add(this.mmemreg + " = shl i32 " + this.mobjreg + ", 2\n");
-		this.code.add(this.mreg + " = add i32 1, " + this.mmemreg + "\n");//add 1 for tag to pointer
-		
-		//store pointer to env
-		this.code.add(this.mptrreg + " = getelementptr %eframe* " + 
-				mregind.reg + ", i32 0, i32 2, i32 " + mregind.index + "\n");
-		this.code.add("store i32 " + this.mreg
-				+ ", i32* " + this.mptrreg + "\n");
-		
-		
-		*/
-		
 		//write func dec?
 		currentLine = new LLVMLine("define i32 @footle_fun" + this.functionid + "(%eframe* " + this.fscope.getCurrentScope() + "){\n");
 		funcdecs.add(currentLine);
@@ -197,7 +169,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		body.add(new LLVMLine("}\n"));
 		funcdecs.addAll(savedindex,body);
 		
-		//TODO define method
+		//define method
 		currentLine = new LLVMLine("define i32 @footle_met" + this.functionid + "(%eframe* " + this.fscope.getCurrentScope() + ", i32 %this){\n");
 		funcdecs.add(currentLine);
 		//savedindex = funcdecs.size();

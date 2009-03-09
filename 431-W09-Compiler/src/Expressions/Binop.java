@@ -88,7 +88,7 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals("/")){
 			this.type = "INTEGER";
 			
-			currentLine = new LLVMLine(ashftreg + " = udiv i32 " + lshftreg + ", " + rshftreg + "\n");
+			currentLine = new LLVMLine(ashftreg + " = sdiv i32 " + lshftreg + ", " + rshftreg + "\n");
 			currentLine.setOperation("udiv");
 			currentLine.setRegisterDefined(this.ashftreg);
 			currentLine.addRegisterUsed(this.lshftreg);
@@ -135,7 +135,7 @@ public class Binop extends AbstractCodeAndReg{
 			this.type = "BOOLEAN";
 
 			currentLine = new LLVMLine(this.aboolreg + " = icmp sgt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
-			currentLine.setOperation("icmp sgt");
+			currentLine.setOperation("icmp ugt");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
 			currentLine.addRegisterUsed(right.getReg());

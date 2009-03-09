@@ -78,10 +78,10 @@ public class MethodCall extends AbstractCodeAndReg {
 		this.code.add(currentLine);
 		
 		//shift
-		currentLine = new LLVMLine(this.cshftreg + " = lshr i32 " + this.typereg + ", 2\n");
+		currentLine = new LLVMLine(this.cshftreg + " = lshr i32 " + this.funclookup.getReg() + ", 2\n");
 		currentLine.setOperation("lshr");
 		currentLine.setRegisterDefined(this.cshftreg);
-		currentLine.addRegisterUsed(this.typereg);
+		currentLine.addRegisterUsed(this.funclookup.getReg());
 		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
 		
@@ -164,13 +164,14 @@ public class MethodCall extends AbstractCodeAndReg {
 		//send compiled args and closure id # to dispatch
 		//currentLine = new LLVMLine(this.numargs + " = add i32 0, " + args.size() + "\n");
 		currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + args.size() + ", i32* " + this.argsreg + ", i32 " + this.objreg + " ) nounwind\n");
+				this.cobjreg + ", i32 " + args.size() + ", i32* " + this.argsreg + ", i32 " + this.funclookup.getReg() + " ) nounwind\n");
 		currentLine.setOperation("call");
 		currentLine.setLabel("dispatch_fun");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.cobjreg);
 		currentLine.addConstantUsed(4*args.size());
 		currentLine.addRegisterUsed(this.argsreg);
+		currentLine.addRegisterUsed(this.funclookup.getReg());
 		this.code.add(currentLine);
 		
 		return this;

@@ -1,7 +1,1 @@
-var c = true;
-if(c) {
-	c = false;
-} else {
-	c = true;
-}
-c;
+"hello";
