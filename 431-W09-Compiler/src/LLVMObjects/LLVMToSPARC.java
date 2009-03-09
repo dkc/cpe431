@@ -74,13 +74,19 @@ public class LLVMToSPARC {
 				// SUB (op-op->%reg)
 				// as far as I can tell we will only ever subtract two regs! constants get loaded and shifted before use
 				
-				currentLine.setOperation("sub"); // redundant, but here for consistency
-				SPARCcode += "\tsub\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
+				if(currentLine.getNumRegistersUsed() == 2) {
+					// then we have two registers to subtract
+					currentLine.setOperation("sub"); // redundant, but here for consistency
+					SPARCcode += "\tsub\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
+				} else {
+					currentLine.setOperation("sub"); // redundant, but here for consistency
+					SPARCcode += "\tsub\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getConstantUsed(0) + ", " + currentLine.getRegisterDefined();
+				}
 			} else if(currentLine.getOperation().equals("mul")) {
-				// SMUL (op-op->%reg), probably SPARC v8-specific, doubt this works for floats
+				// MUL (op-op->%reg), probably SPARC v8-specific, doubt this works for floats
 				
-				currentLine.setOperation("smul");
-				SPARCcode += "\tsmul\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
+				currentLine.setOperation("mul");
+				SPARCcode += "\tmul\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
 			} else if(currentLine.getOperation().equals("udiv")) {
 				// SDIV (op-op->%reg), probably SPARC v8-specific, doubt this works for floats
 				
