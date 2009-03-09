@@ -31,6 +31,7 @@ public class VarMut extends AbstractCodeAndReg{
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.ptrreg);
 		currentLine.addRegisterUsed(regind.reg);
+		currentLine.addConstantUsed(4*2);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store i32 " + newVal.getReg() + ", i32* " + this.ptrreg + "\n");

@@ -98,6 +98,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.cidptr);
 		currentLine.addRegisterUsed(this.cobjreg);
+		currentLine.addConstantUsed(4*0);
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.cobjid + " = load i32* " + this.cidptr + "\n");

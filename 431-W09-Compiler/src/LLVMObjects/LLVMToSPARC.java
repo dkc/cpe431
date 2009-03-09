@@ -232,8 +232,8 @@ public class LLVMToSPARC {
 			} else {
 				// don't have a rule for this yet (though we may not want one); mark it conspicuously
 				
-				SPARCcode += "\t???\t" + "[" + currentLine.getCode() + "]";
-				SPARCcode = SPARCcode.replaceAll("\n", "");
+				// SPARCcode += "\t???\t" + "[" + currentLine.getCode() + "]";
+				// SPARCcode = SPARCcode.replaceAll("\n", "");
 			}
 			
 			currentLine.setSPARCTranslation(SPARCcode);
@@ -308,7 +308,7 @@ public class LLVMToSPARC {
 			ArrayList<String> conflictingRegisters;
 			ArrayList<String> takenMappings;
 			ArrayList<String> registersToMap;
-			for(int x = 0; x < 8; x++) {
+			for(int x = 1; x < 8; x++) {
 				availableMappings.add("%i" + x);
 				availableMappings.add("%l" + x);
 			}
@@ -358,11 +358,12 @@ public class LLVMToSPARC {
 		
 		Collections.sort(mappings);
 		Collections.reverse(mappings);
-		for(BasicBlock block : program)
+		/* for(BasicBlock block : program)
 			for(Mapping m : mappings)
 				block.replace(m);
+		*/
 		
-		System.out.println("pcGreeting: .asciz \"Hello world.\"\\n");
+		System.out.println("pcGreeting: .asciz \"Hello world.\\n\"");
 
 	    System.out.println("\t.section \".text\"");
 
@@ -378,11 +379,11 @@ public class LLVMToSPARC {
 		System.out.println("\trestore");
 		
 		for(BasicBlock block : program) {
-			//if(block.contents.size() > 0)
-			//	System.out.println(block.toString());
+			if(block.contents.size() > 0)
+				System.out.println(block.toString());
 			
-			for(LLVMLine l : block.contents)
-				System.out.println(l.getSPARCTranslation());
+			// for(LLVMLine l : block.contents)
+			//	System.out.println(l.getSPARCTranslation());
 		}
 	}
 }

@@ -40,6 +40,7 @@ public class VarRef extends AbstractCodeAndReg{
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.pttreg);
 			currentLine.addRegisterUsed(regind.reg);
+			currentLine.addConstantUsed(4 * 2);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.reg + " = load i32* " + this.pttreg + "\n");

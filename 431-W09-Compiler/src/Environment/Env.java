@@ -69,14 +69,14 @@ public class Env {
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(eframeptr);
 			currentLine.addRegisterUsed(v.scopeReg);
-			currentLine.addConstantUsed(4*1);
+			currentLine.addConstantUsed(4*0);
 			retVal.code.add(currentLine);
 			}else{
 				currentLine = new LLVMLine(eframeptr + " = getelementptr %eframe* " + v.scopeReg + "_" + regnum + ", i32 0, i32 0\n");
 				currentLine.setOperation("getelementptr");
 				currentLine.setRegisterDefined(eframeptr);
 				currentLine.addRegisterUsed(v.scopeReg + "_" + regnum);
-				currentLine.addConstantUsed(4*1);
+				currentLine.addConstantUsed(4*0);
 				retVal.code.add(currentLine);
 			}
 			i++;

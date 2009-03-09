@@ -85,6 +85,7 @@ public class Application extends AbstractCodeAndReg{
 			currentLine.setOperation("getelementptr");
 			currentLine.setRegisterDefined(this.idslotsptrreg);
 			currentLine.addRegisterUsed(this.cobjreg);
+			currentLine.addConstantUsed(4*0);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.objid + " = load i32* " + this.idslotsptrreg + "\n");

@@ -200,7 +200,7 @@ public class Binop extends AbstractCodeAndReg{
 		//bit shift answer left
 		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.ashftreg + ", 2\n");
 		currentLine.setOperation("shl");
-		currentLine.setRegisterDefined(this.reg);
+		currentLine.setRegisterDefined(this.shftreg);
 		currentLine.addRegisterUsed(this.ashftreg);
 		currentLine.addConstantUsed(2);
 		this.code.add(currentLine);
