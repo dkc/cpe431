@@ -55,13 +55,13 @@ public class BasicBlock {
 			line.setSPARCTranslation(line.getSPARCTranslation().replaceAll(target, replacement));
 			line.setSPARCTranslation(line.getSPARCTranslation().replaceAll("~", target + "_"));
 		}
-		for(Conflict c : conflicts) {
+		/* for(Conflict c : conflicts) {
 			if(c.reg1.equals(target))
 				c.reg1 = replacement;
 
 			if(c.reg2.equals(target))
 				c.reg2 = replacement;
-		}
+		} */
 	}
 	
 	@Override
