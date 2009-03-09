@@ -60,9 +60,9 @@ public class Binop extends AbstractCodeAndReg{
 			
 			currentLine = new LLVMLine(ashftreg + " = add i32 " + lshftreg + ", " + rshftreg + "\n");
 			currentLine.setOperation("add");
-			currentLine.setRegisterDefined(this.ashftreg);
-			currentLine.addRegisterUsed(this.lshftreg);
-			currentLine.addRegisterUsed(this.rshftreg);
+			currentLine.setRegisterDefined(ashftreg);
+			currentLine.addRegisterUsed(lshftreg);
+			currentLine.addRegisterUsed(rshftreg);
 			this.code.add(currentLine);
 			
 		}else if(exp.equals("-")){
@@ -89,7 +89,7 @@ public class Binop extends AbstractCodeAndReg{
 			this.type = "INTEGER";
 			
 			currentLine = new LLVMLine(ashftreg + " = sdiv i32 " + lshftreg + ", " + rshftreg + "\n");
-			currentLine.setOperation("udiv");
+			currentLine.setOperation("sdiv");
 			currentLine.setRegisterDefined(this.ashftreg);
 			currentLine.addRegisterUsed(this.lshftreg);
 			currentLine.addRegisterUsed(this.rshftreg);
@@ -137,8 +137,8 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine = new LLVMLine(this.aboolreg + " = icmp sgt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp ugt");
 			currentLine.setRegisterDefined(this.aboolreg);
-			currentLine.addRegisterUsed(left.getReg());
-			currentLine.addRegisterUsed(right.getReg());
+			currentLine.addRegisterUsed(this.lshftreg);
+			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.ashftreg + " = zext i1 " + this.aboolreg + " to i32\n");
@@ -153,8 +153,8 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine = new LLVMLine(this.aboolreg + " = icmp sge i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp sge");
 			currentLine.setRegisterDefined(this.aboolreg);
-			currentLine.addRegisterUsed(left.getReg());
-			currentLine.addRegisterUsed(right.getReg());
+			currentLine.addRegisterUsed(this.lshftreg);
+			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.ashftreg + " = zext i1 " + this.aboolreg + " to i32\n");
@@ -169,8 +169,8 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine = new LLVMLine(this.aboolreg + " = icmp slt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp slt");
 			currentLine.setRegisterDefined(this.aboolreg);
-			currentLine.addRegisterUsed(left.getReg());
-			currentLine.addRegisterUsed(right.getReg());
+			currentLine.addRegisterUsed(this.lshftreg);
+			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.ashftreg + " = zext i1 " + this.aboolreg + " to i32\n");
@@ -185,8 +185,8 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine = new LLVMLine(this.aboolreg + " = icmp sle i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
 			currentLine.setOperation("icmp sle");
 			currentLine.setRegisterDefined(this.aboolreg);
-			currentLine.addRegisterUsed(left.getReg());
-			currentLine.addRegisterUsed(right.getReg());
+			currentLine.addRegisterUsed(this.lshftreg);
+			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
 			
 			currentLine = new LLVMLine(this.ashftreg + " = zext i1 " + this.aboolreg + " to i32\n");
@@ -210,14 +210,14 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine = new LLVMLine(this.reg + " = add i32 2, " + this.shftreg + "\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
-			currentLine.addRegisterUsed(this.getReg());
+			currentLine.addRegisterUsed(this.shftreg);
 			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 		}else{
 			currentLine = new LLVMLine(this.reg + " = add i32 0, " + this.shftreg + "\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
-			currentLine.addRegisterUsed(this.getReg());
+			currentLine.addRegisterUsed(this.shftreg);
 			currentLine.addConstantUsed(0);
 			this.code.add(currentLine);
 		}

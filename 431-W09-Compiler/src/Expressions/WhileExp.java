@@ -77,7 +77,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine = new LLVMLine(scope.getMallocReg() + " = malloc {%eframe*, i32, [" + scope.numIds() +
  	   	  " x i32]}, align 4\n");
 		currentLine.setOperation("malloc");
-		currentLine.setRegisterDefined(this.scope.getMallocReg());
+		currentLine.setRegisterDefined(scope.getMallocReg());
 		currentLine.addConstantUsed(4 + 4 + 4 * scope.numIds());
 		whilefunc.add(currentLine);
 		
