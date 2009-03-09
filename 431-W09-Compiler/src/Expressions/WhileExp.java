@@ -119,7 +119,7 @@ public class WhileExp extends AbstractCodeAndReg{
  	   	currentLine = new LLVMLine(this.envlinkptr + " = getelementptr %eframe* " + this.scope.getCurrentScope() + 
  	   			", i32 0, i32 0\n");
  	   	currentLine.setOperation("getelementptr");
-		currentLine.setRegisterDefined(this.testreg);
+		currentLine.setRegisterDefined(this.envlinkptr);
 		currentLine.addRegisterUsed(this.scopereg);
 		whilefunc.add(currentLine);
  	   	

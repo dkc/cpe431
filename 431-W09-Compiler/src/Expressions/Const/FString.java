@@ -67,7 +67,7 @@ public class FString extends AbstractCodeAndReg {
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.slotsptr);
 		//TODO fix later
-		//this.code.add(currentLine);
+		this.code.add(currentLine);
 		
 		//store string to obj
 		currentLine = new LLVMLine(this.stringptr + " = getelementptr %sobj* " + this.objreg + 

@@ -99,7 +99,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		currentLine.addConstantUsed(4*0);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.objid + " = load %slots** " + this.idslotsptrreg + "\n");
+		currentLine = new LLVMLine(this.objid + " = load i32* " + this.idslotsptrreg + "\n");
 		currentLine.setOperation("load");
 		currentLine.setRegisterDefined(this.objid);
 		currentLine.addRegisterUsed(this.idslotsptrreg);
@@ -198,7 +198,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			
 		}else{//store to field
 			
-			currentLine = new LLVMLine(this.lookupreg + " = call i32* @lookup_field( i32 " + fid + ", %slots* " + this.slotsreg + "\n");
+			currentLine = new LLVMLine(this.lookupreg + " = call i32* @field_lookup( i32 " + fid + ", %slots* " + this.slotsreg + "\n");
 			currentLine.setOperation("call");
 			currentLine.setRegisterDefined(this.lookupreg);
 			currentLine.addRegisterUsed(this.slotsreg);
@@ -213,10 +213,10 @@ public class FieldMut extends AbstractCodeAndReg {
 		
 		//store retval
 		
-		currentLine = new LLVMLine(this.reg + " = add i32 0, " + this.newval.getReg() + "\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
-		currentLine.addRegisterUsed(this.newval.getReg());
+		currentLine.addConstantUsed(10);
 		currentLine.addConstantUsed(0);
 		this.code.add(currentLine);
 		

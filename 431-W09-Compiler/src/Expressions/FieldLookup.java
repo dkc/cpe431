@@ -79,7 +79,7 @@ public class FieldLookup extends AbstractCodeAndReg {
 			currentLine.addRegisterUsed(this.castreg);
 			this.code.add(currentLine);
 			
-			currentLine = new LLVMLine(this.objid + " = load %slots** " + this.idslotsptrreg + "\n");
+			currentLine = new LLVMLine(this.objid + " = load i32* " + this.idslotsptrreg + "\n");
 			currentLine.setOperation("load");
 			currentLine.setRegisterDefined(this.objid);
 			currentLine.addRegisterUsed(this.idslotsptrreg);
@@ -107,8 +107,8 @@ public class FieldLookup extends AbstractCodeAndReg {
 			
 			//lookup field
 			int fid = fieldTable.get(name);
-			currentLine = new LLVMLine( this.lookupreg + " = call i32* @lookup_field( i32 " + fid + 
-					", %slots* " + this.slotsreg + "\n");
+			currentLine = new LLVMLine( this.lookupreg + " = call i32* @field_lookup( i32 " + fid + 
+					", %slots* " + this.slotsreg + " )\n");
 			currentLine.setOperation("call");
 			currentLine.setRegisterDefined(this.lookupreg);
 			currentLine.addRegisterUsed(this.slotsreg);

@@ -114,7 +114,7 @@ public class Footle
 	    	  //define types
 	    	  output.write("%field = type {i32, i32}\n");
 	    	  output.write("%slots = type {%field, %slots*}\n");
-	    	  output.write("@emptyslots = constant %slots undef\n");
+	    	  output.write("@empty_slots = constant %slots undef\n");
 	    	  
 	    	  output.write("%eframe = type{%eframe*, i32, [0 x i32]}\n");
 	    	  

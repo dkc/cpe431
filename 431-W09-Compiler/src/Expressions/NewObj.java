@@ -78,8 +78,7 @@ public class NewObj extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.slotsptr + "\n");
-		//TODO add later
-		//this.code.add(currentLine);
+		this.code.add(currentLine);
 		
 		//store pobj to env
 		currentLine = new LLVMLine(this.castreg + " = ptrtoint %pobj* " + this.objreg + " to i32\n");
