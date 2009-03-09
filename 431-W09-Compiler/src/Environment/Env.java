@@ -75,7 +75,7 @@ public class Env {
 				currentLine = new LLVMLine(eframeptr + " = getelementptr %eframe* " + v.scopeReg + "_" + regnum + ", i32 0, i32 0\n");
 				currentLine.setOperation("getelementptr");
 				currentLine.setRegisterDefined(eframeptr);
-				currentLine.addRegisterUsed(v.scopeReg);
+				currentLine.addRegisterUsed(v.scopeReg + "_" + regnum);
 				currentLine.addConstantUsed(4*1);
 				retVal.code.add(currentLine);
 			}
@@ -90,7 +90,7 @@ public class Env {
 			
 			currentLine = new LLVMLine(v.scopeReg + "_" + regnum + " = load %eframe** " + eframeptr + "\n");
 			currentLine.setOperation("load");
-			currentLine.setRegisterDefined(v.scopeReg);
+			currentLine.setRegisterDefined(v.scopeReg + "_" + regnum);
 			currentLine.addRegisterUsed(eframeptr);
 			retVal.code.add(currentLine);
 			

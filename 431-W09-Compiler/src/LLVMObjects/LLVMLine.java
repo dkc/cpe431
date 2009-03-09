@@ -9,13 +9,12 @@ public class LLVMLine {
 	private String operation;
 	private String registerDefined;
 	private String targetBlock;
-
+	
 	private String label;
-	private ArrayList<String> registersUsed;
+	protected ArrayList<String> registersUsed;
 	private ArrayList<Number> constantsUsed;
 	
-	public LLVMLine(String code)
-	{
+	public LLVMLine(String code) {
 		this.code = code;
 		this.registersUsed = new ArrayList<String>();
 		this.constantsUsed = new ArrayList<Number>();
@@ -41,8 +40,9 @@ public class LLVMLine {
 		this.constantsUsed.add(newRegisterUsed);
 	}
 
+	/* strips the leading % sign and adds it to registersUsed */
 	public void addRegisterUsed(String newRegisterUsed) {
-		this.registersUsed.add(newRegisterUsed);
+		this.registersUsed.add(newRegisterUsed.replaceAll("%", ""));
 	}
 
 	public String getCode() {
@@ -54,7 +54,7 @@ public class LLVMLine {
 	}
 	
 	public void setRegisterDefined(String registerDefined) {
-		this.registerDefined = registerDefined;
+		this.registerDefined = registerDefined.replaceAll("%", "");
 	}
 	
 	public int getNumConstants() {
@@ -89,6 +89,7 @@ public class LLVMLine {
 		this.targetBlock = targetBlock;
 	}
 	
+	@Override
 	public String toString() {
 		String lineRepresentation = "----------------\n";
 		lineRepresentation += code + "\n";
@@ -101,7 +102,7 @@ public class LLVMLine {
 	}
 
 	public void setLabel(String label) {
-		this.label = label;
+		this.label = label.replaceAll("%", "");
 	}
 
 	public String getLabel() {

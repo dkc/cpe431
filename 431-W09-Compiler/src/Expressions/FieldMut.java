@@ -71,6 +71,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		//typecheck ptr
 		currentLine = new LLVMLine("call void @type_check( i32 " + this.obj.getReg() + ", i32 1 )\n");
 		currentLine.setOperation("call");
+		currentLine.setLabel("type_check");
 		currentLine.addRegisterUsed(this.obj.getReg());
 		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
@@ -107,6 +108,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		
 		currentLine = new LLVMLine("call void @neg_float_check( i32 " + this.objid + " )\n");
 		currentLine.setOperation("call");
+		currentLine.setLabel("neg_float_check");
 		currentLine.addRegisterUsed(this.objid);
 		this.code.add(currentLine);
 		
@@ -200,6 +202,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			
 			currentLine = new LLVMLine(this.lookupreg + " = call i32* @field_lookup( i32 " + fid + ", %slots* " + this.slotsreg + "\n");
 			currentLine.setOperation("call");
+			currentLine.setLabel("lookup_field");
 			currentLine.setRegisterDefined(this.lookupreg);
 			currentLine.addRegisterUsed(this.slotsreg);
 			this.code.add(currentLine);

@@ -63,6 +63,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		//call while
 		currentLine = new LLVMLine("call i32 @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
 		currentLine.setOperation("call");
+		currentLine.setLabel("while" + this.regnum);
 		currentLine.addRegisterUsed(this.scopereg);
 		this.code.add(currentLine);
 		
@@ -72,12 +73,11 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine.addConstantUsed(10);
 		this.code.add(currentLine);
 		
-		
-		
-		
 		//func def
 		currentLine = new LLVMLine("define i32 @while" + regnum + "( %eframe* " + env.getCurrentScope() + " ){\n");
 		currentLine.setOperation("fundec");
+		currentLine.setLabel("while" + regnum);
+		currentLine.addRegisterUsed(env.getCurrentScope());
 		whilefunc.add(currentLine);
 		
 		whilefunc.addAll(this.test.compile(env, funcdecs, fieldTable).getCode());
@@ -86,6 +86,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 6, " + this.test.getReg() + "\n");
 		currentLine.setOperation("icmp eq");
 		currentLine.setRegisterDefined(this.testreg);
+		currentLine.addConstantUsed(6);
 		currentLine.addRegisterUsed(this.test.getReg());
 		whilefunc.add(currentLine);
 		
@@ -98,7 +99,8 @@ public class WhileExp extends AbstractCodeAndReg{
 		
 		//continue label
 		currentLine = new LLVMLine("cont:\n");
-		currentLine.setOperation("lablel");
+		currentLine.setOperation("label");
+		currentLine.setLabel("cont");
 		whilefunc.add(currentLine);
 		
 		//setup env 
@@ -135,6 +137,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		//recursive call
 		currentLine = new LLVMLine(this.retreg + " = call i32 @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
 		currentLine.setOperation("call");
+		currentLine.setLabel("while" + this.regnum);
 		currentLine.setRegisterDefined(this.retreg);
 		currentLine.addRegisterUsed(this.scopereg);
 		whilefunc.add(currentLine);
@@ -147,18 +150,18 @@ public class WhileExp extends AbstractCodeAndReg{
 		//if false return with call val in this.reg
 		currentLine = new LLVMLine("fin:\n");
 		currentLine.setOperation("label");
+		currentLine.setLabel("fin");
 		whilefunc.add(currentLine);
 		
 		currentLine = new LLVMLine("ret i32 10\n");
 		currentLine.setOperation("ret");
+		currentLine.addConstantUsed(10);
 		whilefunc.add(currentLine);
 		
 		currentLine = new LLVMLine("}\n");
 		currentLine.setOperation("endfunc");
 		whilefunc.add(currentLine);
-		
 		funcdecs.addAll(whilefunc);
-		
 		
 		return this;
 	}

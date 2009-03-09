@@ -73,6 +73,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		//typecheck ptr
 		currentLine = new LLVMLine("call void @type_check( i32 " + this.funclookup.getReg() + ", i32 1 )\n");
 		currentLine.setOperation("call");
+		currentLine.setLabel("type_check");
 		currentLine.addRegisterUsed(this.funclookup.getReg());
 		this.code.add(currentLine);
 		
@@ -107,6 +108,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		
 		currentLine = new LLVMLine("call void @obj_type_check( i32 " + this.cobjid + ", i32 1)\n");//1 is cobj type
 		currentLine.setOperation("call");
+		currentLine.setLabel("obj_type_check");
 		currentLine.addRegisterUsed(this.cobjid);
 		currentLine.addConstantUsed(1);
 		this.code.add(currentLine);
@@ -164,6 +166,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
 				this.cobjreg + ", i32 " + args.size() + ", i32* " + this.argsreg + ", i32 " + this.funclookup.getReg() + " ) nounwind\n");
 		currentLine.setOperation("call");
+		currentLine.setLabel("dispatch_fun");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addRegisterUsed(this.cobjreg);
 		currentLine.addConstantUsed(4*args.size());
