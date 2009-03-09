@@ -1,7 +1,7 @@
 package LLVMObjects;
 
 public class Mapping {
-	private String originalLLVM, mappingSPARC;
+	protected String originalLLVM, mappingSPARC;
 	
 	
 	public Mapping(String r1, String r2) {
@@ -16,7 +16,11 @@ public class Mapping {
 	
 	@Override
 	public boolean equals(Object o) {
-		if(this.toString() == o.toString())
+		if(!o.getClass().equals(this.getClass()))
+			return false;
+		
+		Mapping m = (Mapping)o;
+		if(this.originalLLVM.equals(m.originalLLVM))
 			return true;
 		return false;
 	}

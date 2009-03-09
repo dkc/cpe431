@@ -1,7 +1,7 @@
 package LLVMObjects;
 
 public class Conflict {
-	private String reg1, reg2;
+	protected String reg1, reg2;
 	
 	public Conflict(String r1, String r2) {
 		if(r1.compareTo(r2) < 0) {

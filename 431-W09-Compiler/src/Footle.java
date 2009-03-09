@@ -101,7 +101,9 @@ public class Footle
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
-		   ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+		ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+	   LLVMLine currentLine;
+	   ArrayList<LLVMLine> setupCode = new ArrayList<LLVMLine>();
 	   	ArrayList<LLVMLine> code = compiledCode.getCode();
 	      Writer output = null;
 	      try{
@@ -213,21 +215,37 @@ public class Footle
 	    	  }
 	    	  
 	    	  //output beginning of llvm_fun
-	    	  output.write("define i32 @llvm_fun(){\n");
-	   	   	  
-	   	   	  output.write(env.getMallocReg() + " = malloc {%eframe*, i32, [" + env.numIds() +
-	   	   	  " x i32]}\n");
-	   	   	  output.write(env.getCurrentScope() + " = bitcast {%eframe*, i32, [" + env.numIds() + 
-	   	   			  " x i32]}* " + env.getMallocReg() + " to %eframe*\n");
 	    	  
+	   	   	  currentLine = new LLVMLine("define i32 @llvm_fun() {");
+	   	   	  currentLine.setOperation("fundec");
+	   	   	  currentLine.setLabel("llvm_fun");
+	   	   	  setupCode.add(currentLine);
+	    	  
+	   	   	  currentLine = new LLVMLine(env.getMallocReg() + " = malloc {%eframe*, i32, [" + env.numIds() +
+	   	   	  " x i32]}\n");
+	   	   	  currentLine.setOperation("malloc");
+	   	   	  currentLine.setRegisterDefined(env.getMallocReg());
+	   	   	  currentLine.addConstantUsed(4 + 4 + 4 * env.numIds());
+	   	   	  setupCode.add(currentLine);
+	   	   	  
+	   	   	  currentLine = new LLVMLine(env.getCurrentScope() + " = bitcast {%eframe*, i32, [" + env.numIds() + 
+	   	   			  " x i32]}* " + env.getMallocReg() + " to %eframe*\n");
+	    	  currentLine.setOperation("bitcast");
+	    	  currentLine.setRegisterDefined(env.getCurrentScope());
+	    	  currentLine.addRegisterUsed(env.getMallocReg());
+	   	   	  setupCode.add(currentLine);
+	   	   	  
 	   	   	  //output code
-	    	  for(LLVMLine line : code){
+	   	   	  code.addAll(0, setupCode);
+	    	  for(LLVMLine line : code) {
 	    		  output.write(line.getCode());
-	  			}
+	    	  }
 	    	  
 	    	  //output return
-	    	  output.write("ret i32 " + compiledCode.getReg() + "\n");
-	    	  output.write("}");
+	    	  currentLine = new LLVMLine("ret i32 " + compiledCode.getReg() + "\n");
+	    	  currentLine.setOperation("ret");
+	    	  currentLine.addRegisterUsed(compiledCode.getReg());
+	    	  code.add(currentLine);
 	      }catch(Exception e){
 	    	  error("Could not write output to file llvm-code.s");
 	      }

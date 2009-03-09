@@ -35,6 +35,35 @@ public class BasicBlock {
 		contents.add(line);
 	}
 	
+	public void replace(Mapping m) {
+		String target = m.originalLLVM;
+		String replacement = m.mappingSPARC;
+		int location;
+		
+		if(liveOnExit.contains(target)) {
+			location = liveOnExit.indexOf(target);
+			liveOnExit.remove(location);
+			liveOnExit.add(location, replacement);
+		}
+		if(liveOnEntry.contains(target)) {
+			location = liveOnEntry.indexOf(target);
+			liveOnEntry.remove(location);
+			liveOnEntry.add(location, replacement);
+		}
+		for(LLVMLine line : contents) {
+			line.setSPARCTranslation(line.getSPARCTranslation().replaceAll(target + "_", "~"));
+			line.setSPARCTranslation(line.getSPARCTranslation().replaceAll(target, replacement));
+			line.setSPARCTranslation(line.getSPARCTranslation().replaceAll("~", target + "_"));
+		}
+		for(Conflict c : conflicts) {
+			if(c.reg1.equals(target))
+				c.reg1 = replacement;
+
+			if(c.reg2.equals(target))
+				c.reg2 = replacement;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		String returnValue = "";

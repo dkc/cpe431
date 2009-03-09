@@ -134,8 +134,8 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals(">")){
 			this.type = "BOOLEAN";
 
-			currentLine = new LLVMLine(this.aboolreg + " = icmp ugt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
-			currentLine.setOperation("icmp ugt");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp sgt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
+			currentLine.setOperation("icmp sgt");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
 			currentLine.addRegisterUsed(right.getReg());
@@ -150,8 +150,8 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals(">=")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(this.aboolreg + " = icmp uge i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
-			currentLine.setOperation("icmp >=");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp sge i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
+			currentLine.setOperation("icmp sge");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
 			currentLine.addRegisterUsed(right.getReg());
@@ -166,8 +166,8 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals("<")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(this.aboolreg + " = icmp ult i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
-			currentLine.setOperation("icmp ult");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp slt i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
+			currentLine.setOperation("icmp slt");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
 			currentLine.addRegisterUsed(right.getReg());
@@ -182,8 +182,8 @@ public class Binop extends AbstractCodeAndReg{
 		}else if(exp.equals("<=")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(this.aboolreg + " = icmp ule i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
-			currentLine.setOperation("icmp ule");
+			currentLine = new LLVMLine(this.aboolreg + " = icmp sle i32 " + this.lshftreg + ", " + this.rshftreg + "\n");
+			currentLine.setOperation("icmp sle");
 			currentLine.setRegisterDefined(this.aboolreg);
 			currentLine.addRegisterUsed(left.getReg());
 			currentLine.addRegisterUsed(right.getReg());
