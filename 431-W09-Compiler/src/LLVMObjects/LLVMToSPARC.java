@@ -3,6 +3,9 @@ package LLVMObjects;
 import java.util.ArrayList;
 
 public class LLVMToSPARC {
+
+	protected static ArrayList<Mapping> mappings = new ArrayList<Mapping>();
+	
 	public static void convertLLVM(ArrayList<LLVMLine> funcdecs, ArrayList<LLVMLine> compiledCode) {
 		ArrayList<LLVMLine> program = (ArrayList<LLVMLine>) funcdecs.clone();
 		program.addAll(compiledCode);
@@ -13,7 +16,7 @@ public class LLVMToSPARC {
 		}
 		
 		LLVMLine currentLine;
-		boolean newBlock = false;
+		boolean newBlock;
 		int unlabeledBlockCounter = 0;
 		String SPARCcode;
 		ArrayList<BasicBlock> blocksList = new ArrayList<BasicBlock>();
@@ -22,6 +25,7 @@ public class LLVMToSPARC {
 		for(int lineNumber = 0; lineNumber < program.size(); lineNumber++) {
 			
 			SPARCcode = "";
+			newBlock = false;
 			currentLine = program.get(lineNumber);
 			if(currentLine.getLabel() != null)
 			{
@@ -147,11 +151,14 @@ public class LLVMToSPARC {
 			} else if(currentLine.getOperation().equals("call")) {
 				// move arguments into "output" registers %o0 -> %o5 (?... 1-5?)
 				// call the label with the correct name
+				// move the result from %o0 back into the register defined, if applicable
 				
 				currentLine.setOperation("call");
 				currentBlock.addTargetBlock(currentLine.getLabel());
 				SPARCcode += "\tcall\t" + currentLine.getLabel() + "\n";
 				SPARCcode += "\tnop";
+				if(currentLine.getRegisterDefined() != null)
+					SPARCcode += "\n" + "\tmov\t" + "%o0" + ", " + currentLine.getRegisterDefined();
 				
 				newBlock = true;
 				SPARCcode += "\n";
@@ -175,15 +182,31 @@ public class LLVMToSPARC {
 				currentBlock.addTargetBlock(currentLine.getRegisterUsed(2));
 				SPARCcode += "\tbrz\t" + currentLine.getRegisterUsed(1) + "\n";
 				SPARCcode += "\tnop\t" + "\n";
-				currentBlock.mayFallThrough = true;
-				
 				SPARCcode += "\tba\t" + currentLine.getRegisterUsed(2) + "\n";
 				SPARCcode += "\tnop\t";
 				
 				newBlock = true;
 				SPARCcode += "\n";
+			} else if(currentLine.getOperation().equals("fundec")) {
+				/* drop a label matching the function name and map all of the live on entry stuff
+				 * to the input registers we expect them in */
+				
+				currentLine.setOperation("define");
+				SPARCcode += currentLine.getLabel() + ":";
+				
+				int mapInputs = 0;
+				for(String reg : currentLine.registersUsed) {
+					if(!mappings.contains(reg))
+						mappings.add(new Mapping(reg, "%i" + mapInputs++));
+					else
+					{
+						System.err.println("attempting to remap a register name! most curious!!!");
+						System.exit(1);
+					}
+				}
+				
 			} else {
-				// don't have a rule for this yet; mark it conspicuously
+				// don't have a rule for this yet (though we may not want one); mark it conspicuously
 				
 				SPARCcode += "\t???\t" + "[" + currentLine.getCode() + "]";
 				SPARCcode = SPARCcode.replaceAll("\n", "");
@@ -205,7 +228,6 @@ public class LLVMToSPARC {
 			if(newBlock == true) {
 				blocksList.add(currentBlock);
 				currentBlock = new BasicBlock("UNLABELEDBLOCK_" + unlabeledBlockCounter++);
-				newBlock = false;
 			}
 		}
 		
@@ -216,20 +238,15 @@ public class LLVMToSPARC {
 		}
 
 		mapRegisters(blocksList);
-		
-		for(BasicBlock block : blocksList) {
-			System.out.println(block.toString());
-		}
 	}
 	
 	public static void mapRegisters(ArrayList<BasicBlock> program) {
 		ArrayList<String> liveRegisters;
+		LLVMLine currentLine;
+		Conflict currentConflict;
 		
-		for(BasicBlock block : program)
-		{
+		for(BasicBlock block : program) {
 			liveRegisters = new ArrayList<String>();
-			LLVMLine currentLine;
-			Conflict currentConflict;
 			
 			// we want to walk the lines of code in the block in reverse order to generate the interference graph
 			for(int lineNum = block.contents.size()-1; lineNum >= 0; lineNum--) {
@@ -237,15 +254,17 @@ public class LLVMToSPARC {
 				
 				if(		currentLine.getOperation().equals("ba") ||
 						currentLine.getOperation().equals("brz") ||
-						currentLine.getOperation().equals("call") || 
 						currentLine.getOperation().equals("label") ){
 					
 					continue;
 				}
 				
 				if(currentLine.getRegisterDefined() != null) {
-					if(!liveRegisters.remove(currentLine.getRegisterDefined()))
-					{
+					if(mappings.contains(currentLine.getRegisterDefined())) {
+						currentLine.setRegisterDefined(mappings.get(mappings.indexOf(new Mapping("reg", null))).mappingSPARC);
+					}
+					
+					if(!liveRegisters.remove(currentLine.getRegisterDefined())) {
 						// then a register is being defined but not used later in the same basic block...? does this even matter?
 						// it becomes live on exit, I guess
 						block.liveOnExit.add(currentLine.getRegisterDefined());
@@ -255,20 +274,27 @@ public class LLVMToSPARC {
 						if(!block.conflicts.contains(currentConflict))
 							block.conflicts.add(currentConflict);
 					}
-					
 				}
 				
-				for(String registerUsed : currentLine.registersUsed) {	
-					if(!liveRegisters.contains(registerUsed))
-						liveRegisters.add(registerUsed);
+				if(!currentLine.getOperation().equals("call")) {
+					for(String registerUsed : currentLine.registersUsed) {
+						if(!liveRegisters.contains(registerUsed))
+							liveRegisters.add(registerUsed);
+					}
 				}
 			}
 			
 			for(String registerUsed : liveRegisters) {
 				block.liveOnEntry.add(registerUsed);
 			}
-			
-			ArrayList<Mapping> mappings = new ArrayList<Mapping>();
+
+			for(Mapping m : mappings)
+				block.replace(m);
 		}
+		
+		for(BasicBlock block : program) {
+			System.out.println(block.toString());
+		}
+		System.out.println(mappings.toString());
 	}
 }
