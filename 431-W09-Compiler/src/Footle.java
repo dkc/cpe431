@@ -97,7 +97,7 @@ public class Footle
       writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
 
       //convert to SPARC 
-      LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
+      //LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
@@ -237,15 +237,20 @@ public class Footle
 	   	   	  
 	   	   	  //output code
 	   	   	  code.addAll(0, setupCode);
-	    	  for(LLVMLine line : code) {
-	    		  output.write(line.getCode());
-	    	  }
-	    	  
-	    	  //output return
+	   	   	  
+	   	   	  //output return
 	    	  currentLine = new LLVMLine("ret i32 " + compiledCode.getReg() + "\n");
 	    	  currentLine.setOperation("ret");
 	    	  currentLine.addRegisterUsed(compiledCode.getReg());
 	    	  code.add(currentLine);
+	    	  
+	    	  code.add(new LLVMLine("}\n"));
+	   	   	  
+	    	  for(LLVMLine line : code) {
+	    		  output.write(line.getCode());
+	    	  }
+	    	  
+	    	  
 	      }catch(Exception e){
 	    	  error("Could not write output to file llvm-code.s");
 	      }

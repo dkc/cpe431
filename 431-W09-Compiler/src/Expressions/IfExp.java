@@ -70,7 +70,7 @@ public class IfExp extends AbstractCodeAndReg{
 		currentLine.addRegisterUsed(this.testreg);
 		currentLine.addRegisterUsed(this.thenlbl);
 		currentLine.addRegisterUsed(this.elselbl);
-		this.code.add(currentLine);
+		iffunc.add(currentLine);
 		
 		//then
 		//TODO malloc then scope
