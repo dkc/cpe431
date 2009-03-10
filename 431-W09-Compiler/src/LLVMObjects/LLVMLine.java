@@ -43,6 +43,7 @@ public class LLVMLine {
 	/* strips the leading % sign and adds it to registersUsed */
 	public void addRegisterUsed(String newRegisterUsed) {
 		this.registersUsed.add(newRegisterUsed.replaceAll("%", ""));
+		// this.registersUsed.add("%l0");
 	}
 
 	public String getCode() {
@@ -55,6 +56,7 @@ public class LLVMLine {
 	
 	public void setRegisterDefined(String registerDefined) {
 		this.registerDefined = registerDefined.replaceAll("%", "");
+		// this.registerDefined = "%l0";
 	}
 	
 	public int getNumConstants() {
