@@ -161,7 +161,7 @@ public class Footle
 	    		  //args check, call c
 	    		  
 	    		  //build eframe from args, recursive helper fun? probably
-	    		  output.write("%funcenv = call %eframe* @createArgsList ( i32 %len, i32* %args, %eframe* %envframe, i32 0)\n");
+	    		  output.write("%funcenv" + i + " = call %eframe* @createArgsList ( i32 %len, i32* %args, %eframe* %envframe, i32 0)\n");
 	    		  
 	    		  //branch on parent, 0 = void ie function call
 	    		  output.write("%ftest" + i + " = icmp eq i32 %parent, 0\n");

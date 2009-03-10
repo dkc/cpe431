@@ -61,7 +61,7 @@ public class Env {
 					return retVal;
 				}
 			}
-			String eframeptr = "%eframeptr" + regnum;
+			String eframeptr = "%eframeptr" + regnum + "_" + i;
 			//TODO add code to get element ptr to next scope in local reg
 			if(i == 0){
 			

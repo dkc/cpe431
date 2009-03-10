@@ -1,1 +1,2 @@
-"hello";
+function f () { 1; }
+var obj = new f();

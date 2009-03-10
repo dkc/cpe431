@@ -61,18 +61,17 @@ public class FuncDec extends AbstractCodeAndReg{
 	}
 	
 	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
-		//env.add(this.name);
+
 		this.functionid = funcids.size();
 		funcids.add(this.functionid);
-		//this.methodid = funcids.size();
-		//funcids.add(this.methodid);
+
 		this.fscope = new Env(this.regnum);
-		//this.mscope = new Env(this.mregnum);
+
 		Env.addScope(this.fscope, env);
-		//Env.addScope(this.mscope, env);
+
+		System.out.println("size of params: " + params.size());
 		for(String par: params){
 			this.fscope.add(par);
-			//this.mscope.add(par);
 		}
 		//this.fscope.add("this");//this at end
 		this.body.staticPass(this.fscope, funcids, stringdecs);
