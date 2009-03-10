@@ -443,7 +443,7 @@ paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
 ;
 
 param_id returns [String paramName = null]
-	:	#(CONST_IDENTIFIER (name:ID))
+	:	#(CONST_IDENTIFIER (name:ID { paramName = name.toString(); } ))
 ;
 
 /* expressions:
