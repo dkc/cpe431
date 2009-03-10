@@ -40,8 +40,12 @@ public class IfExp extends AbstractCodeAndReg{
 		ArrayList<LLVMLine> iffunc = new ArrayList<LLVMLine>();
 		LLVMLine currentLine;
 		
-		currentLine = new LLVMLine(this.reg + " =  call i32 @if_func" + this.regnum + "( %eframe* " + env.getCurrentScope() + " )\n");
+		//call if fun
+		currentLine = new LLVMLine(this.reg + " = call i32 @if_func" + this.regnum + "( %eframe* " + env.getCurrentScope() + " )\n");
 		this.code.add(currentLine);
+		
+		//ret void?
+		//currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");
 		
 		//define func
 		currentLine = new LLVMLine("define i32 @if_func" + this.regnum + "( %eframe* " + env.getCurrentScope() + " ){\n");
