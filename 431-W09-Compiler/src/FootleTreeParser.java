@@ -489,7 +489,27 @@ inputState.guessing--;
 				_t = __t174;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+						String funName = functionName.toString();
+								result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+								if (operation.equals("string-length")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("integer?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("boolean?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("floating-point?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("void?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("string?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("closure?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("plain?")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								} else if (operation.equals("print")) {
+									result = new UnaryOperation(funName, argumentList.get(0));
+								}
 							
 				}
 				break;
@@ -653,6 +673,9 @@ inputState.guessing--;
 			name = (AST)_t;
 			match(_t,ID);
 			_t = _t.getNextSibling();
+			if ( inputState.guessing==0 ) {
+				paramName = name.toString();
+			}
 			}
 			_t = __t166;
 			_t = _t.getNextSibling();
