@@ -439,7 +439,6 @@ paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
 	:	(
 			paramName=param_id {parameters.add(paramName);}
 		)*
-		{System.out.println(parameters);}
 ;
 
 param_id returns [String paramName = null]
