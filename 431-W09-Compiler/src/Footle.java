@@ -292,7 +292,7 @@ public class Footle
          {
             displayAST = true;
          }
-         if(args[i].equals(EMITLLVM))
+         else if(args[i].equals(EMITLLVM))
          {
         	 emitLLVM = true;
          }
