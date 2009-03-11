@@ -491,24 +491,24 @@ inputState.guessing--;
 				if ( inputState.guessing==0 ) {
 						String funName = functionName.toString();
 								result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
-								if (operation.equals("string-length")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("integer?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("boolean?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("floating-point?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("void?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("string?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("closure?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("plain?")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
-								} else if (operation.equals("print")) {
-									result = new UnaryOperation(funName, argumentList.get(0));
+								if (funName.equals("string-length")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("integer?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("boolean?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("floating-point?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("void?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("string?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("closure?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("plain?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("print")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
 								}
 							
 				}
