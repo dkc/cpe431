@@ -18,6 +18,7 @@ public class Binop extends AbstractCodeAndReg{
 	
 	public  Binop(CodeAndReg left, String op, CodeAndReg right,int regnum){
 		super(regnum);
+		//System.out.println("operator in binop: " + op);
 		this.left = left;
 		this.exp = op;
 		this.right = right;
@@ -95,20 +96,20 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
 			
-		}else if(exp.equals("and")){
+		}else if(exp.equals("&&")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(ashftreg + " = and i32 " + lshftreg + ", " + rshftreg + "\n");
+			currentLine = new LLVMLine(this.ashftreg + " = and i32 " + lshftreg + ", " + rshftreg + "\n");
 			currentLine.setOperation("and");
 			currentLine.setRegisterDefined(this.ashftreg);
 			currentLine.addRegisterUsed(this.lshftreg);
 			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
 			
-		}else if(exp.equals("or")){
+		}else if(exp.equals("||")){
 			this.type = "BOOLEAN";
 			
-			currentLine = new LLVMLine(ashftreg + " = or i32 " + lshftreg + ", " + rshftreg + "\n");
+			currentLine = new LLVMLine(this.ashftreg + " = or i32 " + lshftreg + ", " + rshftreg + "\n");
 			currentLine.setOperation("or");
 			currentLine.setRegisterDefined(this.ashftreg);
 			currentLine.addRegisterUsed(this.lshftreg);
@@ -207,7 +208,7 @@ public class Binop extends AbstractCodeAndReg{
 		
 		//add tag
 		if(this.type == "BOOLEAN"){//add 2 for the tag
-			currentLine = new LLVMLine(this.reg + " = add i32 2, " + this.shftreg + "\n");
+			currentLine = new LLVMLine(this.reg + " = add i32 3, " + this.shftreg + "\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.shftreg);

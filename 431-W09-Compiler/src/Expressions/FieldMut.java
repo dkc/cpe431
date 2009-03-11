@@ -132,7 +132,7 @@ public class FieldMut extends AbstractCodeAndReg {
 		if(fid == null){//add new field
 			fieldTable.put(name, new Integer(this.regnum));
 			fid = this.regnum;
-			//TODO adding to front, is it right?
+			
 			//malloc
 			currentLine = new LLVMLine(this.newslotreg + " = malloc %slots\n");
 			currentLine.setOperation("malloc");
@@ -216,10 +216,10 @@ public class FieldMut extends AbstractCodeAndReg {
 		
 		//store retval
 		
-		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 11\n");
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
-		currentLine.addConstantUsed(10);
+		currentLine.addConstantUsed(11);
 		currentLine.addConstantUsed(0);
 		this.code.add(currentLine);
 		

@@ -77,7 +77,7 @@ public class FString extends AbstractCodeAndReg {
 		currentLine.addRegisterUsed(this.objreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.constptr + " = getelementptr [" + this.content.length()
+		currentLine = new LLVMLine(this.constptr + " = getelementptr [" + (this.content.length() + 1)
 				+ " x i8]* @strconst" + this.regnum + ", i32 0, i32 0\n");
 		currentLine.setOperation("getelementptr");
 		currentLine.setRegisterDefined(this.constptr);
@@ -115,8 +115,8 @@ public class FString extends AbstractCodeAndReg {
 
 	@Override
 	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
-		stringdecs.add("@strconst" + this.regnum + " = internal constant [" + this.content.length() + 
-				" x i8] c\"" + this.content + "\"\n");
+		stringdecs.add("@strconst" + this.regnum + " = internal constant [" + (this.content.length() + 1) + 
+				" x i8] c\"" + this.content + "\0\"\n");
 	}
 
 }

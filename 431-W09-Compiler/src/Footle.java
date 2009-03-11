@@ -97,7 +97,7 @@ public class Footle
       writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
 
       //convert to SPARC 
-      //LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
+      LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
@@ -203,6 +203,12 @@ public class Footle
 	    	  output.write("declare void @type_check(i32, i32)\n");
 	    	  output.write("declare void @obj_type_check(i32, i32)\n");
 	    	  output.write("declare void @neg_float_check(i32)\n");
+	    	  output.write("declare void @footle_print(i32)\n");
+	    	  output.write("declare i32 @string_len(i8*)\n");
+	    	  output.write("declare i32 @instance_int_check(i32)\n");
+	    	  output.write("declare i32 @instance_bool_check(i32)\n");
+	    	  output.write("declare i32 @instance_void_check(i32)\n");
+	    	  output.write("declare i32 @instance_obj_check(i32,i32)\n");
 	    	  
 	    	  //write funcdecs
 	    	  for(LLVMLine line : funcdecs){

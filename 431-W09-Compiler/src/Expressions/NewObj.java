@@ -31,10 +31,23 @@ public class NewObj extends AbstractCodeAndReg{
 	private String cidptr = "%cidptr";
 	private String cobjid = "%cobjid";
 	
+	private String constmal = "%constmal";
+	private String fieldptr = "%fieldptr";
+	private String fidptr = "%fidptr";
+	private String fvalptr = "%fvalptr";
+	private String emptyptr = "%emptyptr";
+	
+	
 	public NewObj(VarRef fname, ArrayList<CodeAndReg> args, int regnum){
 		super(regnum);
 		this.fname = fname;
 		this.args = args;
+		
+		this.constmal += regnum;
+		this.fieldptr += regnum;
+		this.fidptr += regnum;
+		this.fvalptr += regnum;
+		this.emptyptr += regnum;
 		
 		this.objreg += regnum;
 		this.idptr += regnum;
@@ -70,14 +83,6 @@ public class NewObj extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("store i32 0, i32* " + this.idptr + "\n");//tag 0 for pobj
-		this.code.add(currentLine);
-		
-		//store empty slots
-		currentLine = new LLVMLine(this.slotsptr + " = getelementptr %pobj* " + this.objreg + 
-				", i32 0, i32 1\n");
-		this.code.add(currentLine);
-		
-		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.slotsptr + "\n");
 		this.code.add(currentLine);
 		
 		//store pobj to env
@@ -117,6 +122,47 @@ public class NewObj extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("call void @obj_type_check( i32 " + this.cobjid + ", i32 1)\n");//1 is cobj type
+		this.code.add(currentLine);
+		
+		//store new to first slot in obj
+		fieldTable.put("constructor", new Integer(this.regnum));
+		int fid = this.regnum;
+		
+		currentLine = new LLVMLine(this.slotsptr + " = getelementptr %pobj* " + this.objreg + 
+		", i32 0, i32 1\n");
+		this.code.add(currentLine);
+
+		currentLine = new LLVMLine(this.constmal + " = malloc %slots\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store %slots* " + this.constmal + ", %slots** " + this.slotsptr + "\n");
+		this.code.add(currentLine);
+		
+		//store field and val
+		currentLine = new LLVMLine(this.fieldptr + " = getelementptr %slots* " + this.constmal + 
+				", i32 0, i32 0\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.fidptr + " = getelementptr %field* " + this.fieldptr +
+				", i32 0, i32 0\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store i32 " + fid + ", i32* " + this.fidptr + "\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine(this.fvalptr + " = getelementptr %field* " + this.fieldptr +
+				", i32 0, i32 1\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store i32 " + this.fname.getReg() + ", i32* " + this.fvalptr + "\n");
+		this.code.add(currentLine);
+		
+		//store empty slots
+		currentLine = new LLVMLine(this.emptyptr + " = getelementptr %slots* " + this.constmal + 
+		", i32 0, i32 1\n");
+		this.code.add(currentLine);
+		
+		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.emptyptr + "\n");
 		this.code.add(currentLine);
 		
 		//evaluate args
