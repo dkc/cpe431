@@ -499,6 +499,7 @@ expr returns [CodeAndReg result = null]
 			} else if (operation.equals("print")) {
 				result = new UnaryOperation(operation, argumentList.get(0));
 			}
+		}
 	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
 		{	result = new NewObj(new VarRef(objectName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		}
