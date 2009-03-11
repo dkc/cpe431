@@ -1,825 +1,825 @@
 echo '~~Test #1~~'
-../compile -emitllvm test1.g
-../a.out
+compile -emit-llvm tests/test1.g
+a.out
 echo '** should produce : **'
 echo '3'
 
 
 echo '~~Test #2~~'
-../compile -emitllvm test2.g
-../a.out
+compile -emit-llvm tests/test2.g
+a.out
 echo '** should produce : **'
 echo '14000'
 
 
 echo '~~Test #3~~'
-../compile -emitllvm test3.g
-../a.out
+compile -emit-llvm tests/test3.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #4~~'
-../compile -emitllvm test4.g
-../a.out
+compile -emit-llvm tests/test4.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #5~~'
-../compile -emitllvm test5.g
-../a.out
+compile -emit-llvm tests/test5.g
+a.out
 echo '** should produce : **'
 echo '7'
 
 
 echo '~~Test #6~~'
-../compile -emitllvm test6.g
-../a.out
+compile -emit-llvm tests/test6.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: false'
 
 
 echo '~~Test #7~~'
-../compile -emitllvm test7.g
-../a.out
+compile -emit-llvm tests/test7.g
+a.out
 echo '** should produce : **'
 echo '20'
 
 
 echo '~~Test #8~~'
-../compile -emitllvm test8.g
-../a.out
+compile -emit-llvm tests/test8.g
+a.out
 echo '** should produce : **'
 echo '-232'
 
 
 echo '~~Test #9~~'
-../compile -emitllvm test9.g
-../a.out
+compile -emit-llvm tests/test9.g
+a.out
 echo '** should produce : **'
 echo '7'
 
 
 echo '~~Test #10~~'
-../compile -emitllvm test10.g
-../a.out
+compile -emit-llvm tests/test10.g
+a.out
 echo '** should produce : **'
 echo '0'
 
 
 echo '~~Test #11~~'
-../compile -emitllvm test11.g
-../a.out
+compile -emit-llvm tests/test11.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #12~~'
-../compile -emitllvm test12.g
-../a.out
+compile -emit-llvm tests/test12.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #13~~'
-../compile -emitllvm test13.g
-../a.out
+compile -emit-llvm tests/test13.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #14~~'
-../compile -emitllvm test14.g
-../a.out
+compile -emit-llvm tests/test14.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #15~~'
-../compile -emitllvm test15.g
-../a.out
+compile -emit-llvm tests/test15.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #16~~'
-../compile -emitllvm test16.g
-../a.out
+compile -emit-llvm tests/test16.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #17~~'
-../compile -emitllvm test17.g
-../a.out
+compile -emit-llvm tests/test17.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #18~~'
-../compile -emitllvm test18.g
-../a.out
+compile -emit-llvm tests/test18.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #19~~'
-../compile -emitllvm test19.g
-../a.out
+compile -emit-llvm tests/test19.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #20~~'
-../compile -emitllvm test20.g
-../a.out
+compile -emit-llvm tests/test20.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #21~~'
-../compile -emitllvm test21.g
-../a.out
+compile -emit-llvm tests/test21.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #22~~'
-../compile -emitllvm test22.g
-../a.out
+compile -emit-llvm tests/test22.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #23~~'
-../compile -emitllvm test23.g
-../a.out
+compile -emit-llvm tests/test23.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #24~~'
-../compile -emitllvm test24.g
-../a.out
+compile -emit-llvm tests/test24.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #25~~'
-../compile -emitllvm test25.g
-../a.out
+compile -emit-llvm tests/test25.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #26~~'
-../compile -emitllvm test26.g
-../a.out
+compile -emit-llvm tests/test26.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #27~~'
-../compile -emitllvm test27.g
-../a.out
+compile -emit-llvm tests/test27.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 13'
 
 
 echo '~~Test #28~~'
-../compile -emitllvm test28.g
-../a.out
+compile -emit-llvm tests/test28.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 13'
 
 
 echo '~~Test #29~~'
-../compile -emitllvm test29.g
-../a.out
+compile -emit-llvm tests/test29.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #30~~'
-../compile -emitllvm test30.g
-../a.out
+compile -emit-llvm tests/test30.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #31~~'
-../compile -emitllvm test31.g
-../a.out
+compile -emit-llvm tests/test31.g
+a.out
 echo '** should produce : **'
 echo '3'
 
 
 echo '~~Test #32~~'
-../compile -emitllvm test32.g
-../a.out
+compile -emit-llvm tests/test32.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 34'
 
 
 echo '~~Test #33~~'
-../compile -emitllvm test33.g
-../a.out
+compile -emit-llvm tests/test33.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 9 and memory value first word: 3'
 
 
 echo '~~Test #34~~'
-../compile -emitllvm test34.g
-../a.out
+compile -emit-llvm tests/test34.g
+a.out
 echo '** should produce : **'
 echo '6'
 
 
 echo '~~Test #35~~'
-../compile -emitllvm test35.g
-../a.out
+compile -emit-llvm tests/test35.g
+a.out
 echo '** should produce : **'
 echo '3'
 
 
 echo '~~Test #36~~'
-../compile -emitllvm test36.g
-../a.out
+compile -emit-llvm tests/test36.g
+a.out
 echo '** should produce : **'
 echo 'closure'
 
 
 echo '~~Test #37~~'
-../compile -emitllvm test37.g
-../a.out
+compile -emit-llvm tests/test37.g
+a.out
 echo '** should produce : **'
 echo '14'
 
 
 echo '~~Test #38~~'
-../compile -emitllvm test38.g
-../a.out
+compile -emit-llvm tests/test38.g
+a.out
 echo '** should produce : **'
 echo '3'
 
 
 echo '~~Test #39~~'
-../compile -emitllvm test39.g
-../a.out
+compile -emit-llvm tests/test39.g
+a.out
 echo '** should produce : **'
 echo '3'
 
 
 echo '~~Test #40~~'
-../compile -emitllvm test40.g
-../a.out
+compile -emit-llvm tests/test40.g
+a.out
 echo '** should produce : **'
 echo '19'
 
 
 echo '~~Test #41~~'
-../compile -emitllvm test41.g
-../a.out
+compile -emit-llvm tests/test41.g
+a.out
 echo '** should produce : **'
 echo '12'
 
 
 echo '~~Test #42~~'
-../compile -emitllvm test42.g
-../a.out
+compile -emit-llvm tests/test42.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 4'
 
 
 echo '~~Test #43~~'
-../compile -emitllvm test43.g
-../a.out
+compile -emit-llvm tests/test43.g
+a.out
 echo '** should produce : **'
 echo '13'
 
 
 echo '~~Test #44~~'
-../compile -emitllvm test44.g
-../a.out
+compile -emit-llvm tests/test44.g
+a.out
 echo '** should produce : **'
 echo '19'
 
 
 echo '~~Test #45~~'
-../compile -emitllvm test45.g
-../a.out
+compile -emit-llvm tests/test45.g
+a.out
 echo '** should produce : **'
 echo '13'
 
 
 echo '~~Test #46~~'
-../compile -emitllvm test46.g
-../a.out
+compile -emit-llvm tests/test46.g
+a.out
 echo '** should produce : **'
 echo '1224'
 
 
 echo '~~Test #47~~'
-../compile -emitllvm test47.g
-../a.out
+compile -emit-llvm tests/test47.g
+a.out
 echo '** should produce : **'
 echo '134'
 
 
 echo '~~Test #48~~'
-../compile -emitllvm test48.g
-../a.out
+compile -emit-llvm tests/test48.g
+a.out
 echo '** should produce : **'
 echo '19'
 
 
 echo '~~Test #49~~'
-../compile -emitllvm test49.g
-../a.out
+compile -emit-llvm tests/test49.g
+a.out
 echo '** should produce : **'
 echo '19'
 
 
 echo '~~Test #50~~'
-../compile -emitllvm test50.g
-../a.out
+compile -emit-llvm tests/test50.g
+a.out
 echo '** should produce : **'
 echo '720'
 
 
 echo '~~Test #51~~'
-../compile -emitllvm test51.g
-../a.out
+compile -emit-llvm tests/test51.g
+a.out
 echo '** should produce : **'
 echo '14'
 
 
 echo '~~Test #52~~'
-../compile -emitllvm test52.g
-../a.out
+compile -emit-llvm tests/test52.g
+a.out
 echo '** should produce : **'
 echo '10'
 
 
 echo '~~Test #53~~'
-../compile -emitllvm test53.g
-../a.out
+compile -emit-llvm tests/test53.g
+a.out
 echo '** should produce : **'
 echo '1000006'
 
 
 echo '~~Test #54~~'
-../compile -emitllvm test54.g
-../a.out
+compile -emit-llvm tests/test54.g
+a.out
 echo '** should produce : **'
 echo '14'
 
 
 echo '~~Test #55~~'
-../compile -emitllvm test55.g
-../a.out
+compile -emit-llvm tests/test55.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #56~~'
-../compile -emitllvm test56.g
-../a.out
+compile -emit-llvm tests/test56.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 7 and integer: 1'
 
 
 echo '~~Test #57~~'
-../compile -emitllvm test57.g
-../a.out
+compile -emit-llvm tests/test57.g
+a.out
 echo '** should produce : **'
 echo '197'
 
 
 echo '~~Test #58~~'
-../compile -emitllvm test58.g
-../a.out
+compile -emit-llvm tests/test58.g
+a.out
 echo '** should produce : **'
 echo '197'
 
 
 echo '~~Test #59~~'
-../compile -emitllvm test59.g
-../a.out
+compile -emit-llvm tests/test59.g
+a.out
 echo '** should produce : **'
 echo '33'
 
 
 echo '~~Test #60~~'
-../compile -emitllvm test60.g
-../a.out
+compile -emit-llvm tests/test60.g
+a.out
 echo '** should produce : **'
 echo '13'
 
 
 echo '~~Test #61~~'
-../compile -emitllvm test61.g
-../a.out
+compile -emit-llvm tests/test61.g
+a.out
 echo '** should produce : **'
 echo '(void)'
 
 
 echo '~~Test #62~~'
-../compile -emitllvm test62.g
-../a.out
+compile -emit-llvm tests/test62.g
+a.out
 echo '** should produce : **'
 echo '13'
 
 
 echo '~~Test #63~~'
-../compile -emitllvm test63.g
-../a.out
+compile -emit-llvm tests/test63.g
+a.out
 echo '** should produce : **'
 echo '(string "abcdef")'
 
 
 echo '~~Test #64~~'
-../compile -emitllvm test64.g
-../a.out
+compile -emit-llvm tests/test64.g
+a.out
 echo '** should produce : **'
 echo 'aeth'
 
 
 echo '~~Test #65~~'
-../compile -emitllvm test65.g
-../a.out
+compile -emit-llvm tests/test65.g
+a.out
 echo '** should produce : **'
 echo '(float 3.423000)'
 
 
 echo '~~Test #66~~'
-../compile -emitllvm test66.g
-../a.out
+compile -emit-llvm tests/test66.g
+a.out
 echo '** should produce : **'
 echo '(float 5.900000)'
 
 
 echo '~~Test #67~~'
-../compile -emitllvm test67.g
-../a.out
+compile -emit-llvm tests/test67.g
+a.out
 echo '** should produce : **'
 echo '(float 5.400000)'
 
 
 echo '~~Test #68~~'
-../compile -emitllvm test68.g
-../a.out
+compile -emit-llvm tests/test68.g
+a.out
 echo '** should produce : **'
 echo '(float 5.400000)'
 
 
 echo '~~Test #69~~'
-../compile -emitllvm test69.g
-../a.out
+compile -emit-llvm tests/test69.g
+a.out
 echo '** should produce : **'
 echo '(float 0.900000)'
 
 
 echo '~~Test #70~~'
-../compile -emitllvm test70.g
-../a.out
+compile -emit-llvm tests/test70.g
+a.out
 echo '** should produce : **'
 echo '(float 1.400000)'
 
 
 echo '~~Test #71~~'
-../compile -emitllvm test71.g
-../a.out
+compile -emit-llvm tests/test71.g
+a.out
 echo '** should produce : **'
 echo '(float -1.400000)'
 
 
 echo '~~Test #72~~'
-../compile -emitllvm test72.g
-../a.out
+compile -emit-llvm tests/test72.g
+a.out
 echo '** should produce : **'
 echo '(float 8.500000)'
 
 
 echo '~~Test #73~~'
-../compile -emitllvm test73.g
-../a.out
+compile -emit-llvm tests/test73.g
+a.out
 echo '** should produce : **'
 echo '(float 6.800000)'
 
 
 echo '~~Test #74~~'
-../compile -emitllvm test74.g
-../a.out
+compile -emit-llvm tests/test74.g
+a.out
 echo '** should produce : **'
 echo '(float 6.800000)'
 
 
 echo '~~Test #75~~'
-../compile -emitllvm test75.g
-../a.out
+compile -emit-llvm tests/test75.g
+a.out
 echo '** should produce : **'
 echo '(float 1.360000)'
 
 
 echo '~~Test #76~~'
-../compile -emitllvm test76.g
-../a.out
+compile -emit-llvm tests/test76.g
+a.out
 echo '** should produce : **'
 echo '(float 1.700000)'
 
 
 echo '~~Test #77~~'
-../compile -emitllvm test77.g
-../a.out
+compile -emit-llvm tests/test77.g
+a.out
 echo '** should produce : **'
 echo '(float 0.588235)'
 
 
 echo '~~Test #78~~'
-../compile -emitllvm test78.g
-../a.out
+compile -emit-llvm tests/test78.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #79~~'
-../compile -emitllvm test79.g
-../a.out
+compile -emit-llvm tests/test79.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #80~~'
-../compile -emitllvm test80.g
-../a.out
+compile -emit-llvm tests/test80.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #81~~'
-../compile -emitllvm test81.g
-../a.out
+compile -emit-llvm tests/test81.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #82~~'
-../compile -emitllvm test82.g
-../a.out
+compile -emit-llvm tests/test82.g
+a.out
 echo '** should produce : **'
 echo '(string "abc")'
 
 
 echo '~~Test #83~~'
-../compile -emitllvm test83.g
-../a.out
+compile -emit-llvm tests/test83.g
+a.out
 echo '** should produce : **'
 echo '(string "b")'
 
 
 echo '~~Test #84~~'
-../compile -emitllvm test84.g
-../a.out
+compile -emit-llvm tests/test84.g
+a.out
 echo '** should produce : **'
 echo '(string "")'
 
 
 echo '~~Test #85~~'
-../compile -emitllvm test85.g
-../a.out
+compile -emit-llvm tests/test85.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 3'
 
 
 echo '~~Test #86~~'
-../compile -emitllvm test86.g
-../a.out
+compile -emit-llvm tests/test86.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: false'
 
 
 echo '~~Test #87~~'
-../compile -emitllvm test87.g
-../a.out
+compile -emit-llvm tests/test87.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: false'
 
 
 echo '~~Test #88~~'
-../compile -emitllvm test88.g
-../a.out
+compile -emit-llvm tests/test88.g
+a.out
 echo '** should produce : **'
 echo '(string "abcdef")'
 
 
 echo '~~Test #89~~'
-../compile -emitllvm test89.g
-../a.out
+compile -emit-llvm tests/test89.g
+a.out
 echo '** should produce : **'
 echo '(string "def")'
 
 
 echo '~~Test #90~~'
-../compile -emitllvm test90.g
-../a.out
+compile -emit-llvm tests/test90.g
+a.out
 echo '** should produce : **'
 echo '(string "def")'
 
 
 echo '~~Test #91~~'
-../compile -emitllvm test91.g
-../a.out
+compile -emit-llvm tests/test91.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 3'
 
 
 echo '~~Test #92~~'
-../compile -emitllvm test92.g
-../a.out
+compile -emit-llvm tests/test92.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 3'
 
 
 echo '~~Test #93~~'
-../compile -emitllvm test93.g
-../a.out
+compile -emit-llvm tests/test93.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #94~~'
-../compile -emitllvm test94.g
-../a.out
+compile -emit-llvm tests/test94.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #95~~'
-../compile -emitllvm test95.g
-../a.out
+compile -emit-llvm tests/test95.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #96~~'
-../compile -emitllvm test96.g
-../a.out
+compile -emit-llvm tests/test96.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #97~~'
-../compile -emitllvm test97.g
-../a.out
+compile -emit-llvm tests/test97.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 4'
 
 
 echo '~~Test #98~~'
-../compile -emitllvm test98.g
-../a.out
+compile -emit-llvm tests/test98.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 4'
 
 
 echo '~~Test #99~~'
-../compile -emitllvm test99.g
-../a.out
+compile -emit-llvm tests/test99.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #100~~'
-../compile -emitllvm test100.g
-../a.out
+compile -emit-llvm tests/test100.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #101~~'
-../compile -emitllvm test101.g
-../a.out
+compile -emit-llvm tests/test101.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #102~~'
-../compile -emitllvm test102.g
-../a.out
+compile -emit-llvm tests/test102.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #103~~'
-../compile -emitllvm test103.g
-../a.out
+compile -emit-llvm tests/test103.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 4'
 
 
 echo '~~Test #104~~'
-../compile -emitllvm test104.g
-../a.out
+compile -emit-llvm tests/test104.g
+a.out
 echo '** should produce : **'
 echo 'evaluation halted with error: 5 and value: 4'
 
 
 echo '~~Test #105~~'
-../compile -emitllvm test105.g
-../a.out
+compile -emit-llvm tests/test105.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #106~~'
-../compile -emitllvm test106.g
-../a.out
+compile -emit-llvm tests/test106.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #107~~'
-../compile -emitllvm test107.g
-../a.out
+compile -emit-llvm tests/test107.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #108~~'
-../compile -emitllvm test108.g
-../a.out
+compile -emit-llvm tests/test108.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #109~~'
-../compile -emitllvm test109.g
-../a.out
+compile -emit-llvm tests/test109.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #110~~'
-../compile -emitllvm test110.g
-../a.out
+compile -emit-llvm tests/test110.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #111~~'
-../compile -emitllvm test111.g
-../a.out
+compile -emit-llvm tests/test111.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #112~~'
-../compile -emitllvm test112.g
-../a.out
+compile -emit-llvm tests/test112.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #113~~'
-../compile -emitllvm test113.g
-../a.out
+compile -emit-llvm tests/test113.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #114~~'
-../compile -emitllvm test114.g
-../a.out
+compile -emit-llvm tests/test114.g
+a.out
 echo '** should produce : **'
 echo 'true'
 
 
 echo '~~Test #115~~'
-../compile -emitllvm test115.g
-../a.out
+compile -emit-llvm tests/test115.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #116~~'
-../compile -emitllvm test116.g
-../a.out
+compile -emit-llvm tests/test116.g
+a.out
 echo '** should produce : **'
 echo 'false'
 
 
 echo '~~Test #117~~'
-../compile -emitllvm test117.g
-../a.out
+compile -emit-llvm tests/test117.g
+a.out
 echo '** should produce : **'
 echo '32'
 
 
 echo '~~Test #118~~'
-../compile -emitllvm test118.g
-../a.out
+compile -emit-llvm tests/test118.g
+a.out
 echo '** should produce : **'
 echo '255'
 

@@ -652,9 +652,6 @@ inputState.guessing--;
 				
 			} while (true);
 			}
-			if ( inputState.guessing==0 ) {
-				System.out.println(parameters);
-			}
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
