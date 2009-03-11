@@ -225,7 +225,7 @@ public class Footle
 	    	  
 	    	  //output beginning of llvm_fun
 	    	  
-	   	   	  currentLine = new LLVMLine("define i32 @llvm_fun() {");
+	   	   	  currentLine = new LLVMLine("define i32 @llvm_fun() {\n");
 	   	   	  currentLine.setOperation("fundec");
 	   	   	  currentLine.setLabel("llvm_fun");
 	   	   	  setupCode.add(currentLine);
@@ -292,7 +292,7 @@ public class Footle
          {
             displayAST = true;
          }
-         if(args[i].equals(EMITLLVM))
+         else if(args[i].equals(EMITLLVM))
          {
         	 emitLLVM = true;
          }

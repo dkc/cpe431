@@ -1,0 +1,9 @@
+if [[ $# -eq 2 ]]; then
+	java -jar footle.jar -emit-llvm $2
+	llvm-as -f llvm-code.s
+	llvm-ld -o a.out llvm-code.s.bc helper.o
+fi
+if [[ $# -eq 1 ]]; then
+	java -jar footle.jar $1
+	gcc -o a.out sparc-code.s
+fi
