@@ -118,7 +118,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine = new LLVMLine(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
 		currentLine.setOperation("malloc");
 		currentLine.setRegisterDefined(this.argptr);
-		currentLine.addConstantUsed(4*(args.size()+1));
+		currentLine.addConstantUsed(4*args.size());
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + 
@@ -126,7 +126,7 @@ public class MethodCall extends AbstractCodeAndReg {
 		currentLine.setOperation("bitcast");
 		currentLine.setRegisterDefined(this.argsreg);
 		currentLine.addRegisterUsed(this.argptr);
-		currentLine.addConstantUsed(4*(args.size()+1));
+		currentLine.addConstantUsed(4*args.size());
 		this.code.add(currentLine);
 		
 		for(int i = 0;i < args.size();i++){

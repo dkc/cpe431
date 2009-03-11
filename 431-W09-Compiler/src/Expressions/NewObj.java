@@ -95,7 +95,6 @@ public class NewObj extends AbstractCodeAndReg{
 		//CALL NEW
 		//Lookup closure by name in env
 		this.code.addAll(this.fname.compile(env, funcdecs, fieldTable).getCode());
-		this.code.add(currentLine);
 		
 		//type check for ptr
 		currentLine = new LLVMLine("call void @type_check( i32 " + this.fname.getReg() + ", i32 1)\n");//1 is cobj type
@@ -114,17 +113,17 @@ public class NewObj extends AbstractCodeAndReg{
 		", i32 0, i32 0\n");
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.cobjid + " = load %slots** " + this.cidptr + "\n");
+		currentLine = new LLVMLine(this.cobjid + " = load i32* " + this.cidptr + "\n");
 		this.code.add(currentLine);
 		
 		currentLine = new LLVMLine("call void @obj_type_check( i32 " + this.cobjid + ", i32 1)\n");//1 is cobj type
 		this.code.add(currentLine);
 		
 		//evaluate args
-		currentLine = new LLVMLine(this.argptr + " = malloc [" + (args.size() + 1) + " x i32], align 4\n");
+		currentLine = new LLVMLine(this.argptr + " = malloc [" + args.size() + " x i32], align 4\n");
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + (args.size() + 1) + " x i32]* " + 
+		currentLine = new LLVMLine(this.argsreg + " = bitcast [" + args.size() + " x i32]* " + 
 				this.argptr + " to i32*\n");
 		this.code.add(currentLine);
 		for(int i = 0;i < args.size();i++){
@@ -140,7 +139,7 @@ public class NewObj extends AbstractCodeAndReg{
 		
 		//send compiled args and closure id # to dispatch
 		currentLine = new LLVMLine("call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + (this.args.size() + 1) + ", i32* " + this.argsreg + ", i32 " + this.objreg + " ) nounwind\n");
+				this.cobjreg + ", i32 " + (this.args.size() + 1) + ", i32* " + this.argsreg + ", i32 " + this.reg + " ) nounwind\n");
 		this.code.add(currentLine);
 		
 		return this;
