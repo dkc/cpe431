@@ -85,8 +85,8 @@ public class LLVMToSPARC {
 			} else if(currentLine.getOperation().equals("mul")) {
 				// MUL (op-op->%reg), probably SPARC v8-specific, doubt this works for floats
 				
-				currentLine.setOperation("mul");
-				SPARCcode += "\tmul\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
+				currentLine.setOperation("smul");
+				SPARCcode += "\tsmul\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
 			} else if(currentLine.getOperation().equals("udiv")) {
 				// SDIV (op-op->%reg), probably SPARC v8-specific, doubt this works for floats
 				

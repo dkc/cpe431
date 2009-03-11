@@ -12,6 +12,7 @@ import java.util.Hashtable;
 
 public class Footle
 {
+	
 	public static void main(String[] args)
 	{
 		parseParameters(args);
@@ -96,8 +97,10 @@ public class Footle
       //write output
       writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
 
-      //convert to SPARC 
-      LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
+      //convert to SPARC
+      if(emitLLVM == false) {
+    	  LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
+      }
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
@@ -264,9 +267,11 @@ public class Footle
    }
  
    private static final String DISPLAYAST = "-displayAST";
+   private static final String EMITLLVM = "-emit-llvm";
  
    private static String inputFile = null;
    private static boolean displayAST = false;
+   private static boolean emitLLVM = false;
  
    private static void parseParameters(String [] args)
    {
@@ -275,6 +280,10 @@ public class Footle
          if (args[i].equals(DISPLAYAST))
          {
             displayAST = true;
+         }
+         if(args[i].equals(EMITLLVM))
+         {
+        	 emitLLVM = true;
          }
          else if (args[i].charAt(0) == '-')
          {
