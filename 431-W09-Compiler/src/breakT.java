@@ -25,7 +25,7 @@ public class breakT {
 					continue;
 				} else if(curLine.length() > 1 && curLine.substring(0,2).equals("**")) {
 					System.out.println("echo '~~Test #" + testCaseNumber + "~~'");
-					System.out.println("../compile -emitllvm test" + testCaseNumber + ".g");
+					System.out.println("../compile -emit-llvm test" + testCaseNumber + ".g");
 					System.out.println("../a.out");
 					System.out.println("echo '" + curLine + "'");
 					System.out.println("echo '" + s.nextLine() + "'");
