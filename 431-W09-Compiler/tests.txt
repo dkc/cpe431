@@ -1,0 +1,1544 @@
+function main(){
+return 3;
+}
+
+print(main());
+** should produce : **
+3
+
+**
+
+function main(){
+return 14000;
+}
+
+print(main());
+** should produce : **
+14000
+
+**
+
+function main(){
+return false;
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return true;
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (3 + 4);
+}
+
+print(main());
+** should produce : **
+7
+
+**
+
+function main(){
+return (3 + false);
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: false
+
+**
+
+function main(){
+return (4 * 5);
+}
+
+print(main());
+** should produce : **
+20
+
+**
+
+function main(){
+return (2 - 234);
+}
+
+print(main());
+** should produce : **
+-232
+
+**
+
+function main(){
+return (14 / 2);
+}
+
+print(main());
+** should produce : **
+7
+
+**
+
+function main(){
+return (3 / 4);
+}
+
+print(main());
+** should produce : **
+0
+
+**
+
+function main(){
+return (4 < 5);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (5 < 5);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (3 <= 8);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (8 > 5);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (7 >= 2);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (3 >= 19);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (3 == 4);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (3 == 3);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (true == true);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (true == false);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+function f(){
+134;
+
+}
+return (f == f);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+function f(){
+134;
+
+}
+function g(){
+134;
+
+}
+return (f == g);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (false && false);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (false && true);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (true && false);
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (true && true);
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (13 && true);
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 13
+
+**
+
+function main(){
+return (true && 13);
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 13
+
+**
+
+function main(){
+return (!(true));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (!(false));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (stringLength("abc"));
+}
+
+print(main());
+** should produce : **
+3
+
+**
+
+function main(){
+return (stringLength(34));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 34
+
+**
+
+function main(){
+return (stringLength(3.4213));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 9 and memory value first word: 3
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+return 6;
+}
+
+print(main());
+** should produce : **
+6
+
+**
+
+function main(){
+var x = 3;
+return x;
+}
+
+print(main());
+** should produce : **
+3
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+return f;
+}
+
+print(main());
+** should produce : **
+closure
+
+**
+
+function main(){
+if (true) {
+if (false) {
+return 13;
+} else {
+return 14;
+}
+} else {
+return 15;
+}
+}
+
+print(main());
+** should produce : **
+14
+
+**
+
+function main(){
+function f(){
+return 3;
+
+}
+return (f());
+}
+
+print(main());
+** should produce : **
+3
+
+**
+
+function main(){
+function f(x){
+return 3;
+
+}
+return (f(2));
+}
+
+print(main());
+** should produce : **
+3
+
+**
+
+function main(){
+function f(x){
+return x;
+
+}
+return (f(19));
+}
+
+print(main());
+** should produce : **
+19
+
+**
+
+function main(){
+function f(x,y,z){
+return (x + (y + z));
+
+}
+return (f(3,4,5));
+}
+
+print(main());
+** should produce : **
+12
+
+**
+
+function main(){
+function f(x,y,z){
+return (x + (y + z));
+
+}
+return (f(3,4));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 4
+
+**
+
+function main(){
+function f(x){
+function g(){
+return x;
+
+}
+return (g());
+
+}
+return (f(13));
+}
+
+print(main());
+** should produce : **
+13
+
+**
+
+function main(){
+function f(x){
+function g(y){
+return (x + y);
+
+}
+return (g(6));
+
+}
+return (f(13));
+}
+
+print(main());
+** should produce : **
+19
+
+**
+
+function main(){
+function f(x){
+function g(y){
+return 13;
+
+}
+return g;
+
+}
+return ((f(123))(1224));
+}
+
+print(main());
+** should produce : **
+13
+
+**
+
+function main(){
+function f(x){
+function g(y){
+return y;
+
+}
+return g;
+
+}
+return ((f(123))(1224));
+}
+
+print(main());
+** should produce : **
+1224
+
+**
+
+function main(){
+function f(x){
+function g(y){
+return x;
+
+}
+return g;
+
+}
+return ((f(134))(6));
+}
+
+print(main());
+** should produce : **
+134
+
+**
+
+function main(){
+function f(x){
+function g(y){
+return (x + y);
+
+}
+return g;
+
+}
+return ((f(13))(6));
+}
+
+print(main());
+** should produce : **
+19
+
+**
+
+function main(){
+function f(x){
+function g(y){
+return (x + y);
+
+}
+return g;
+
+}
+var myClosure = (f(13));
+return (myClosure(6));
+}
+
+print(main());
+** should produce : **
+19
+
+**
+
+function main(){
+function fact(x){
+if ((x == 0)) {
+return 1;
+} else {
+return (x * (fact((x - 1))));
+}
+
+}
+return (fact(6));
+}
+
+print(main());
+** should produce : **
+720
+
+**
+
+function main(){
+if ((3 < 4)) {
+return 14;
+} else {
+return 15;
+}
+}
+
+print(main());
+** should produce : **
+14
+
+**
+
+function main(){
+var x = 4;
+var y = 6;
+while ((x > 0)){
+y = (y + 1);
+x = (x - 1);
+}
+return y;
+}
+
+print(main());
+** should produce : **
+10
+
+**
+
+function main(){
+var x = 1000000;
+var y = 6;
+while ((x > 0)){
+y = (y + 1);
+x = (x - 1);
+}
+return y;
+}
+
+print(main());
+** should produce : **
+1000006
+
+**
+
+function main(){
+var x = 1000000;
+while ((x > 0)){
+function y(){
+6;
+
+}
+x = (x - 1);
+}
+return 14;
+}
+
+print(main());
+** should produce : **
+14
+
+**
+
+function main(){
+function even(x){
+if ((x == 0)) {
+return true;
+} else {
+return (odd((x - 1)));
+}
+
+}
+function odd(x){
+if ((x == 0)) {
+return false;
+} else {
+return (even((x - 1)));
+}
+
+}
+return ((odd(15)) && (even(14)));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+function f(){
+13;
+
+}
+return (f).flooby;
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 7 and integer: 1
+
+**
+
+function main(){
+function f(){
+13;
+
+}
+(f).flooby = 197;
+return (f).flooby;
+}
+
+print(main());
+** should produce : **
+197
+
+**
+
+function main(){
+function f(){
+13;
+
+}
+(f).flooby = 197;
+(f).loopy = 33;
+return (f).flooby;
+}
+
+print(main());
+** should produce : **
+197
+
+**
+
+function main(){
+function f(){
+13;
+
+}
+(f).flooby = 197;
+(f).loopy = 33;
+return (f).loopy;
+}
+
+print(main());
+** should produce : **
+33
+
+**
+
+function main(){
+function G(){
+(this).x = 13;
+
+}
+return 13;
+}
+
+print(main());
+** should produce : **
+13
+
+**
+
+function main(){
+function G(){
+(this).x = 13;
+
+}
+function dummy(){
+return 3;
+
+}
+(dummy).m = G;
+(dummy).m();
+}
+
+print(main());
+** should produce : **
+(void)
+
+**
+
+function main(){
+function G(){
+(this).x = 13;
+
+}
+function dummy(){
+return 3;
+
+}
+(dummy).m = G;
+(dummy).m();
+return (dummy).x;
+}
+
+print(main());
+** should produce : **
+13
+
+**
+
+function main(){
+return "abcdef";
+}
+
+print(main());
+** should produce : **
+(string "abcdef")
+
+**
+
+function main(){
+return (print("aeth\na"));
+}
+
+print(main());
+** should produce : **
+aeth
+a(void)
+
+**
+
+function main(){
+return 3.423;
+}
+
+print(main());
+** should produce : **
+(float 3.423000)
+
+**
+
+function main(){
+return (3.4 + 2.5);
+}
+
+print(main());
+** should produce : **
+(float 5.900000)
+
+**
+
+function main(){
+return (3.4 + 2);
+}
+
+print(main());
+** should produce : **
+(float 5.400000)
+
+**
+
+function main(){
+return (2 + 3.4);
+}
+
+print(main());
+** should produce : **
+(float 5.400000)
+
+**
+
+function main(){
+return (3.4 - 2.5);
+}
+
+print(main());
+** should produce : **
+(float 0.900000)
+
+**
+
+function main(){
+return (3.4 - 2);
+}
+
+print(main());
+** should produce : **
+(float 1.400000)
+
+**
+
+function main(){
+return (2 - 3.4);
+}
+
+print(main());
+** should produce : **
+(float -1.400000)
+
+**
+
+function main(){
+return (3.4 * 2.5);
+}
+
+print(main());
+** should produce : **
+(float 8.500000)
+
+**
+
+function main(){
+return (3.4 * 2);
+}
+
+print(main());
+** should produce : **
+(float 6.800000)
+
+**
+
+function main(){
+return (2 * 3.4);
+}
+
+print(main());
+** should produce : **
+(float 6.800000)
+
+**
+
+function main(){
+return (3.4 / 2.5);
+}
+
+print(main());
+** should produce : **
+(float 1.360000)
+
+**
+
+function main(){
+return (3.4 / 2);
+}
+
+print(main());
+** should produce : **
+(float 1.700000)
+
+**
+
+function main(){
+return (2 / 3.4);
+}
+
+print(main());
+** should produce : **
+(float 0.588235)
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+return (instanceof((new f()),f));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+function g(){
+3;
+
+}
+return (instanceof((new g()),f));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+var myobj = "abc";
+(myobj).constructor = f;
+return (instanceof(myobj,f));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+var myobj = (new f());
+(myobj).constructor = 13;
+return (instanceof(myobj,f));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (subString("abc",0,3));
+}
+
+print(main());
+** should produce : **
+(string "abc")
+
+**
+
+function main(){
+return (subString("abc",1,2));
+}
+
+print(main());
+** should produce : **
+(string "b")
+
+**
+
+function main(){
+return (subString("abc",1,1));
+}
+
+print(main());
+** should produce : **
+(string "")
+
+**
+
+function main(){
+return (subString(3,4,5));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 3
+
+**
+
+function main(){
+return (subString("abc",false,5));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: false
+
+**
+
+function main(){
+return (subString("abc",4,false));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: false
+
+**
+
+function main(){
+return (stringAppend("abc","def"));
+}
+
+print(main());
+** should produce : **
+(string "abcdef")
+
+**
+
+function main(){
+return (stringAppend("","def"));
+}
+
+print(main());
+** should produce : **
+(string "def")
+
+**
+
+function main(){
+return (stringAppend("def",""));
+}
+
+print(main());
+** should produce : **
+(string "def")
+
+**
+
+function main(){
+return (stringAppend(3,"abc"));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 3
+
+**
+
+function main(){
+return (stringAppend("abc",3));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 3
+
+**
+
+function main(){
+return (stringEqual?("abc","abc"));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (stringEqual?("abc","abcd"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (stringEqual?("",""));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (stringEqual?("abc","def"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (stringEqual?("abc",4));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 4
+
+**
+
+function main(){
+return (stringEqual?(4,"abc"));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 4
+
+**
+
+function main(){
+return (stringLessThan?("abc","def"));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (stringLessThan?("abc","abc"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (stringLessThan?("def","abc"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (stringLessThan?("abc","abcd"));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (stringLessThan?("abc",4));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 4
+
+**
+
+function main(){
+return (stringLessThan?(4,"abc"));
+}
+
+print(main());
+** should produce : **
+evaluation halted with error: 5 and value: 4
+
+**
+
+function main(){
+return (string?("abc"));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (string?(34));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (string?(3.4));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (float?(3.4));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (float?(34));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (float?("abc"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+return (plain?((new f())));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (plain?(34));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (plain?("abc"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+function f(){
+3;
+
+}
+return (closure?(f));
+}
+
+print(main());
+** should produce : **
+true
+
+**
+
+function main(){
+return (closure?(34));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+return (closure?("abc"));
+}
+
+print(main());
+** should produce : **
+false
+
+**
+
+function main(){
+function add(){
+return ((this).x + (this).y);
+
+}
+function G(y){
+(this).x = 13;
+(this).y = y;
+(this).f = add;
+
+}
+var lg = (new G(19));
+(lg).f();
+}
+
+print(main());
+** should produce : **
+32
+
+**
+
+function main(){
+function MT(){
+
+}
+function Cons(a,b){
+(this).fst = a;
+(this).rst = b;
+
+}
+function GSPair(getter,setter){
+(this).getter = getter;
+(this).setter = setter;
+
+}
+function empty?(a){
+return (instanceof(a,MT));
+
+}
+function foldl(f,i,l){
+if ((empty?(l))) {
+return i;
+} else {
+return (foldl(f,(f((l).fst,i)),(l).rst));
+}
+
+}
+function map(f,l){
+if ((empty?(l))) {
+return (new MT());
+} else {
+return (new Cons((f((l).fst)),(map(f,(l).rst))));
+}
+
+}
+function length(l){
+function add1(dc,n){
+return (n + 1);
+
+}
+return (foldl(add1,0,l));
+
+}
+function addAllFuns(lst){
+function h(p,n){
+return ((method-call(p,getter)) + n);
+
+}
+return (foldl(h,0,lst));
+
+}
+function numToFun(n){
+function dc(){
+return n;
+
+}
+return dc;
+
+}
+function setEachToDifferentValue(lst,n){
+if ((empty?(lst))) {
+return 13;
+} else {
+((lst).fst).setter(n);
+(setEachToDifferentValue((lst).rst,(n * 2)));
+}
+
+}
+var funtbl = (new MT());
+var x = 0;
+function g(){
+return x;
+
+}
+function h(newX){
+x = newX;
+return 4;
+
+}
+funtbl = (new Cons((new GSPair(g,h)),funtbl));
+var x = 0;
+function g(){
+return x;
+
+}
+function h(newX){
+x = newX;
+return 4;
+
+}
+funtbl = (new Cons((new GSPair(g,h)),funtbl));
+function f(){
+var x = 0;
+function g(){
+return x;
+
+}
+function h(newX){
+x = newX;
+return 4;
+
+}
+funtbl = (new Cons((new GSPair(g,h)),funtbl));
+function f1(){
+var x = 0;
+function g(){
+return x;
+
+}
+function h(newX){
+x = newX;
+return 4;
+
+}
+funtbl = (new Cons((new GSPair(g,h)),funtbl));
+
+}
+(f1());
+(f1());
+
+}
+(f());
+(f());
+(setEachToDifferentValue(funtbl,1));
+return (addAllFuns(funtbl));
+}
+
+print(main());
+** should produce : **
+255
+
+**
+

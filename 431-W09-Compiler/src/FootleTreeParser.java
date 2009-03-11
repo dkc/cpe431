@@ -509,6 +509,16 @@ inputState.guessing--;
 									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
 								} else if (funName.equals("print")) {
 									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("substring")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("string=?")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("string<?")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("instanceof")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("readline")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 								}
 							
 				}
