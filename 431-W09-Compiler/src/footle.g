@@ -479,25 +479,26 @@ expr returns [CodeAndReg result = null]
 		{	result = new MethodCall(new FieldLookup(expression, methodId.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		} 
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
-		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+		{	String funName = functionName.toString();
+			result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 			if (operation.equals("string-length")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("integer?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("boolean?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("floating-point?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("void?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("string?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("closure?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("plain?")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			} else if (operation.equals("print")) {
-				result = new UnaryOperation(operation, argumentList.get(0));
+				result = new UnaryOperation(funName, argumentList.get(0));
 			}
 		}
 	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
