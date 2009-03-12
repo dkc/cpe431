@@ -69,7 +69,7 @@ public class FuncDec extends AbstractCodeAndReg{
 
 		Env.addScope(this.fscope, env);
 
-		System.out.println("size of params: " + params.size());
+		//System.out.println("size of params: " + params.size());
 		for(String par: params){
 			this.fscope.add(par);
 		}

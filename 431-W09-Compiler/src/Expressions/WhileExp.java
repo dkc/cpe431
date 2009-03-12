@@ -53,7 +53,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		whilefunc.addAll(this.test.compile(env, funcdecs, fieldTable).getCode());
 		
 		//compile and branch on test
-		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 6, " + this.test.getReg() + "\n");
+		currentLine = new LLVMLine(this.testreg + " = icmp eq i32 7, " + this.test.getReg() + "\n");
 		currentLine.setOperation("icmp eq");
 		currentLine.setRegisterDefined(this.testreg);
 		currentLine.addConstantUsed(6);
@@ -125,9 +125,9 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine.setLabel("fin");
 		whilefunc.add(currentLine);
 		
-		currentLine = new LLVMLine("ret i32 10\n");
+		currentLine = new LLVMLine("ret i32 11\n");
 		currentLine.setOperation("ret");
-		currentLine.addConstantUsed(10);
+		currentLine.addConstantUsed(11);
 		whilefunc.add(currentLine);
 		
 		currentLine = new LLVMLine("}\n");

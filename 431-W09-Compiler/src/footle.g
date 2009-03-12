@@ -439,7 +439,6 @@ paramlist returns [ArrayList<String> parameters = new ArrayList<String>()]
 	:	(
 			paramName=param_id {parameters.add(paramName);}
 		)*
-		{System.out.println(parameters);}
 ;
 
 param_id returns [String paramName = null]
@@ -479,7 +478,37 @@ expr returns [CodeAndReg result = null]
 		{	result = new MethodCall(new FieldLookup(expression, methodId.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 		} 
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
-		{	result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+		{	String funName = functionName.toString();
+			result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+			if (funName.equals("string-length")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("integer?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("boolean?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("floating-point?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("void?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("string?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("closure?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("plain?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("print")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("substring")) {
+				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+			} else if (funName.equals("string=?")) {
+				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+			} else if (funName.equals("string<?")) {
+				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+			} else if (funName.equals("instanceof")) {
+				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+			} else if (funName.equals("readline")) {
+				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+			}
 		}
 	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
 		{	result = new NewObj(new VarRef(objectName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);

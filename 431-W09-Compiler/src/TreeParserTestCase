@@ -1,2 +1,1 @@
-function f () { 1; }
-var obj = new f();
+print("Hello World!");

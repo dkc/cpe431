@@ -12,6 +12,7 @@ import java.util.Hashtable;
 
 public class Footle
 {
+	
 	public static void main(String[] args)
 	{
 		parseParameters(args);
@@ -96,8 +97,10 @@ public class Footle
       //write output
       writeLLVM(compiledCode, env, funcdecs, funcids, stringdecs);
 
-      //convert to SPARC 
-      LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
+      //convert to SPARC
+      if(emitLLVM == false) {
+    	  LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
+      }
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
@@ -203,6 +206,12 @@ public class Footle
 	    	  output.write("declare void @type_check(i32, i32)\n");
 	    	  output.write("declare void @obj_type_check(i32, i32)\n");
 	    	  output.write("declare void @neg_float_check(i32)\n");
+	    	  output.write("declare void @footle_print(i32)\n");
+	    	  output.write("declare i32 @string_len(i8*)\n");
+	    	  output.write("declare i32 @instance_int_check(i32)\n");
+	    	  output.write("declare i32 @instance_bool_check(i32)\n");
+	    	  output.write("declare i32 @instance_void_check(i32)\n");
+	    	  output.write("declare i32 @instance_obj_check(i32,i32)\n");
 	    	  
 	    	  //write funcdecs
 	    	  for(LLVMLine line : funcdecs){
@@ -216,7 +225,7 @@ public class Footle
 	    	  
 	    	  //output beginning of llvm_fun
 	    	  
-	   	   	  currentLine = new LLVMLine("define i32 @llvm_fun() {");
+	   	   	  currentLine = new LLVMLine("define i32 @llvm_fun() {\n");
 	   	   	  currentLine.setOperation("fundec");
 	   	   	  currentLine.setLabel("llvm_fun");
 	   	   	  setupCode.add(currentLine);
@@ -237,15 +246,20 @@ public class Footle
 	   	   	  
 	   	   	  //output code
 	   	   	  code.addAll(0, setupCode);
-	    	  for(LLVMLine line : code) {
-	    		  output.write(line.getCode());
-	    	  }
-	    	  
-	    	  //output return
+	   	   	  
+	   	   	  //output return
 	    	  currentLine = new LLVMLine("ret i32 " + compiledCode.getReg() + "\n");
 	    	  currentLine.setOperation("ret");
 	    	  currentLine.addRegisterUsed(compiledCode.getReg());
 	    	  code.add(currentLine);
+	    	  
+	    	  code.add(new LLVMLine("}\n"));
+	   	   	  
+	    	  for(LLVMLine line : code) {
+	    		  output.write(line.getCode());
+	    	  }
+	    	  
+	    	  
 	      }catch(Exception e){
 	    	  error("Could not write output to file llvm-code.s");
 	      }
@@ -264,9 +278,11 @@ public class Footle
    }
  
    private static final String DISPLAYAST = "-displayAST";
+   private static final String EMITLLVM = "-emit-llvm";
  
    private static String inputFile = null;
    private static boolean displayAST = false;
+   private static boolean emitLLVM = false;
  
    private static void parseParameters(String [] args)
    {
@@ -275,6 +291,10 @@ public class Footle
          if (args[i].equals(DISPLAYAST))
          {
             displayAST = true;
+         }
+         else if(args[i].equals(EMITLLVM))
+         {
+        	 emitLLVM = true;
          }
          else if (args[i].charAt(0) == '-')
          {

@@ -50,10 +50,10 @@ public class Bind extends AbstractCodeAndReg{
 		this.code.add(currentLine);		
 		
 		//return value
-		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n");//return void
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 11\n");//return void
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
-		currentLine.addConstantUsed(10);
+		currentLine.addConstantUsed(11);
 		this.code.add(currentLine);
 		
 		return this;

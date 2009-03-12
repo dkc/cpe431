@@ -21,8 +21,6 @@ public class Env {
 	
 	public static Env addScope(Env newScope, Env oldScope){
 		newScope.prev = oldScope;
-		//newScope.scopenum = oldScope.scopenum + 1;
-		//newScope.scopeReg = "%scopereg" + newScope.scopenum;
 		return newScope;
 	}
 	
@@ -36,6 +34,10 @@ public class Env {
 
 	public void add(String id){
 		ids.add(id);
+	}
+	
+	public boolean contains(String id){
+		return this.ids.contains(id);
 	}
 	
 	public int numIds() {

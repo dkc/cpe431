@@ -489,7 +489,37 @@ inputState.guessing--;
 				_t = __t174;
 				_t = _t.getNextSibling();
 				if ( inputState.guessing==0 ) {
-						result = new Application(new VarRef(functionName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+						String funName = functionName.toString();
+								result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
+								if (funName.equals("string-length")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("integer?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("boolean?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("floating-point?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("void?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("string?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("closure?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("plain?")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("print")) {
+									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+								} else if (funName.equals("substring")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("string=?")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("string<?")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("instanceof")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								} else if (funName.equals("readline")) {
+									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+								}
 							
 				}
 				break;
@@ -622,9 +652,6 @@ inputState.guessing--;
 				
 			} while (true);
 			}
-			if ( inputState.guessing==0 ) {
-				System.out.println(parameters);
-			}
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
@@ -653,6 +680,9 @@ inputState.guessing--;
 			name = (AST)_t;
 			match(_t,ID);
 			_t = _t.getNextSibling();
+			if ( inputState.guessing==0 ) {
+				paramName = name.toString();
+			}
 			}
 			_t = __t166;
 			_t = _t.getNextSibling();

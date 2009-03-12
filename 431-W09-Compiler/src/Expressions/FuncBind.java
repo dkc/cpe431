@@ -35,11 +35,11 @@ public class FuncBind extends AbstractCodeAndReg {
 		
 		//retturn void
 		
-		LLVMLine line = new LLVMLine(this.reg + " = add i32 0, 10\n");
+		LLVMLine line = new LLVMLine(this.reg + " = add i32 0, 11\n");
 		line.setOperation("add");
 		line.setRegisterDefined(this.reg);
 		line.addConstantUsed(0);
-		line.addConstantUsed(10);
+		line.addConstantUsed(11);
 		this.code.add(line);
 		
 		return this;
