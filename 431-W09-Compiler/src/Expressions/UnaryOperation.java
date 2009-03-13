@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
-import Expressions.Const.*;
 import LLVMObjects.LLVMLine;
-import Values.*;
+import Environment.FuncIDandParams;
 
 public class UnaryOperation extends AbstractCodeAndReg {
 	/* valid unary operations:
@@ -36,6 +35,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	
 	public UnaryOperation(String operation, CodeAndReg operand, int regnum) {
 		super(regnum);
+		//System.out.println("op in unary op: " + this.operation);
 		this.operation = operation;
 		this.operand = operand;
 		this.objreg += regnum;
@@ -50,7 +50,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
 		operandScope = Env.addScope(new Env(this.regnum), env);
 		this.operand.staticPass(this.operandScope, null, stringdecs);
 	}
@@ -66,7 +66,7 @@ public class UnaryOperation extends AbstractCodeAndReg {
 		//currentLine = new LLVMLine("UNARYOPERATION PLACEHOLDER: " + this.getReg() + " gets the result of " + operation + " " + targetReg + "\n");
 		//this.code.add(currentLine);
 
-		if (operation.equals("string-length")) {
+		if (operation.equals("stringLength")) {
 			//typecheck  operand pointer
 			currentLine = new LLVMLine("call void type_check( i32 " + this.operand.getReg() + ", i32 1 )\n");
 			currentLine.setOperation("call");
@@ -118,21 +118,22 @@ public class UnaryOperation extends AbstractCodeAndReg {
 			
 			//call string_len
 			currentLine = new LLVMLine(this.reg + " = call i32 @string_len( i8* " + this.strreg +  " )\n");
-		} else if (operation.equals("integer?")) {
+			this.code.add(currentLine);
+		} else if (operation.equals("int?")) {
 			currentLine = new LLVMLine(this.reg + " = call i32 @instance_int_check( i32 " + this.operand.getReg() + " )\n");
 			currentLine.setOperation("call");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.operand.getReg());
 			this.code.add(currentLine);
 			
-		} else if (operation.equals("boolean?")) {
+		} else if (operation.equals("bool?")) {
 			currentLine = new LLVMLine(this.reg + " = call i32 @instance_bool_check( i32 " + this.operand.getReg() + " )\n");
 			currentLine.setOperation("call");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.operand.getReg());
 			this.code.add(currentLine);
 			
-		} else if (operation.equals("floating-point?")) {
+		} else if (operation.equals("float?")) {
 			currentLine = new LLVMLine(this.reg + " = call i32 @instance_obj_check( i32 " + this.operand.getReg() + ", i32 3 )\n");
 			currentLine.setOperation("call");
 			currentLine.setRegisterDefined(this.reg);
@@ -180,7 +181,14 @@ public class UnaryOperation extends AbstractCodeAndReg {
 			currentLine.addConstantUsed(11);
 			this.code.add(currentLine);
 			
-		} else if (operation.equals("not")){
+		} else if (operation.equals("!")){
+			currentLine = new LLVMLine("call i32 @type_check( i32 " + this.operand.getReg() + ", i32 3)\n");
+			currentLine.setOperation("call");
+			currentLine.setLabel("type_check");
+			currentLine.addRegisterUsed(this.operand.getReg());
+			currentLine.addConstantUsed(3);
+			this.code.add(currentLine);
+			
 			currentLine = new LLVMLine(this.shftreg + " = lshr i32 " + this.operand.getReg() + ", 2\n");
 			currentLine.setOperation("lshr");
 			currentLine.setRegisterDefined(this.shftreg);

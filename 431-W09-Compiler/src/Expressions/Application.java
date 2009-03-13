@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
-import Environment.RegAndIndex;
-import Expressions.Const.FVoid;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class Application extends AbstractCodeAndReg{
 	CodeAndReg func;
@@ -40,9 +39,9 @@ public class Application extends AbstractCodeAndReg{
 	}
 	
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
 		this.func.staticPass(env, funcids, stringdecs);
-		//call staticPass on args?
+		//call staticPass on args
 		for(CodeAndReg arg: args){
 			arg.staticPass(env, funcids, stringdecs);
 		}
@@ -52,6 +51,7 @@ public class Application extends AbstractCodeAndReg{
 	 * UnaryOperation and BinaryOperation ate the bulk of this functionality and the other built-ins (readline,
 	 * string=?, string<?) are "predefined" applications that should always be included and can be called through
 	 * here */
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 			LLVMLine currentLine;
 		

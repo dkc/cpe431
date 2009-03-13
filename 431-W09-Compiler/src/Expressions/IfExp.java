@@ -6,6 +6,8 @@ import java.util.Hashtable;
 
 import Environment.Env;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
+
 public class IfExp extends AbstractCodeAndReg{
 	CodeAndReg test;
 	CodeAndReg fthen;
@@ -30,7 +32,8 @@ public class IfExp extends AbstractCodeAndReg{
 		this.elseenvptr += regnum;
 	}
 	
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+	@Override
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
 		this.thenscope = Env.addScope(new Env(regnum), env);
 		this.elsescope = Env.addScope(new Env(-regnum), env);
 		this.test.staticPass(env, funcids, stringdecs);
@@ -40,6 +43,7 @@ public class IfExp extends AbstractCodeAndReg{
 		//this.felse.staticPass(env, funcids, stringdecs);
 	}
 	
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		ArrayList<LLVMLine> iffunc = new ArrayList<LLVMLine>();
 		LLVMLine currentLine;

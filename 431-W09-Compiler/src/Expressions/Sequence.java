@@ -1,10 +1,12 @@
 package Expressions;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
 import Expressions.Const.FVoid;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class Sequence extends AbstractCodeAndReg{
 
@@ -15,11 +17,13 @@ public class Sequence extends AbstractCodeAndReg{
 		this.seq = seq;
 	}
 	
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+	@Override
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
 		for(CodeAndReg reg : seq)
 			reg.staticPass(env, funcids, stringdecs);
 	}
 	
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){// throws ReturnException {
 
 		if(seq.size() == 0){

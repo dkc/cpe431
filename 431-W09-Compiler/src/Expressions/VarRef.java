@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import Environment.Env;
 import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class VarRef extends AbstractCodeAndReg{
 	String id;
@@ -20,6 +21,7 @@ public class VarRef extends AbstractCodeAndReg{
 	}
 	
 
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
 		if(this.id.equals("this")){
@@ -55,13 +57,18 @@ public class VarRef extends AbstractCodeAndReg{
 	}
 
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
-		if(!this.id.equals("this")){
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
+		//reserved name use check
+			for(int i = 0; i < res_len; i++){
+				if(id.equals(reserved_names[i])){
+					System.err.println("Static Pass Error Variable Reference: illegal use of primitive name");
+					System.exit(-1);
+				}
+			}
 		RegAndIndex regind = Env.lookup(id, env, this.regnum);
 		if(regind == null){
 			System.err.println("Error in Static Pass: Variable reference before bind");
 			System.exit(-1);
-		}
 		}
 	}
 }

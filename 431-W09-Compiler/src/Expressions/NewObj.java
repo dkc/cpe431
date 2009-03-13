@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
-import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
-import Values.*;
+import Environment.FuncIDandParams;
 
 public class NewObj extends AbstractCodeAndReg{
 	VarRef fname;
@@ -192,7 +191,7 @@ public class NewObj extends AbstractCodeAndReg{
 	}
 
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
 		this.fname.staticPass(env, funcids, stringdecs);
 		//call staticPass on args?
 		for(CodeAndReg arg: args){

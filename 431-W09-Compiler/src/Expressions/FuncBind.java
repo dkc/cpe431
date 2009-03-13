@@ -3,8 +3,8 @@ package Expressions;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import Environment.Env;
-import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class FuncBind extends AbstractCodeAndReg {
 	public ArrayList<FuncDec> funs;
@@ -15,7 +15,8 @@ public class FuncBind extends AbstractCodeAndReg {
 		this.funs = funs;
 	}
 	
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+	@Override
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
 		for(FuncDec f: funs){
 			env.add(f.name);
 			//System.out.println("added " + f.name);

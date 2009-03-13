@@ -59,12 +59,12 @@ public class FFloat extends AbstractCodeAndReg{
 		currentLine.addRegisterUsed(this.objreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine("store float " + this.number + ", float* " + this.floatptr + "\n");
+		currentLine = new LLVMLine("store i32 " + Float.floatToRawIntBits(this.number) + ", i32* " + this.floatptr + "\n");
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.floatptr);
 		this.code.add(currentLine);
 		
-		//store pobj to env
+		//store fobj to env
 		currentLine = new LLVMLine(this.castreg + " = ptrtoint %fobj* " + this.objreg + " to i32\n");
 		currentLine.setOperation("ptrtoint");
 		currentLine.setRegisterDefined(this.castreg);

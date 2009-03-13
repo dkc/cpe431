@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
-import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
-import Values.*;
+import Environment.FuncIDandParams;
 
 public class FieldLookup extends AbstractCodeAndReg {
 	String name;
@@ -40,7 +39,14 @@ public class FieldLookup extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
+		//reserved name use check\
+			for(int i = 0; i < res_len; i++){
+				if(this.name.equals(reserved_names[i])){
+					System.err.println("Static Pass Error Field Lookup: illegal use of primitive name");
+					System.exit(-1);
+				}
+			}
 		this.obj.staticPass(env, funcids, stringdecs);
 	}
 	

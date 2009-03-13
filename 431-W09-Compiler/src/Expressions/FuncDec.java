@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
+import Environment.FuncIDandParams;
 import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
 
@@ -30,7 +31,6 @@ public class FuncDec extends AbstractCodeAndReg{
 	private String mobjreg = "%mobjreg";
 	private String menvlinkptr = "%menvlkptr";
 	private String mreg = "%mreg";
-	private int methodid = 0;
 	private int functionid = 0;
 	private String slotsptr = "%slotsptr";
 	
@@ -60,10 +60,34 @@ public class FuncDec extends AbstractCodeAndReg{
 		this.slotsptr += regnum;
 	}
 	
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
-
+	@Override
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
+		//check for multiple params
+		for(String id:this.params){
+			int count = 0;
+			for(String test:this.params){
+				if(id.equals(test)){
+					count++;
+				}
+			}
+			if(count > 1){
+				System.err.println("Static Pass Error Function Definition: multiple parametere with similar id");
+				System.exit(-1);
+			}
+		}
+		
+		//reserved name use check
+		for(String id: params){
+			for(int i = 0; i < res_len; i++){
+				if(id.equals(reserved_names[i])){
+					System.err.println("Static Pass Error Function Definition: illegal use of primitive name in parameters");
+					System.exit(-1);
+				}
+			}
+		}
+		
 		this.functionid = funcids.size();
-		funcids.add(this.functionid);
+		funcids.add(new FuncIDandParams(this.functionid,this.params.size()));
 
 		this.fscope = new Env(this.regnum);
 
@@ -78,6 +102,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		//this.mbody.staticPass(this.mscope, funcid);
 	}
 	
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
 		
@@ -120,7 +145,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		currentLine = new LLVMLine("store %eframe* " + this.fscope.getCurrentScope() + ", %eframe** " + this.eframereg + "\n");
 		this.code.add(currentLine);
 		
-		// TODO store empty slots
+		//store empty slots
 		currentLine = new LLVMLine(this.slotsptr + " = getelementptr %cobj* "
 				+ this.mallocreg + ", i32 0, i32 1\n");
 		currentLine.setOperation("getelementptr");
@@ -132,7 +157,6 @@ public class FuncDec extends AbstractCodeAndReg{
 				+ this.slotsptr + "\n");
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.slotsptr);
-		// TODO fix later
 		this.code.add(currentLine);
 		
 		//setup pointer to func obj
