@@ -277,7 +277,8 @@ public class LLVMToSPARC {
 			// we want to walk the lines of code in the block in reverse order to generate the interference graph
 			for(int lineNum = block.contents.size()-1; lineNum >= 0; lineNum--) {
 				currentLine = block.contents.get(lineNum);
-				
+				if(currentLine.getOperation() == null)
+					continue;
 				if(		currentLine.getOperation().equals("ba") ||
 						currentLine.getOperation().equals("brz") ||
 						currentLine.getOperation().equals("label") ){
@@ -332,6 +333,8 @@ public class LLVMToSPARC {
 			}
 			
 			for(LLVMLine curLine: block.contents) {
+				if(curLine.getOperation() == null)
+					continue;
 				if(curLine.getOperation().equals("ba"))
 					continue;
 				registersToMap = curLine.registersUsed;

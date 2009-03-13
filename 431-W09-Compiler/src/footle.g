@@ -480,17 +480,19 @@ expr returns [CodeAndReg result = null]
 	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
 		{	String funName = functionName.toString();
 			result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
-			if (funName.equals("string-length")) {
+			if (funName.equals("stringLength")) {
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
-			} else if (funName.equals("integer?")) {
+			} else if (funName.equals("not")) {
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
-			} else if (funName.equals("boolean?")) {
-				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
-			} else if (funName.equals("floating-point?")) {
-				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
-			} else if (funName.equals("void?")) {
+			} else if (funName.equals("int?")) {
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
 			} else if (funName.equals("string?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("bool?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("float?")) {
+				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
+			} else if (funName.equals("void?")) {
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
 			} else if (funName.equals("closure?")) {
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
@@ -498,15 +500,15 @@ expr returns [CodeAndReg result = null]
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
 			} else if (funName.equals("print")) {
 				result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
-			} else if (funName.equals("substring")) {
+			} else if (funName.equals("subString")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			} else if (funName.equals("string=?")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
-			} else if (funName.equals("string<?")) {
+			} else if (funName.equals("stringLessThan?")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			} else if (funName.equals("instanceof")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
-			} else if (funName.equals("read-line")) {
+			} else if (funName.equals("readLine")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			}
 		}
