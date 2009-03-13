@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060906): "footle.g" -> "FootleLexer.java"$
+// $ANTLR 2.7.7 (20060906): "src/footle.g" -> "FootleLexer.java"$
 
 
 import java.io.InputStream;

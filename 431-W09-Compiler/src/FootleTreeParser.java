@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060906): "footle.g" -> "FootleTreeParser.java"$
+// $ANTLR 2.7.7 (20060906): "src/footle.g" -> "FootleTreeParser.java"$
 
 
 import antlr.TreeParser;
@@ -517,7 +517,7 @@ inputState.guessing--;
 									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 								} else if (funName.equals("instanceof")) {
 									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
-								} else if (funName.equals("readline")) {
+								} else if (funName.equals("read-line")) {
 									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 								}
 							

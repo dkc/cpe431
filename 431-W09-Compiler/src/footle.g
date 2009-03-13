@@ -506,7 +506,7 @@ expr returns [CodeAndReg result = null]
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			} else if (funName.equals("instanceof")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
-			} else if (funName.equals("readline")) {
+			} else if (funName.equals("read-line")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			}
 		}

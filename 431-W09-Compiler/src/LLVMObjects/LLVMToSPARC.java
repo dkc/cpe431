@@ -87,7 +87,7 @@ public class LLVMToSPARC {
 				
 				currentLine.setOperation("smul");
 				SPARCcode += "\tsmul\t" + currentLine.getRegisterUsed(0) + ", " + currentLine.getRegisterUsed(1) + ", " + currentLine.getRegisterDefined();
-			} else if(currentLine.getOperation().equals("udiv")) {
+			} else if(currentLine.getOperation().equals("sdiv")) {
 				// SDIV (op-op->%reg), probably SPARC v8-specific, doubt this works for floats
 				
 				currentLine.setOperation("sdiv");
@@ -348,14 +348,14 @@ public class LLVMToSPARC {
 						}
 						// System.out.println("conflicts: " + conflictingRegisters.toString());
 						takenMappings = new ArrayList<String>();
-						for(String conflictingRegister : conflictingRegisters) {
+						for(String conflictingRegister : conflictingRegisters) { // compile the list of SPARC mappings that are already in use by conflicting ("adjacent") registers
 							mappingLocation = mappings.indexOf(new Mapping(conflictingRegister, null));
-							if(mappingLocation > -1) {
+							if(mappingLocation > -1) { // 
 								takenMappings.add(mappings.get(mappingLocation).mappingSPARC);
 							}
 						}
 						// System.out.println(takenMappings.toString());
-						for(String availableMapping : availableMappings) {
+						for(String availableMapping : availableMappings) { // looking for the first "free" mapping, i.e. one that's not in the takenMappings list generated above
 							if(!takenMappings.contains(availableMapping)) {
 								mappings.add(new Mapping(register, availableMapping));
 								if(block.liveOnExit.contains(register)) {
@@ -368,8 +368,8 @@ public class LLVMToSPARC {
 			}
 		}
 		
-		Collections.sort(mappings);
-		Collections.reverse(mappings);
+		Collections.sort(mappings); /* mappings are sorted by the length of the name of their original LLVM registers... */
+		Collections.reverse(mappings); /* ... and then we flip it around so the longest names are first (to prevent %r10 from being replaced during a remapping of %r1, for example) */
 		for(BasicBlock block : program)
 			for(Mapping m : mappings)
 				block.replace(m);
