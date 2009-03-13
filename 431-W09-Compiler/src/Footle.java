@@ -159,7 +159,7 @@ public class Footle
 	    		  
 	    		  //fun call
 	    		  output.write("ffun" + i + ":\n");
-	    		  output.write("%rfun" + i + " = call i32 @footle_fun" + i + " ( %eframe* %envframe )\n");
+	    		  output.write("%rfun" + i + " = call i32 @footle_fun" + i + " ( %eframe* %envframe, i32 0 )\n");
 	    		  output.write("ret i32 %rfun" + i + "\n");
 	    		  
 	    		  //met call
@@ -194,6 +194,7 @@ public class Footle
 	    	  output.write("declare void @obj_type_check(i32, i32)\n");
 	    	  output.write("declare void @neg_float_check(i32)\n");
 	    	  output.write("declare void @footle_print(i32)\n");
+	    	  output.write("declare i32 @bin_op(i32,i32,i32)\n");
 	    	  output.write("declare i32 @string_len(i32)\n");
 	    	  output.write("declare i32 @instance_int_check(i32)\n");
 	    	  output.write("declare i32 @instance_bool_check(i32)\n");

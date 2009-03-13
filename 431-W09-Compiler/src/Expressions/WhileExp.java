@@ -32,20 +32,20 @@ public class WhileExp extends AbstractCodeAndReg{
 		//call while func with env
 		
 		//call while
-		currentLine = new LLVMLine("call i32 @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
+		currentLine = new LLVMLine("call void @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
 		currentLine.setOperation("call");
 		currentLine.setLabel("while" + this.regnum);
 		currentLine.addRegisterUsed(env.getCurrentScope());
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine(this.reg + " = add i32 0, 10\n"); // ret void
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 11\n"); // ret void
 		currentLine.setOperation("add");
 		currentLine.setRegisterDefined(this.reg);
 		currentLine.addConstantUsed(10);
 		this.code.add(currentLine);
 		
 		//func def
-		currentLine = new LLVMLine("define i32 @while" + regnum + "( %eframe* " + env.getCurrentScope() + " ){\n");
+		currentLine = new LLVMLine("define void @while" + regnum + "( %eframe* " + env.getCurrentScope() + " ){\n");
 		currentLine.setOperation("fundec");
 		currentLine.setLabel("while" + regnum);
 		currentLine.addRegisterUsed(env.getCurrentScope());
@@ -108,16 +108,15 @@ public class WhileExp extends AbstractCodeAndReg{
 		whilefunc.addAll(this.body.compile(this.scope, funcdecs, fieldTable).getCode());
 		
 		//recursive call
-		currentLine = new LLVMLine(this.retreg + " = call i32 @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
+		currentLine = new LLVMLine("call void @while" + this.regnum + "( %eframe* " + env.getCurrentScope() + ")\n");
 		currentLine.setOperation("call");
 		currentLine.setLabel("while" + this.regnum);
 		currentLine.setRegisterDefined(this.retreg);
 		currentLine.addRegisterUsed(env.getCurrentScope());
 		whilefunc.add(currentLine);
 		
-		currentLine = new LLVMLine("ret i32 " + this.retreg + "\n");
+		currentLine = new LLVMLine("ret void\n");
 		currentLine.setOperation("ret");
-		currentLine.addRegisterUsed(this.retreg);
 		whilefunc.add(currentLine);
 		
 		//if false return with call val in this.reg
@@ -126,9 +125,8 @@ public class WhileExp extends AbstractCodeAndReg{
 		currentLine.setLabel("fin");
 		whilefunc.add(currentLine);
 		
-		currentLine = new LLVMLine("ret i32 11\n");
+		currentLine = new LLVMLine("ret void\n");
 		currentLine.setOperation("ret");
-		currentLine.addConstantUsed(11);
 		whilefunc.add(currentLine);
 		
 		currentLine = new LLVMLine("}\n");
@@ -142,7 +140,6 @@ public class WhileExp extends AbstractCodeAndReg{
 
 	@Override
 	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
-		// TODO Auto-generated method stub
 		this.scope = new Env(this.regnum);
 		Env.addScope(this.scope, env);
 		this.test.staticPass(this.scope, funcids, stringdecs);

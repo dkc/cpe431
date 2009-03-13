@@ -114,10 +114,10 @@ public class FieldLookup extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 			
 			//lookup field
-			System.out.println(name);
+			//System.out.println("field lookup: " + name);
 			Integer fid = fieldTable.get(name);
-			if(fid.equals(null)){
-				System.err.println("Runtime Error Field Lookup: field does not exist\n");
+			if(fid == null){
+				System.err.println("Runtime Error Field Lookup: field <" + name + "> does not exist\n");
 				System.exit(-1);
 			}else{
 			currentLine = new LLVMLine( this.lookupreg + " = call i32* @field_lookup( i32 " + fid + 

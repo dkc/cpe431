@@ -147,25 +147,11 @@ public class MethodCall extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 		}
 		
-		//add this reference
-		/* = new LLVMLine(this.thisptr + " = getelementptr i32* " + this.argsreg + 
-				", i32 " + args.size() + "\n");
-		currentLine.setOperation("getelementptr");
-		currentLine.setRegisterDefined(this.thisptr);
-		currentLine.addRegisterUsed(this.argsreg);
-		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine("store i32 " + this.objreg + ", i32* " + this.thisptr + "\n");
-		currentLine.setOperation("store");
-		currentLine.addRegisterUsed(this.objreg);
-		currentLine.addRegisterUsed(this.thisptr);
-		this.code.add(currentLine);*/
-		
-		//TODO add 1 to func id?
 		//send compiled args and closure id # to dispatch
 		//currentLine = new LLVMLine(this.numargs + " = add i32 0, " + args.size() + "\n");
 		currentLine = new LLVMLine(this.reg + " = call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + args.size() + ", i32* " + this.argsreg + ", i32 " + this.funclookup.getReg() + " ) nounwind\n");
+				this.cobjreg + ", i32 " + args.size() + ", i32* " + this.argsreg + ", i32 " + this.funclookup.getReg() + " )\n");
 		currentLine.setOperation("call");
 		currentLine.setLabel("dispatch_fun");
 		currentLine.setRegisterDefined(this.reg);

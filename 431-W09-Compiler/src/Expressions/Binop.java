@@ -57,9 +57,17 @@ public class Binop extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		if(exp.equals("+")){
-			this.type = "INTEGER";
+			this.type = "bin_op called";
 			
-			currentLine = new LLVMLine("call void @type_check( i32 " + this.left.getReg() + ", i32 0)\n");
+			currentLine = new LLVMLine(this.reg + " = call i32 @bin_op( i32 " + this.left.getReg() + ", i32 " + this.right.getReg() + ", i32 0)\n");
+			currentLine.setOperation("call");
+			currentLine.setLabel("bin_op");
+			currentLine.addRegisterUsed(this.left.getReg());
+			currentLine.addRegisterUsed(this.right.getReg());
+			currentLine.addConstantUsed(0);
+			this.code.add(currentLine);
+			
+			/*currentLine = new LLVMLine("call void @type_check( i32 " + this.left.getReg() + ", i32 0)\n");
 			currentLine.setOperation("call");
 			currentLine.setLabel("type_check");
 			currentLine.addRegisterUsed(this.left.getReg());
@@ -78,10 +86,20 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine.setRegisterDefined(ashftreg);
 			currentLine.addRegisterUsed(lshftreg);
 			currentLine.addRegisterUsed(rshftreg);
-			this.code.add(currentLine);
+			this.code.add(currentLine);*/
 			
 		}else if(exp.equals("-")){
-			this.type = "INTEGER";
+			this.type = "bin_op called";
+			
+			currentLine = new LLVMLine(this.reg + " = call i32 @bin_op( i32 " + this.left.getReg() + ", i32 " + this.right.getReg() + ", i32 1)\n");
+			currentLine.setOperation("call");
+			currentLine.setLabel("bin_op");
+			currentLine.addRegisterUsed(this.left.getReg());
+			currentLine.addRegisterUsed(this.right.getReg());
+			currentLine.addConstantUsed(1);
+			this.code.add(currentLine);
+			
+			/*this.type = "INTEGER";
 			
 			currentLine = new LLVMLine("call void @type_check( i32 " + this.left.getReg() + ", i32 0)\n");
 			currentLine.setOperation("call");
@@ -103,53 +121,27 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine.addRegisterUsed(this.lshftreg);
 			currentLine.addRegisterUsed(this.rshftreg);
 			this.code.add(currentLine);
-			
+			*/
 		}else if(exp.equals("*")){
-			this.type = "INTEGER";
+			this.type = "bin_op called";
 			
-			currentLine = new LLVMLine("call void @type_check( i32 " + this.left.getReg() + ", i32 0)\n");
+			currentLine = new LLVMLine(this.reg + " = call i32 @bin_op( i32 " + this.left.getReg() + ", i32 " + this.right.getReg() + ", i32 2)\n");
 			currentLine.setOperation("call");
-			currentLine.setLabel("type_check");
+			currentLine.setLabel("bin_op");
 			currentLine.addRegisterUsed(this.left.getReg());
-			currentLine.addConstantUsed(0);
-			this.code.add(currentLine);
-			
-			currentLine = new LLVMLine("call void @type_check( i32 " + this.right.getReg() + ", i32 0)\n");
-			currentLine.setOperation("call");
-			currentLine.setLabel("type_check");
 			currentLine.addRegisterUsed(this.right.getReg());
-			currentLine.addConstantUsed(0);
-			this.code.add(currentLine);
-			
-			currentLine = new LLVMLine(ashftreg + " = mul i32 " + lshftreg + ", " + rshftreg + "\n");
-			currentLine.setOperation("mul");
-			currentLine.setRegisterDefined(this.ashftreg);
-			currentLine.addRegisterUsed(this.lshftreg);
-			currentLine.addRegisterUsed(this.rshftreg);
+			currentLine.addConstantUsed(2);
 			this.code.add(currentLine);
 			
 		}else if(exp.equals("/")){
-			this.type = "INTEGER";
+			this.type = "bin_op called";
 			
-			currentLine = new LLVMLine("call void @type_check( i32 " + this.left.getReg() + ", i32 0)\n");
+			currentLine = new LLVMLine(this.reg + " = call i32 @bin_op( i32 " + this.left.getReg() + ", i32 " + this.right.getReg() + ", i32 3)\n");
 			currentLine.setOperation("call");
-			currentLine.setLabel("type_check");
+			currentLine.setLabel("bin_op");
 			currentLine.addRegisterUsed(this.left.getReg());
-			currentLine.addConstantUsed(0);
-			this.code.add(currentLine);
-			
-			currentLine = new LLVMLine("call void @type_check( i32 " + this.right.getReg() + ", i32 0)\n");
-			currentLine.setOperation("call");
-			currentLine.setLabel("type_check");
 			currentLine.addRegisterUsed(this.right.getReg());
-			currentLine.addConstantUsed(0);
-			this.code.add(currentLine);
-			
-			currentLine = new LLVMLine(ashftreg + " = sdiv i32 " + lshftreg + ", " + rshftreg + "\n");
-			currentLine.setOperation("sdiv");
-			currentLine.setRegisterDefined(this.ashftreg);
-			currentLine.addRegisterUsed(this.lshftreg);
-			currentLine.addRegisterUsed(this.rshftreg);
+			currentLine.addConstantUsed(3);
 			this.code.add(currentLine);
 			
 		}else if(exp.equals("&&")){
@@ -337,7 +329,7 @@ public class Binop extends AbstractCodeAndReg{
 			this.code.add(currentLine);
 			
 		}
-		
+		if(!this.type.equals("bin_op called")){
 		//bit shift answer left
 		currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.ashftreg + ", 2\n");
 		currentLine.setOperation("shl");
@@ -361,6 +353,7 @@ public class Binop extends AbstractCodeAndReg{
 			currentLine.addRegisterUsed(this.shftreg);
 			currentLine.addConstantUsed(0);
 			this.code.add(currentLine);
+		}
 		}
 		
 		return this;

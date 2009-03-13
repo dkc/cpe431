@@ -86,7 +86,7 @@ public class Env {
 			
 			if(v==null)
 			{
-				System.err.println("lookup not found: " + id);
+				//System.err.println("lookup not found: " + id);
 				return null;
 			}
 			

@@ -24,12 +24,14 @@ public class VarRef extends AbstractCodeAndReg{
 	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		LLVMLine currentLine;
+		//System.out.println("id: " + this.id);
 		if(this.id.equals("this")){
 			currentLine = new LLVMLine(this.reg + " = add i32 0, %this\n");
 			currentLine.setOperation("add");
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed("%this");
 			currentLine.addConstantUsed(0);
+			this.code.add(currentLine);
 		}else{
 		
 		RegAndIndex regind = Env.lookup(id, env, this.regnum);
@@ -65,10 +67,13 @@ public class VarRef extends AbstractCodeAndReg{
 					System.exit(-1);
 				}
 			}
+		if(!this.id.equals("this")){
+		
 		RegAndIndex regind = Env.lookup(id, env, this.regnum);
 		if(regind == null){
 			System.err.println("Error in Static Pass: Variable reference before bind");
 			System.exit(-1);
+		}
 		}
 	}
 }

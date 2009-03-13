@@ -131,8 +131,10 @@ public class FieldMut extends AbstractCodeAndReg {
 		this.code.add(currentLine);
 		
 		//lookup id
+		//System.out.println("name: " + name);
 		Integer fid = fieldTable.get(name);
 		if(fid == null){//add new field
+			//System.out.println("name added to fieldTable");
 			fieldTable.put(name, new Integer(this.regnum));
 			fid = this.regnum;
 			
@@ -202,7 +204,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 			
 		}else{//store to field
-			
+			//System.out.println("name stored");
 			currentLine = new LLVMLine(this.lookupreg + " = call i32* @field_lookup( i32 " + fid + ", %slots* " + this.slotsreg + " )\n");
 			currentLine.setOperation("call");
 			currentLine.setLabel("lookup_field");

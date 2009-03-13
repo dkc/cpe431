@@ -183,7 +183,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		this.code.add(currentLine);
 		
 		//write func dec?
-		currentLine = new LLVMLine("define i32 @footle_fun" + this.functionid + "(%eframe* " + this.fscope.getCurrentScope() + "){\n");
+		currentLine = new LLVMLine("define i32 @footle_fun" + this.functionid + "(%eframe* " + this.fscope.getCurrentScope() + ", i32 %this){\n");
 		funcdecs.add(currentLine);
 		int savedindex = funcdecs.size();
 		// can't handle func dec in func body, save index, use insert? done?

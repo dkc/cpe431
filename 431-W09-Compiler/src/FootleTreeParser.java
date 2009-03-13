@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060906): "footle.g" -> "FootleTreeParser.java"$
+// $ANTLR 2.7.7 (20060906): "431-W09-Compiler/src/footle.g" -> "FootleTreeParser.java"$
 
 
 import antlr.TreeParser;
@@ -513,7 +513,7 @@ inputState.guessing--;
 									result = new UnaryOperation(funName, argumentList.get(0), nextUniqueRegisterId++);
 								} else if (funName.equals("subString")) {
 									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
-								} else if (funName.equals("string=?")) {
+								} else if (funName.equals("stringEqual?")) {
 									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 								} else if (funName.equals("stringLessThan?")) {
 									result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
