@@ -204,7 +204,6 @@ function
 expr
 	: (LPAREN! expr RPAREN! arglist) => application
 	| (exprnr arglist) => application
-	| LPAREN! expr RPAREN!
 	| (exprnr DOT identifier operator) => binexp
 	| (exprnr operator) => binexp
 	| (exprnr DOT) => exprfield
@@ -229,7 +228,8 @@ loneexprmethodcall
 
 /* a list of non-LL recursive expressions separated from expr above to keep it from freaking out--thanks, LL parser */
 exprnr
-	:!	i:INT
+	:	LPAREN! expr RPAREN!
+	|!	i:INT
 		{ #exprnr = #([CONST_INT, "CONST_INT"], i); }
 	|!	f:FLOAT
 		{ #exprnr = #([CONST_FLOAT, "CONST_FLOAT"], f); }
@@ -247,10 +247,8 @@ exprnr
 /* any function application falls under this rule, including built-ins */
 application
 	:!	(LPAREN applicationnr RPAREN arglist ) => LPAREN app:applicationnr RPAREN args2:arglist
-		{ #application = #([INVOKE, "INVOKE"], #app, #args2); 
-			System.out.println("wuggle"); }
+		{ #application = #([INVOKE, "INVOKE"], #app, #args2); }
 	|	applicationnr
-		{	System.out.println("chuggle");}
 ;
 applicationnr
 	:! 	id:exprnr args:arglist

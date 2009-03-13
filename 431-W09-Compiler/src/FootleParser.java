@@ -387,16 +387,9 @@ inputState.guessing--;
 				astFactory.addASTChild(currentAST, returnAST);
 				expr_AST = (AST)currentAST.root;
 			}
-			else if ((LA(1)==LPAREN)) {
-				match(LPAREN);
-				expr();
-				astFactory.addASTChild(currentAST, returnAST);
-				match(RPAREN);
-				expr_AST = (AST)currentAST.root;
-			}
 			else {
 				boolean synPredMatched72 = false;
-				if (((_tokenSet_2.member(LA(1))))) {
+				if (((_tokenSet_1.member(LA(1))))) {
 					int _m72 = mark();
 					synPredMatched72 = true;
 					inputState.guessing++;
@@ -421,7 +414,7 @@ inputState.guessing--;
 				}
 				else {
 					boolean synPredMatched74 = false;
-					if (((_tokenSet_2.member(LA(1))))) {
+					if (((_tokenSet_1.member(LA(1))))) {
 						int _m74 = mark();
 						synPredMatched74 = true;
 						inputState.guessing++;
@@ -444,7 +437,7 @@ inputState.guessing--;
 					}
 					else {
 						boolean synPredMatched76 = false;
-						if (((_tokenSet_2.member(LA(1))))) {
+						if (((_tokenSet_1.member(LA(1))))) {
 							int _m76 = mark();
 							synPredMatched76 = true;
 							inputState.guessing++;
@@ -465,7 +458,7 @@ inputState.guessing--;
 							astFactory.addASTChild(currentAST, returnAST);
 							expr_AST = (AST)currentAST.root;
 						}
-						else if ((_tokenSet_2.member(LA(1)))) {
+						else if ((_tokenSet_1.member(LA(1)))) {
 							exprnr();
 							astFactory.addASTChild(currentAST, returnAST);
 							expr_AST = (AST)currentAST.root;
@@ -528,8 +521,8 @@ inputState.guessing--;
 		AST params_AST = null;
 		AST body_AST = null;
 		
-		AST tmp134_AST = null;
-		tmp134_AST = astFactory.create(LT(1));
+		AST tmp132_AST = null;
+		tmp132_AST = astFactory.create(LT(1));
 		match(FUNCTION);
 		identifier();
 		name_AST = (AST)returnAST;
@@ -627,52 +620,54 @@ inputState.guessing--;
 		AST app_AST = null;
 		AST args2_AST = null;
 		
-		switch ( LA(1)) {
-		case LPAREN:
-		{
-			AST tmp140_AST = null;
-			tmp140_AST = astFactory.create(LT(1));
+		boolean synPredMatched87 = false;
+		if (((LA(1)==LPAREN))) {
+			int _m87 = mark();
+			synPredMatched87 = true;
+			inputState.guessing++;
+			try {
+				{
+				match(LPAREN);
+				applicationnr();
+				match(RPAREN);
+				arglist();
+				}
+			}
+			catch (RecognitionException pe) {
+				synPredMatched87 = false;
+			}
+			rewind(_m87);
+inputState.guessing--;
+		}
+		if ( synPredMatched87 ) {
+			AST tmp138_AST = null;
+			tmp138_AST = astFactory.create(LT(1));
 			match(LPAREN);
 			applicationnr();
 			app_AST = (AST)returnAST;
-			AST tmp141_AST = null;
-			tmp141_AST = astFactory.create(LT(1));
+			AST tmp139_AST = null;
+			tmp139_AST = astFactory.create(LT(1));
 			match(RPAREN);
 			arglist();
 			args2_AST = (AST)returnAST;
 			if ( inputState.guessing==0 ) {
 				application_AST = (AST)currentAST.root;
-				application_AST = (AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(INVOKE,"INVOKE")).add(app_AST).add(args2_AST)); 
-							System.out.println("wuggle");
+				application_AST = (AST)astFactory.make( (new ASTArray(3)).add(astFactory.create(INVOKE,"INVOKE")).add(app_AST).add(args2_AST));
 				currentAST.root = application_AST;
 				currentAST.child = application_AST!=null &&application_AST.getFirstChild()!=null ?
 					application_AST.getFirstChild() : application_AST;
 				currentAST.advanceChildToEnd();
 			}
-			break;
 		}
-		case TRUE:
-		case FALSE:
-		case NEW:
-		case NOT:
-		case ID:
-		case STRING:
-		case INT:
-		case FLOAT:
-		{
+		else if ((_tokenSet_1.member(LA(1)))) {
 			applicationnr();
 			astFactory.addASTChild(currentAST, returnAST);
-			if ( inputState.guessing==0 ) {
-					System.out.println("chuggle");
-			}
 			application_AST = (AST)currentAST.root;
-			break;
 		}
-		default:
-		{
+		else {
 			throw new NoViableAltException(LT(1), getFilename());
 		}
-		}
+		
 		returnAST = application_AST;
 	}
 	
@@ -698,6 +693,15 @@ inputState.guessing--;
 		AST args_AST = null;
 		
 		switch ( LA(1)) {
+		case LPAREN:
+		{
+			match(LPAREN);
+			expr();
+			astFactory.addASTChild(currentAST, returnAST);
+			match(RPAREN);
+			exprnr_AST = (AST)currentAST.root;
+			break;
+		}
 		case INT:
 		{
 			i = LT(1);
@@ -963,7 +967,7 @@ inputState.guessing--;
 		AST id_AST = null;
 		
 		boolean synPredMatched79 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m79 = mark();
 			synPredMatched79 = true;
 			inputState.guessing++;
@@ -986,7 +990,7 @@ inputState.guessing--;
 			astFactory.addASTChild(currentAST, returnAST);
 			exprfield_AST = (AST)currentAST.root;
 		}
-		else if ((_tokenSet_2.member(LA(1)))) {
+		else if ((_tokenSet_1.member(LA(1)))) {
 			exprnr();
 			exp_AST = (AST)returnAST;
 			AST tmp155_AST = null;
@@ -1020,7 +1024,7 @@ inputState.guessing--;
 		AST a1_AST = null;
 		
 		boolean synPredMatched82 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m82 = mark();
 			synPredMatched82 = true;
 			inputState.guessing++;
@@ -1058,7 +1062,7 @@ inputState.guessing--;
 				currentAST.advanceChildToEnd();
 			}
 		}
-		else if ((_tokenSet_2.member(LA(1)))) {
+		else if ((_tokenSet_1.member(LA(1)))) {
 			loneexprmethodcall();
 			astFactory.addASTChild(currentAST, returnAST);
 			exprmethodcall_AST = (AST)currentAST.root;
@@ -1189,7 +1193,7 @@ inputState.guessing--;
 		AST exp5_AST = null;
 		
 		boolean synPredMatched101 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m101 = mark();
 			synPredMatched101 = true;
 			inputState.guessing++;
@@ -1229,7 +1233,7 @@ inputState.guessing--;
 		}
 		else {
 			boolean synPredMatched103 = false;
-			if (((_tokenSet_2.member(LA(1))))) {
+			if (((_tokenSet_1.member(LA(1))))) {
 				int _m103 = mark();
 				synPredMatched103 = true;
 				inputState.guessing++;
@@ -1261,7 +1265,7 @@ inputState.guessing--;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			else if ((_tokenSet_2.member(LA(1)))) {
+			else if ((_tokenSet_1.member(LA(1)))) {
 				binexplvl7();
 				astFactory.addASTChild(currentAST, returnAST);
 				binexplvl8_AST = (AST)currentAST.root;
@@ -1288,7 +1292,7 @@ inputState.guessing--;
 		AST exp5_AST = null;
 		
 		boolean synPredMatched107 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m107 = mark();
 			synPredMatched107 = true;
 			inputState.guessing++;
@@ -1328,7 +1332,7 @@ inputState.guessing--;
 		}
 		else {
 			boolean synPredMatched109 = false;
-			if (((_tokenSet_2.member(LA(1))))) {
+			if (((_tokenSet_1.member(LA(1))))) {
 				int _m109 = mark();
 				synPredMatched109 = true;
 				inputState.guessing++;
@@ -1360,7 +1364,7 @@ inputState.guessing--;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			else if ((_tokenSet_2.member(LA(1)))) {
+			else if ((_tokenSet_1.member(LA(1)))) {
 				binexplvl6();
 				astFactory.addASTChild(currentAST, returnAST);
 				binexplvl7_AST = (AST)currentAST.root;
@@ -1401,7 +1405,7 @@ inputState.guessing--;
 		AST exp5_AST = null;
 		
 		boolean synPredMatched113 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m113 = mark();
 			synPredMatched113 = true;
 			inputState.guessing++;
@@ -1441,7 +1445,7 @@ inputState.guessing--;
 		}
 		else {
 			boolean synPredMatched115 = false;
-			if (((_tokenSet_2.member(LA(1))))) {
+			if (((_tokenSet_1.member(LA(1))))) {
 				int _m115 = mark();
 				synPredMatched115 = true;
 				inputState.guessing++;
@@ -1473,7 +1477,7 @@ inputState.guessing--;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			else if ((_tokenSet_2.member(LA(1)))) {
+			else if ((_tokenSet_1.member(LA(1)))) {
 				binexplvl5();
 				astFactory.addASTChild(currentAST, returnAST);
 				binexplvl6_AST = (AST)currentAST.root;
@@ -1533,7 +1537,7 @@ inputState.guessing--;
 		AST exp5_AST = null;
 		
 		boolean synPredMatched119 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m119 = mark();
 			synPredMatched119 = true;
 			inputState.guessing++;
@@ -1573,7 +1577,7 @@ inputState.guessing--;
 		}
 		else {
 			boolean synPredMatched121 = false;
-			if (((_tokenSet_2.member(LA(1))))) {
+			if (((_tokenSet_1.member(LA(1))))) {
 				int _m121 = mark();
 				synPredMatched121 = true;
 				inputState.guessing++;
@@ -1605,7 +1609,7 @@ inputState.guessing--;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			else if ((_tokenSet_2.member(LA(1)))) {
+			else if ((_tokenSet_1.member(LA(1)))) {
 				binexplvl4();
 				astFactory.addASTChild(currentAST, returnAST);
 				binexplvl5_AST = (AST)currentAST.root;
@@ -1683,7 +1687,7 @@ inputState.guessing--;
 		AST exp5_AST = null;
 		
 		boolean synPredMatched125 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m125 = mark();
 			synPredMatched125 = true;
 			inputState.guessing++;
@@ -1723,7 +1727,7 @@ inputState.guessing--;
 		}
 		else {
 			boolean synPredMatched127 = false;
-			if (((_tokenSet_2.member(LA(1))))) {
+			if (((_tokenSet_1.member(LA(1))))) {
 				int _m127 = mark();
 				synPredMatched127 = true;
 				inputState.guessing++;
@@ -1755,7 +1759,7 @@ inputState.guessing--;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			else if ((_tokenSet_2.member(LA(1)))) {
+			else if ((_tokenSet_1.member(LA(1)))) {
 				binexplvl3();
 				astFactory.addASTChild(currentAST, returnAST);
 				binexplvl4_AST = (AST)currentAST.root;
@@ -1796,7 +1800,7 @@ inputState.guessing--;
 		AST exp5_AST = null;
 		
 		boolean synPredMatched131 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m131 = mark();
 			synPredMatched131 = true;
 			inputState.guessing++;
@@ -1836,7 +1840,7 @@ inputState.guessing--;
 		}
 		else {
 			boolean synPredMatched133 = false;
-			if (((_tokenSet_2.member(LA(1))))) {
+			if (((_tokenSet_1.member(LA(1))))) {
 				int _m133 = mark();
 				synPredMatched133 = true;
 				inputState.guessing++;
@@ -1868,7 +1872,7 @@ inputState.guessing--;
 					currentAST.advanceChildToEnd();
 				}
 			}
-			else if ((_tokenSet_2.member(LA(1)))) {
+			else if ((_tokenSet_1.member(LA(1)))) {
 				exprnr2();
 				astFactory.addASTChild(currentAST, returnAST);
 				binexplvl3_AST = (AST)currentAST.root;
@@ -1920,7 +1924,7 @@ inputState.guessing--;
 		AST exprnr2_AST = null;
 		
 		boolean synPredMatched137 = false;
-		if (((_tokenSet_2.member(LA(1))))) {
+		if (((_tokenSet_1.member(LA(1))))) {
 			int _m137 = mark();
 			synPredMatched137 = true;
 			inputState.guessing++;
@@ -1941,7 +1945,7 @@ inputState.guessing--;
 			astFactory.addASTChild(currentAST, returnAST);
 			exprnr2_AST = (AST)currentAST.root;
 		}
-		else if ((_tokenSet_2.member(LA(1)))) {
+		else if ((_tokenSet_1.member(LA(1)))) {
 			exprnr();
 			astFactory.addASTChild(currentAST, returnAST);
 			exprnr2_AST = (AST)currentAST.root;
@@ -2044,10 +2048,5 @@ inputState.guessing--;
 		return data;
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
-	private static final long[] mk_tokenSet_2() {
-		long[] data = { 257700142080L, 0L};
-		return data;
-	}
-	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	
 	}
