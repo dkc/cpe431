@@ -56,7 +56,7 @@ public class Footle
 		}
             
       //Static Pass initializes env
-      /* Env env = new Env(0);
+      Env env = new Env(0);
       ArrayList<String> stringdecs = new ArrayList<String>();
       Hashtable<String, Integer> fieldTable = new Hashtable<String, Integer>();
       ArrayList<FuncIDandParams> funcids = new ArrayList<FuncIDandParams>();
@@ -72,7 +72,7 @@ public class Footle
       //convert to SPARC
       if(emitLLVM == false) {
     	  LLVMToSPARC.convertLLVM(funcdecs, compiledCode.getCode());
-      }*/
+      }
    }
    
    private static void writeLLVM(CodeAndReg compiledCode, Env env, ArrayList<LLVMLine> funcdecs,
