@@ -1,13 +1,17 @@
+
 function main(){
-function f(x){
-function g(y){
-return 13;
+function add(){
+return ((this).x + (this).y);
 
 }
-return g;
+function G(y){
+(this).x = 13;
+(this).y = y;
+(this).f = add;
 
 }
-return ((f(123))(1224));
+var lg = (new G(19));
+(lg).f();
 }
 
 print(main());

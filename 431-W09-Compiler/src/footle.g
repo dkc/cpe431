@@ -203,8 +203,9 @@ function
  * new _id_ ( _arglist_ )
  */
 expr
-	: (exprnr DOT) => exprfield
+	: (exprnr DOT identifier operator) => binexp
 	| (exprnr operator) => binexp
+	| (exprnr DOT) => exprfield
 	| exprnr
 ;
 
@@ -520,6 +521,8 @@ expr returns [CodeAndReg result = null]
 			} else if (funName.equals("instanceof")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			} else if (funName.equals("readLine")) {
+				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
+			} else if (funName.equals("stringAppend")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			}
 		}
