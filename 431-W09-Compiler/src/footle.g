@@ -159,7 +159,6 @@ stmtlist
 
 stmt
 	: 	(identifier ASSIGN) => stmtassign
-	|	(expr arglist) => application
 	| 	expr (SEMI! | (ASSIGN^ expr SEMI!))
 	| 	VAR^ identifier ASSIGN! expr SEMI!
 	| 	RETURN^ expr SEMI!
@@ -203,7 +202,10 @@ function
  * new _id_ ( _arglist_ )
  */
 expr
-	: (exprnr DOT identifier operator) => binexp
+	: (LPAREN! expr RPAREN! arglist) => application
+	| (exprnr arglist) => application
+	| LPAREN! expr RPAREN!
+	| (exprnr DOT identifier operator) => binexp
 	| (exprnr operator) => binexp
 	| (exprnr DOT) => exprfield
 	| exprnr
@@ -217,12 +219,12 @@ exprfield
 /* working on handling nested method calls */
 exprmethodcall
 	:!	(exprnr DOT identifier arglist DOT) => expm:loneexprmethodcall DOT id1:identifier a1:arglist
-		{ #exprmethodcall  = #([METHOD_CALL, "METHOD_CALL"], #expm, #id1, #([ARGUMENTS, "ARGUMENTS"], #a1)); }
+		{ #exprmethodcall  = #([METHOD_CALL, "METHOD_CALL"], #expm, #id1, #a1); }
 	|	loneexprmethodcall
 ;
 loneexprmethodcall
 	:!	exp:exprnr DOT id:identifier a:arglist
-		{ #loneexprmethodcall  = #([METHOD_CALL, "METHOD_CALL"], #exp, #id, #([ARGUMENTS, "ARGUMENTS"], #a)); }
+		{ #loneexprmethodcall  = #([METHOD_CALL, "METHOD_CALL"], #exp, #id, #a); }
 ;
 
 /* a list of non-LL recursive expressions separated from expr above to keep it from freaking out--thanks, LL parser */
@@ -235,24 +237,24 @@ exprnr
 		{ #exprnr = #([CONST_BOOLEAN, "CONST_BOOLEAN"], b1); }
 	|!	b2:FALSE
 		{ #exprnr = #([CONST_BOOLEAN, "CONST_BOOLEAN"], b2); }
-	|	(identifier arglist) => application
 	|	id:identifier
 	|!	s:STRING
 		{ #exprnr = #([CONST_STRING, "CONST_STRING"], s); }
-	|	LPAREN! expr RPAREN! (arglist)?
 	|	NOT^ expr
 	|!	n:NEW id2:identifier args:arglist
-		{ #exprnr = #(n, id2, #([ARGUMENTS, "ARGUMENTS"], args)); }
+		{ #exprnr = #(n, id2, args); }
 ;
 /* any function application falls under this rule, including built-ins */
 application
-	:!	(identifier arglist arglist) => app:applicationnr args2:arglist
-		{ #application = #([INVOKE, "INVOKE"], #app, #([ARGUMENTS, "ARGUMENTS"], #args2)); }
+	:!	(LPAREN applicationnr RPAREN arglist ) => LPAREN app:applicationnr RPAREN args2:arglist
+		{ #application = #([INVOKE, "INVOKE"], #app, #args2); 
+			System.out.println("wuggle"); }
 	|	applicationnr
+		{	System.out.println("chuggle");}
 ;
 applicationnr
-	:! 	id:identifier args:arglist
-		{ #applicationnr = #([INVOKE, "INVOKE"], #id, #([ARGUMENTS, "ARGUMENTS"], #args)); }
+	:! 	id:exprnr args:arglist
+		{ #applicationnr = #([INVOKE, "INVOKE"], #id, #args); }
 ;
 
 /* list of parameters in a function definition */
@@ -261,6 +263,10 @@ paramlist
 ;
 /* list of arguments in an application */
 arglist
+	:	args:subarglist
+		{	#arglist =  #([ARGUMENTS, "ARGUMENTS"], #args); }
+;
+subarglist
 	:	LPAREN! (expr (COMMA! expr)*)? RPAREN!
 ;
 
@@ -488,8 +494,8 @@ expr returns [CodeAndReg result = null]
 		}
 	|	#(METHOD_CALL expression=expr #(CONST_IDENTIFIER methodId:ID) argumentList=args)
 		{	result = new MethodCall(new FieldLookup(expression, methodId.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
-		} 
-	|	#(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
+		}
+	|	(#(INVOKE #(CONST_IDENTIFIER ID) args)) => #(INVOKE #(CONST_IDENTIFIER functionName:ID) argumentList=args)
 		{	String funName = functionName.toString();
 			result = new Application(new VarRef(funName, nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);
 			if (funName.equals("stringLength")) {
@@ -525,6 +531,9 @@ expr returns [CodeAndReg result = null]
 			} else if (funName.equals("stringAppend")) {
 				result = new PrimitiveOperation(funName, argumentList, nextUniqueRegisterId++);
 			}
+		}
+	|	#(INVOKE expression=expr argumentList=args)
+		{	result = new Application(expression, argumentList, nextUniqueRegisterId++);
 		}
 	|	#(NEW #(CONST_IDENTIFIER objectName:ID) argumentList=args)
 		{	result = new NewObj(new VarRef(objectName.toString(), nextUniqueRegisterId++), argumentList, nextUniqueRegisterId++);

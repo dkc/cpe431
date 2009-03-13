@@ -1,13 +1,13 @@
 function main(){
 function f(x){
-function g(y){
+function g(y, z){
 return 13;
 
 }
 return g;
 
 }
-return ((f(123))(1224));
+return (    ( f(123) ) ( 1224, 123 )    );
 }
 
 print(main());
