@@ -148,7 +148,7 @@ public class Footle
 	    		  output.write("funccall" + i + ":\n");
 	    		  
 	    		  //check #args
-	    		  output.write("call void args_check( i32 %len, i32 " + fandp.getNumparams() + " )\n");
+	    		  output.write("call void @args_check( i32 %len, i32 " + fandp.getNumparams() + " )\n");
 	    		  
 	    		  //build eframe from args, recursive helper fun? probably
 	    		  output.write("%funcenv" + i + " = call %eframe* @createArgsList ( i32 %len, i32* %args, %eframe* %envframe, i32 0)\n");
