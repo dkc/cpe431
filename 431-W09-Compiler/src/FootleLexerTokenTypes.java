@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060906): "src/footle.g" -> "FootleParser.java"$
+// $ANTLR 2.7.7 (20060906): "footle.g" -> "FootleParser.java"$
 
 
 public interface FootleLexerTokenTypes {
