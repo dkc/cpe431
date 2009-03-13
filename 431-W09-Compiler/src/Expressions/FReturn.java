@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import Environment.Env;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class FReturn extends AbstractCodeAndReg {
 	CodeAndReg target;
@@ -32,9 +33,8 @@ public class FReturn extends AbstractCodeAndReg {
 
 
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
-		// TODO Auto-generated method stub
-		super.staticPass(env, funcids, stringdecs);
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
+		target.staticPass(env, funcids, stringdecs);
 	}
 
 }

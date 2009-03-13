@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import Environment.Env;
-import Environment.RegAndIndex;
 import Expressions.AbstractCodeAndReg;
 import Expressions.CodeAndReg;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class FString extends AbstractCodeAndReg {
 	public String content;
@@ -66,7 +66,6 @@ public class FString extends AbstractCodeAndReg {
 		currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.slotsptr + "\n");
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.slotsptr);
-		//TODO fix later
 		this.code.add(currentLine);
 		
 		//store string to obj
@@ -114,7 +113,7 @@ public class FString extends AbstractCodeAndReg {
 	}
 
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
 		stringdecs.add("@strconst" + this.regnum + " = internal constant [" + (this.content.length() + 1) + 
 				" x i8] c\"" + this.content + "\0\"\n");
 	}

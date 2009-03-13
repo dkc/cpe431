@@ -2,10 +2,10 @@ package Expressions;
 
 import java.util.ArrayList;
 import Environment.Env;
-import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
-import Values.*;
 import java.util.Hashtable;
+import Environment.FuncIDandParams;
+
 public class MethodCall extends AbstractCodeAndReg {
 	CodeAndReg funclookup;
 	ArrayList<CodeAndReg> args;
@@ -179,7 +179,7 @@ public class MethodCall extends AbstractCodeAndReg {
 	}
 	
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
 		this.funclookup.staticPass(env, funcids, stringdecs);
 		//call staticPass on args?
 		for(CodeAndReg arg: args){

@@ -5,7 +5,7 @@ import java.util.Hashtable;
 
 import Environment.Env;
 import LLVMObjects.LLVMLine;
-import Values.*;
+import Environment.FuncIDandParams;
 
 public class WhileExp extends AbstractCodeAndReg{
 	CodeAndReg test;
@@ -25,6 +25,7 @@ public class WhileExp extends AbstractCodeAndReg{
 		this.envlinkptr += regnum;
 	}
 	
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable) {
 		ArrayList<LLVMLine> whilefunc = new ArrayList<LLVMLine>();
 		LLVMLine currentLine;
@@ -140,7 +141,7 @@ public class WhileExp extends AbstractCodeAndReg{
 
 
 	@Override
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs) {
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
 		// TODO Auto-generated method stub
 		this.scope = new Env(this.regnum);
 		Env.addScope(this.scope, env);

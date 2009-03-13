@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import Environment.Env;
 import Environment.RegAndIndex;
 import LLVMObjects.LLVMLine;
+import Environment.FuncIDandParams;
 
 public class Bind extends AbstractCodeAndReg{
 	public String name;
@@ -20,11 +21,20 @@ public class Bind extends AbstractCodeAndReg{
 		this.ptrreg += regnum;
 	}
 	
-	public void staticPass(Env env, ArrayList<Integer> funcids, ArrayList<String> stringdecs){
+	@Override
+	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
+		//reserved name use check
+			for(int i = 0; i < res_len; i++){
+				if(name.equals(reserved_names[i])){
+					System.err.println("Static Pass Error Variable Definition: illegal use of primitive name");
+					System.exit(-1);
+				}
+			}
 		env.add(name);
 		this.val.staticPass(env, funcids, stringdecs);
 	}
 	
+	@Override
 	public CodeAndReg compile(Env env, ArrayList<LLVMLine> funcdecs, Hashtable<String, Integer> fieldTable){
 		this.code.addAll(val.compile(env, funcdecs, fieldTable).getCode());
 		

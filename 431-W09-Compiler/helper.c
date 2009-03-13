@@ -4,6 +4,9 @@
 
 extern unsigned int llvm_fun();
 
+void type_check(unsigned int type, unsigned int test);
+void obj_type_check(unsigned int type, unsigned int test);
+void neg_float_check(unsigned int type);
 int main(){
 	llvm_fun();
 	return 0;
@@ -99,6 +102,116 @@ int string_len(char* str){
 	return strlen(str);
 }
 
+int string_eq(int str1, int str2){
+	//pointer check
+	type_check(str1, 1);
+	type_check(str2, 1);
+	//string check
+	int* oid1 = (int*) str1;
+	obj_type_check(*oid1, 2);
+	int* oid2 = (int*) str2;
+	obj_type_check(*oid2, 2);
+	//get string pointers
+	char* stringptr1;
+	stringptr1 = (char*) oid1[2];
+	char* stringptr2;
+	stringptr2 = (char*) oid2[2];
+	//compare
+	if(strcmp(stringptr1,stringptr2) == 0){
+		return 7;
+	}
+	return 3;
+}
+
+int string_comp(int str1, int str2){
+	//pointer check
+	type_check(str1, 1);
+	type_check(str2, 1);
+	//string check
+	int* oid1 = (int*) str1;
+	obj_type_check(*oid1, 2);
+	int* oid2 = (int*) str2;
+	obj_type_check(*oid2, 2);
+	//get string pointers
+	char* stringptr1;
+	stringptr1 = (char*) oid1[2];
+	char* stringptr2;
+	stringptr2 = (char*) oid2[2];
+	//compare
+	if(strcmp(stringptr1, stringptr2) < 0){
+		return 7;
+	}
+	return 3;
+}
+
+char* string_sub(int str1, int start,int end){
+	//pointer check
+	type_check(str1, 1);
+	//int checks
+	type_check(start,0);
+	type_cheeck(end,0);
+	//string check
+	int* oid1 = (int*) str1;
+	obj_type_check(*oid1, 2);
+	//get string pointer
+	char* stringptr1;
+	stringptr1 = (char*) oid1[2];
+	//get ints
+	start = start >> 2;
+	end = end >>2;
+	//copy str
+	int len = end - start;
+	stringptr1 += start;
+	char* newstr = malloc((len + 1) * sizeof(char));
+	strncpy(newstr, stringptr1, len);
+	newstr[len] = '\0';
+	return newstr;
+}
+
+int intstance_of(int obj, int func){
+	//pointer check
+	type_check(obj, 1);
+	type_check(func, 1);
+	//func check
+	int* oid1 = (int*) func;
+	obj_type_check(*oid1, 1);
+	//get slots on obj
+	int* oid2 = (int*) obj;
+	neg_float_check(*oid2);
+	oid2++;
+	int* slotid2 = (int*) *oid2;
+	int* fid2 = (int*) slotid2;
+	fid2++;
+	//get pointer to func
+
+	if(*fid2 == func){
+		return 7;
+	}
+	return 3;
+}
+
+int int_to_float(unsigned int ieee_float){
+	//unsigned int signtst = ieee_float & 2147483648;//1 and 31 zeroes
+	int signtst = 0;
+	int sign = 1;
+	if(!signtst){
+		sign = -1;
+	}
+	int exp = ieee_float & 2139095040;//011111111000...
+	int mant = ieee_float & 8388607;
+	return ieee_float;
+}
+
+char* read_line(){
+	char buffer[1000];
+	fgets(buffer,1000,stdin);
+	int len = strlen(buffer);
+	len++;//for null byte
+	char* newstr = malloc(len * sizeof(char));
+	strcpy(newstr,buffer);
+	return newstr;
+}
+
 void footle_print(int val){
 	int tag = val & 3;
 	val = val >> 2;
@@ -143,6 +256,11 @@ void footle_print(int val){
 		fprintf(stderr,"Error: non footle value passed to print\n");
 		exit(-1);
 	}
+}
+
+void print_fieldlookup_err(){
+	fprintf(stderr,"Runtime Error FieldLookup: attempt to access non-existant field\n");
+	exit(-1);
 }
 
 void type_check(unsigned int type, unsigned int test){
@@ -249,6 +367,13 @@ void neg_float_check(unsigned int type){
 	unsigned int shfttype = type & 3;
 	if(shfttype == 3){
 		fprintf(stderr,"Runtime Error Type: Field lookup/mutation may not be performed on floats\n");
+		exit(-1);
+	}
+}
+
+void args_check(int args, int params){
+	if(args != params){
+		fprintf(stderr,"Runtime Error Function Call: # args != # params defined\n");
 		exit(-1);
 	}
 }
