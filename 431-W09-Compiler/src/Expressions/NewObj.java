@@ -184,7 +184,7 @@ public class NewObj extends AbstractCodeAndReg{
 		
 		//send compiled args and closure id # to dispatch
 		currentLine = new LLVMLine("call i32 @dispatch_fun( %cobj* " + 
-				this.cobjreg + ", i32 " + (this.args.size() + 1) + ", i32* " + this.argsreg + ", i32 " + this.reg + " ) nounwind\n");
+				this.cobjreg + ", i32 " + this.args.size() + ", i32* " + this.argsreg + ", i32 " + this.reg + " ) nounwind\n");
 		this.code.add(currentLine);
 		
 		return this;

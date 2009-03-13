@@ -25,7 +25,7 @@ public class PrimitiveOperation extends AbstractCodeAndReg {
 		super(regnum);
 		this.op = operation;
 		this.args = arguments;
-		
+		///System.out.println("op: " + this.op);
 		this.objreg += regnum;
 		this.idptr += regnum;
 		this.slotsptr += regnum;
@@ -225,6 +225,83 @@ public class PrimitiveOperation extends AbstractCodeAndReg {
 			currentLine = new LLVMLine(this.reg + " = call i32 @instance_of( i32 " 
 					+ this.args.get(0).getReg() +  ", i32 " + this.args.get(1).getReg() + " )\n");
 			this.code.add(currentLine);
+		}else if(this.op.equals("stringAppend")){
+			if(args.size() != 2){
+				System.err.println("Runtime Error: wrong number of args to stingAppend");
+				System.exit(-1);
+			}
+			this.code.addAll(this.args.get(0).compile(env, funcdecs, fieldTable).getCode());
+			this.code.addAll(this.args.get(1).compile(env, funcdecs, fieldTable).getCode());
+
+			currentLine = new LLVMLine(this.strptr + " = call i8* @string_append( i32 " 
+					+ this.args.get(0).getReg() +  ", i32 " + this.args.get(1).getReg() + " )\n");
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine(this.objreg + " = malloc %sobj\n");
+			currentLine.setOperation("malloc");
+			currentLine.setRegisterDefined(this.objreg);
+			this.code.add(currentLine);
+			
+			//store id
+			currentLine = new LLVMLine(this.idptr + " = getelementptr %sobj* " + this.objreg + 
+					", i32 0, i32 0\n");
+			currentLine.setOperation("getelementptr");
+			currentLine.setRegisterDefined(this.idptr);
+			currentLine.addRegisterUsed(this.objreg);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine("store i32 2, i32* " + this.idptr + "\n");//tag 2 for string
+			currentLine.setOperation("store");
+			currentLine.addRegisterUsed(this.idptr);
+			this.code.add(currentLine);
+			
+			//store empty slots
+			currentLine = new LLVMLine(this.slotsptr + " = getelementptr %sobj* " + this.objreg + 
+					", i32 0, i32 1\n");
+			currentLine.setOperation("getelementptr");
+			currentLine.setRegisterDefined(this.slotsptr);
+			currentLine.addRegisterUsed(this.objreg);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine("store %slots* @empty_slots, %slots** " + this.slotsptr + "\n");
+			currentLine.setOperation("store");
+			currentLine.addRegisterUsed(this.slotsptr);
+			this.code.add(currentLine);
+			
+			//store string to obj
+			currentLine = new LLVMLine(this.stringptr + " = getelementptr %sobj* " + this.objreg + 
+					", i32 0, i32 2\n");
+			currentLine.setOperation("getelementptr");
+			currentLine.setRegisterDefined(this.stringptr);
+			currentLine.addRegisterUsed(this.objreg);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine("store i8* " + this.strptr + ", i8** " + this.stringptr + "\n");
+			currentLine.setOperation("store");
+			currentLine.addRegisterUsed(this.strptr);
+			currentLine.addRegisterUsed(this.stringptr);
+			this.code.add(currentLine);
+			
+			//store sobj to env
+			currentLine = new LLVMLine(this.castreg + " = ptrtoint %sobj* " + this.objreg + " to i32\n");
+			currentLine.setOperation("ptrtoint");
+			currentLine.setRegisterDefined(this.castreg);
+			currentLine.addRegisterUsed(this.objreg);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine(this.shftreg + " = shl i32 " + this.castreg + ", 2\n");
+			currentLine.setOperation("shl");
+			currentLine.setRegisterDefined(this.shftreg);
+			currentLine.addRegisterUsed(this.castreg);
+			currentLine.addConstantUsed(2);
+			this.code.add(currentLine);
+			
+			currentLine = new LLVMLine(this.reg + " = add i32 1, " + this.shftreg + "\n");
+			currentLine.setOperation("add");
+			currentLine.setRegisterDefined(this.reg);
+			currentLine.addRegisterUsed(this.shftreg);
+			currentLine.addConstantUsed(1);
+			this.code.add(currentLine);
 		}
 		return this;
 	}
@@ -232,8 +309,9 @@ public class PrimitiveOperation extends AbstractCodeAndReg {
 	@Override
 	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids,
 			ArrayList<String> stringdecs) {
-		// TODO Auto-generated method stub
-		super.staticPass(env, funcids, stringdecs);
+		for(CodeAndReg arg: args){
+			arg.staticPass(env, funcids, stringdecs);
+		}
 	}
 
 	

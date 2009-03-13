@@ -59,7 +59,7 @@ public class VarRef extends AbstractCodeAndReg{
 	@Override
 	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
 		//reserved name use check
-			for(int i = 0; i < res_len; i++){
+			for(int i = 0; i < (res_len - 1); i++){
 				if(id.equals(reserved_names[i])){
 					System.err.println("Static Pass Error Variable Reference: illegal use of primitive name");
 					System.exit(-1);

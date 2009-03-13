@@ -28,8 +28,8 @@ public abstract class AbstractCodeAndReg implements CodeAndReg{
 										"stringEqual?",
 										"stringLessThan?",
 										"readLine",
-										"this",
-										"instanceof"};
+										"instanceof",
+										"this"};
 	
 	
 	public AbstractCodeAndReg(int regnum){

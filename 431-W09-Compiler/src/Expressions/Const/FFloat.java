@@ -59,7 +59,7 @@ public class FFloat extends AbstractCodeAndReg{
 		currentLine.addRegisterUsed(this.objreg);
 		this.code.add(currentLine);
 		
-		currentLine = new LLVMLine("store i32 " + Float.floatToRawIntBits(this.number) + ", i32* " + this.floatptr + "\n");
+		currentLine = new LLVMLine("store i32 " + Float.floatToIntBits(this.number) + ", i32* " + this.floatptr + "\n");
 		currentLine.setOperation("store");
 		currentLine.addRegisterUsed(this.floatptr);
 		this.code.add(currentLine);

@@ -1,5 +1,6 @@
 function main(){
-return (!(true));
+return (stringLength("abc"));
 }
 
 print(main());
+

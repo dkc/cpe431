@@ -98,8 +98,18 @@ int test(int argc,char** argv){
 	return 0;
 }
 
-int string_len(char* str){
-	return strlen(str);
+int string_len(int str){
+	//pointer check
+	type_check(str, 1);
+	//string check
+	int stradd1 = str >> 2;
+	int* oid1 = (int*) stradd1;
+	obj_type_check(*oid1, 2);
+	//get string pointers
+	char* stringptr1;
+	stringptr1 = (char*) oid1[2];
+	//strlen
+	return strlen(stringptr1);
 }
 
 int string_eq(int str1, int str2){
@@ -107,9 +117,11 @@ int string_eq(int str1, int str2){
 	type_check(str1, 1);
 	type_check(str2, 1);
 	//string check
-	int* oid1 = (int*) str1;
+	int stradd1 = str1 >> 2;
+	int* oid1 = (int*) stradd1;
 	obj_type_check(*oid1, 2);
-	int* oid2 = (int*) str2;
+	int stradd2 = str2 >> 2;
+	int* oid2 = (int*) stradd2;
 	obj_type_check(*oid2, 2);
 	//get string pointers
 	char* stringptr1;
@@ -123,14 +135,44 @@ int string_eq(int str1, int str2){
 	return 3;
 }
 
+char* string_append(int str1, int str2){
+	//pointer check
+	type_check(str1, 1);
+	type_check(str2, 1);
+	//string check
+	int stradd1 = str1 >> 2;
+	int* oid1 = (int*) stradd1;
+	obj_type_check(*oid1, 2);
+	int stradd2 = str2 >> 2;
+	int* oid2 = (int*) stradd2;
+	obj_type_check(*oid2, 2);
+	//get string pointers
+	char* stringptr1;
+	stringptr1 = (char*) oid1[2];
+	char* stringptr2;
+	stringptr2 = (char*) oid2[2];
+	//append
+	int len1 = strlen(stringptr1);
+	int len2 = strlen(stringptr2);
+	char* newstr = malloc(sizeof(char)*(len1 + len2 + 1));
+	char* newptr = newstr;
+	strncpy(newptr,stringptr1,len1);
+	newptr += len1;
+	strcpy(newptr,stringptr2);
+	//newptr[len1+len2] = '\0';
+	return newstr;
+}
+
 int string_comp(int str1, int str2){
 	//pointer check
 	type_check(str1, 1);
 	type_check(str2, 1);
 	//string check
-	int* oid1 = (int*) str1;
+	int stradd1 = str1 >> 2;
+	int* oid1 = (int*) stradd1;
 	obj_type_check(*oid1, 2);
-	int* oid2 = (int*) str2;
+	int stradd2 = str2 >> 2;
+	int* oid2 = (int*) stradd2;
 	obj_type_check(*oid2, 2);
 	//get string pointers
 	char* stringptr1;
@@ -149,9 +191,10 @@ char* string_sub(int str1, int start,int end){
 	type_check(str1, 1);
 	//int checks
 	type_check(start,0);
-	type_cheeck(end,0);
+	type_check(end,0);
 	//string check
-	int* oid1 = (int*) str1;
+	int straddr = str1 >> 2;
+	int* oid1 = (int*) straddr;
 	obj_type_check(*oid1, 2);
 	//get string pointer
 	char* stringptr1;
@@ -168,15 +211,17 @@ char* string_sub(int str1, int start,int end){
 	return newstr;
 }
 
-int intstance_of(int obj, int func){
+int instance_of(int obj, int func){
 	//pointer check
 	type_check(obj, 1);
 	type_check(func, 1);
 	//func check
-	int* oid1 = (int*) func;
+	int funcaddr = func >> 2;
+	int* oid1 = (int*) funcaddr;
 	obj_type_check(*oid1, 1);
 	//get slots on obj
-	int* oid2 = (int*) obj;
+	int objaddr = obj >> 2;
+	int* oid2 = (int*) objaddr;
 	neg_float_check(*oid2);
 	oid2++;
 	int* slotid2 = (int*) *oid2;
@@ -223,6 +268,8 @@ void footle_print(int val){
 		int* oid = (int*) val;
 		int otag = *oid & 3;
 		char* stringptr;
+		float floatval;
+		float* floatptr;
 		switch(otag){
 		case 0:
 			printf("#plain object constructor fid: \n");
@@ -235,7 +282,9 @@ void footle_print(int val){
 			printf("#string object value: %s\n",stringptr);
 			break;
 		case 3:
-			printf("#float\n");
+			floatptr = (float*) oid;
+			floatval = (float) floatptr[1];
+			printf("#float object value: %f\n",floatval);
 			break;
 		default:
 			break;
@@ -292,7 +341,7 @@ void type_check(unsigned int type, unsigned int test){
 	}
 }
 
-int instance_int_check(unsigned int type){
+int instance_int_check(int type){
 	int shfttype = type & 3;
 	if(shfttype != 0){
 		return 3;//3 for false
@@ -300,14 +349,14 @@ int instance_int_check(unsigned int type){
 	return 7;//7 for true in footle
 }
 
-int instance_bool_check(unsigned int type){
+int instance_bool_check(int type){
 	if((type == 3) || (type == 7)){
 		return 7;
 	}
 	return 3;
 }
 
-int instance_void_check(unsigned int type){
+int instance_void_check(int type){
 	if(type == 11){
 		return 7;
 	}
@@ -317,7 +366,8 @@ int instance_void_check(unsigned int type){
 int instance_obj_check(unsigned int type, unsigned int test){
 	unsigned int ftype = type & 3;
 	if(ftype == 1){
-		int* oid = (int*) type;
+		int typeaddr = type >> 2;
+		int* oid = (int*) typeaddr;
 		int otag = *oid & 3;
 		if(otag == test){
 			return 7;

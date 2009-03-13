@@ -27,7 +27,14 @@ public class FReturn extends AbstractCodeAndReg {
 		currentLine.setOperation("ret");
 		currentLine.addRegisterUsed(target.getReg());
 		this.code.add(currentLine);
-			
+		
+		currentLine = new LLVMLine(this.reg + " = add i32 0, 11\n");
+		currentLine.setOperation("add");
+		currentLine.setRegisterDefined(this.reg);
+		currentLine.addConstantUsed(0);
+		currentLine.addConstantUsed(11);
+		this.code.add(currentLine);
+		//throw new ReturnException();	
 		return this;
 	}
 

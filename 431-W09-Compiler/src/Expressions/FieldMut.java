@@ -203,7 +203,7 @@ public class FieldMut extends AbstractCodeAndReg {
 			
 		}else{//store to field
 			
-			currentLine = new LLVMLine(this.lookupreg + " = call i32* @field_lookup( i32 " + fid + ", %slots* " + this.slotsreg + "\n");
+			currentLine = new LLVMLine(this.lookupreg + " = call i32* @field_lookup( i32 " + fid + ", %slots* " + this.slotsreg + " )\n");
 			currentLine.setOperation("call");
 			currentLine.setLabel("lookup_field");
 			currentLine.setRegisterDefined(this.lookupreg);

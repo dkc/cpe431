@@ -63,6 +63,7 @@ public class FuncDec extends AbstractCodeAndReg{
 	@Override
 	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs){
 		//check for multiple params
+		
 		for(String id:this.params){
 			int count = 0;
 			for(String test:this.params){
@@ -187,7 +188,7 @@ public class FuncDec extends AbstractCodeAndReg{
 		int savedindex = funcdecs.size();
 		// can't handle func dec in func body, save index, use insert? done?
 		ArrayList<LLVMLine> body = this.body.compile(this.fscope, funcdecs, fieldTable).getCode();
-		currentLine = new LLVMLine("ret i32 10\n");
+		currentLine = new LLVMLine("ret i32 11\n");
 		body.add(currentLine);
 		body.add(new LLVMLine("}\n"));
 		funcdecs.addAll(savedindex,body);

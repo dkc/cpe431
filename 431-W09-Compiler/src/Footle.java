@@ -148,7 +148,7 @@ public class Footle
 	    		  output.write("funccall" + i + ":\n");
 	    		  
 	    		  //check #args
-	    		  output.write("call void args_check( i32 %len, i32 " + fandp.getNumparams() + " )\n");
+	    		  output.write("call void @args_check( i32 %len, i32 " + fandp.getNumparams() + " )\n");
 	    		  
 	    		  //build eframe from args, recursive helper fun? probably
 	    		  output.write("%funcenv" + i + " = call %eframe* @createArgsList ( i32 %len, i32* %args, %eframe* %envframe, i32 0)\n");
@@ -194,7 +194,7 @@ public class Footle
 	    	  output.write("declare void @obj_type_check(i32, i32)\n");
 	    	  output.write("declare void @neg_float_check(i32)\n");
 	    	  output.write("declare void @footle_print(i32)\n");
-	    	  output.write("declare i32 @string_len(i8*)\n");
+	    	  output.write("declare i32 @string_len(i32)\n");
 	    	  output.write("declare i32 @instance_int_check(i32)\n");
 	    	  output.write("declare i32 @instance_bool_check(i32)\n");
 	    	  output.write("declare i32 @instance_void_check(i32)\n");
@@ -203,6 +203,7 @@ public class Footle
 	    	  output.write("declare i32 @string_eq(i32,i32)\n");
 	    	  output.write("declare i32 @string_comp(i32,i32)\n");
 	    	  output.write("declare i8* @string_sub(i32,i32,i32)\n");
+	    	  output.write("declare i8* @string_append(i32,i32)\n");
 	    	  output.write("declare i8* @read_line()\n");
 	    	  
 	    	  //write funcdecs

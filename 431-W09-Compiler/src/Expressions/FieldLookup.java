@@ -40,7 +40,7 @@ public class FieldLookup extends AbstractCodeAndReg {
 	
 	@Override
 	public void staticPass(Env env, ArrayList<FuncIDandParams> funcids, ArrayList<String> stringdecs) {
-		//reserved name use check\
+		//reserved name use check
 			for(int i = 0; i < res_len; i++){
 				if(this.name.equals(reserved_names[i])){
 					System.err.println("Static Pass Error Field Lookup: illegal use of primitive name");
@@ -114,7 +114,12 @@ public class FieldLookup extends AbstractCodeAndReg {
 			this.code.add(currentLine);
 			
 			//lookup field
-			int fid = fieldTable.get(name);
+			System.out.println(name);
+			Integer fid = fieldTable.get(name);
+			if(fid.equals(null)){
+				System.err.println("Runtime Error Field Lookup: field does not exist\n");
+				System.exit(-1);
+			}else{
 			currentLine = new LLVMLine( this.lookupreg + " = call i32* @field_lookup( i32 " + fid + 
 					", %slots* " + this.slotsreg + " )\n");
 			currentLine.setOperation("call");
@@ -128,7 +133,7 @@ public class FieldLookup extends AbstractCodeAndReg {
 			currentLine.setRegisterDefined(this.reg);
 			currentLine.addRegisterUsed(this.lookupreg);
 			this.code.add(currentLine);
-
+			}
 			return this;
 	}
 
