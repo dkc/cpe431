@@ -1,6 +1,13 @@
-var c = 0;
-while(c < 100)
-{
-	(c+(2-3));
+function main(){
+function f(x){
+function g(y){
+return 13;
+
 }
-c;
+return g;
+
+}
+return ((f(123))(1224));
+}
+
+print(main());

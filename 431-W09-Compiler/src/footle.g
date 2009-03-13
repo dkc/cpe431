@@ -159,6 +159,7 @@ stmtlist
 
 stmt
 	: 	(identifier ASSIGN) => stmtassign
+	|	(expr arglist) => application
 	| 	expr (SEMI! | (ASSIGN^ expr SEMI!))
 	| 	VAR^ identifier ASSIGN! expr SEMI!
 	| 	RETURN^ expr SEMI!
@@ -244,9 +245,15 @@ exprnr
 ;
 /* any function application falls under this rule, including built-ins */
 application
-	:! 	id:identifier args:arglist
-		{ #application = #([INVOKE, "INVOKE"], #id, #([ARGUMENTS, "ARGUMENTS"], #args)); }
+	:!	(identifier arglist arglist) => app:applicationnr args2:arglist
+		{ #application = #([INVOKE, "INVOKE"], #app, #([ARGUMENTS, "ARGUMENTS"], #args2)); }
+	|	applicationnr
 ;
+applicationnr
+	:! 	id:identifier args:arglist
+		{ #applicationnr = #([INVOKE, "INVOKE"], #id, #([ARGUMENTS, "ARGUMENTS"], #args)); }
+;
+
 /* list of parameters in a function definition */
 paramlist
 	: 	LPAREN! (identifier (COMMA! identifier)*)? RPAREN!
@@ -269,7 +276,7 @@ binexplvl8
 	|	binexplvl7
 ;
 l8op
-	:	op:EQ
+	:	EQ
 ;
 
 binexplvl7
@@ -317,15 +324,19 @@ l4op
 ;
 
 binexplvl3
-	:!	(exprnr l3op exprnr l3op ) => exp1:exprnr op1:l3op exp2:exprnr op2:l3op exp3:binexplvl3
+	:!	(exprnr2 l3op exprnr2 l3op ) => exp1:exprnr2 op1:l3op exp2:exprnr2 op2:l3op exp3:binexplvl3
 		{	#binexplvl3 = #([BINOP, "BINOP"], op2, #([BINOP, "BINOP"], op1, exp1, exp2), exp3); }
-	|!	(exprnr l3op) => exp4:exprnr op3:l3op exp5:binexplvl3
+	|!	(exprnr2 l3op) => exp4:exprnr2 op3:l3op exp5:binexplvl3
 		{	#binexplvl3 = #([BINOP, "BINOP"], op3, exp4, exp5); }
-	|	(exprnr DOT) => exprfield
-	|	exprnr
+	|	exprnr2
 ;
 l3op
 	:	TIMES
+;
+
+exprnr2
+	:	(exprnr DOT) => exprfield
+	|	exprnr
 ;
 
 operator
