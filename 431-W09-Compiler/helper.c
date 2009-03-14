@@ -109,7 +109,8 @@ int string_len(int str){
 	char* stringptr1;
 	stringptr1 = (char*) oid1[2];
 	//strlen
-	return strlen(stringptr1);
+	int retVal = strlen(stringptr1);
+	return retVal << 2;
 }
 
 int string_eq(int str1, int str2){
@@ -235,6 +236,93 @@ int instance_of(int obj, int func){
 	return 3;
 }
 
+int bin_op(int left, int right, int op){
+	int rettype = 0;//0 for int, 1 for float
+	int lfloat = 0;
+	int rfloat = 0;
+	int tag1 = left & 3;
+	int tag2 = right & 3;
+	if((tag1 != 0)){//not a int
+		if(tag1 == 1){//its a pointer
+			int* otag = (int*) (left >> 2);
+			obj_type_check(*otag, 3);
+			rettype = 1;
+			lfloat = 1;
+		}else{
+			fprintf(stderr,"Runtime Error Type: Expected Int or Float, but got Bool/Void\n");
+			exit(-1);
+		}
+	}
+	if((tag2 != 0)){//not a int
+		if(tag2 == 1){//its a pointer
+			int* otag = (int*) (right >> 2);
+			obj_type_check(*otag, 3);
+			rettype = 1;
+			rfloat = 1;
+		}else{
+			fprintf(stderr,"Runtime Error Type: Expected Int or Float, but got Bool/Void\n");
+			exit(-1);
+		}
+	}
+	if(rettype == 0){//both ints
+		int l = left >> 2;
+		int r = right >>2;
+		switch(op){
+		case 0:
+			return ((l + r) << 2);
+			break;
+		case 1:
+			return ((l - r) << 2);
+			break;
+		case 2:
+			return ((l * r) << 2);
+			break;
+		case 3:
+			return ((l / r) << 2);
+			break;
+		}
+	}else{
+		float l;
+		float r;
+		float result;
+		if(lfloat == 1){//get float val
+			int* oid = (int*) (left >> 2);
+			float* floatptr = (float*) oid;
+			l = (float) floatptr[1];
+		}else{
+			l = left >> 2;
+		}
+		if(rfloat == 1){//get float val
+			int* oid = (int*) (right >> 2);
+			float* floatptr = (float*) oid;
+			r = (float) floatptr[1];
+		}else{
+			r = right >> 2;
+		}
+		switch(op){
+		case 0:
+			result = (l + r);
+			break;
+		case 1:
+			result = (l - r);
+			break;
+		case 2:
+			result = (l * r);
+			break;
+		case 3:
+			result = (l / r);
+			break;
+		}
+		int* floatobj = malloc(sizeof(int)*2);
+		int* fptr = floatobj;
+		*fptr = 3;
+		fptr++;
+		int* floatptr = (int*) &result;
+		*fptr = *floatptr;
+		return ((((int) floatobj) << 2) + 1);
+	}
+}
+
 int int_to_float(unsigned int ieee_float){
 	//unsigned int signtst = ieee_float & 2147483648;//1 and 31 zeroes
 	int signtst = 0;
@@ -279,7 +367,7 @@ void footle_print(int val){
 			break;
 		case 2:
 			stringptr = (char*) oid[2];
-			printf("#string object value: %s\n",stringptr);
+			printf("%s\n",stringptr);
 			break;
 		case 3:
 			floatptr = (float*) oid;
